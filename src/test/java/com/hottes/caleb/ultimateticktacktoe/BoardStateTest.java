@@ -258,7 +258,7 @@ class BoardStateTest {
         testState.preformAction(new UltimateTickTacToeGameAction(0, 0, 2, 1, 1));
         testState.setAllBoardsActivity(false);
         testState.setBoardActive(2, 1);
-        BitSet actualSet = BitSet.valueOf(new byte[] {3, 0, 1, 2, 0, 0, 16, 0, 4, 8, 0, 0, 0, 0, 0, 0, 0, 32, 4});
+        BitSet actualSet = BitSet.valueOf(new byte[] {3, 1, 2, 4, 0, 0, 32, 0, 8, 16, 0, 0, 0, 0, 0, 0, 0, 64, 8});
         assertEquals(actualSet, testState.getBitSet(), "Returned bit set was not correct for simple state");
 
         SubBoardState topRight = new SubBoardState(new double[][]{
@@ -283,7 +283,7 @@ class BoardStateTest {
                 3);
         testState.setAllBoardsActivity(false);
         testState.setBoardActive(1, 2);
-        actualSet = BitSet.valueOf(new byte[] {3, 14, 28, 112, -32, -128, -42, -128, 29, 56, -32, 0, -128, -64, -128, -111, 32, 1});
+        actualSet = BitSet.valueOf(new byte[] {3, 29, 56, -32, -64, 1, -83, 1, 59, 112, -64, 1, 0, -127, 1, 35, 65, 2});
         assertEquals(actualSet, testState.getBitSet(), "Returned bit set was not correct for X play so O can win");
     }
 

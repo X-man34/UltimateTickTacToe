@@ -49,5 +49,21 @@ public class GameAction extends Point{
     public void setMarker(double marker) {
         this.marker = marker;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        GameAction action = (GameAction) o;
+        return java.lang.Double.compare(marker, action.marker) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + java.lang.Double.hashCode(marker);
+        return result;
+    }
 }

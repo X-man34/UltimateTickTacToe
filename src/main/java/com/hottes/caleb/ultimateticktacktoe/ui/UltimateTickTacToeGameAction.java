@@ -42,4 +42,22 @@ public class UltimateTickTacToeGameAction extends GameAction {
                 ", marker=" + getMarker() +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        UltimateTickTacToeGameAction that = (UltimateTickTacToeGameAction) o;
+        return majorRow == that.majorRow && majorCol == that.majorCol;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + majorRow;
+        result = 31 * result + majorCol;
+        return result;
+    }
 }

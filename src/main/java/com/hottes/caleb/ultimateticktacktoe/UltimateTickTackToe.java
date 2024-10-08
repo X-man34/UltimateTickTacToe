@@ -1,9 +1,8 @@
 package com.hottes.caleb.ultimateticktacktoe;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
-import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
-import com.hottes.caleb.ultimateticktacktoe.ui.MenuScreen;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
+import com.hottes.caleb.ultimateticktacktoe.ui.MenuScreen;
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Scene;
@@ -22,6 +21,7 @@ import java.util.Optional;
  * hash function.
  *5. undo/redo buttons
  * 6. load menu screen options from config file
+ * 7. more documentation
  *
  */
 

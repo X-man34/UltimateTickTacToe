@@ -1,9 +1,7 @@
 package com.hottes.caleb.ultimateticktacktoe.ui;
 
-import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.Resources;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
-import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;

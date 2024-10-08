@@ -2,6 +2,7 @@ package com.hottes.caleb.ultimateticktacktoe.ui;
 
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.Resources;
+import com.hottes.caleb.ultimateticktacktoe.Resources.PlayerType;
 import com.hottes.caleb.ultimateticktacktoe.SubBoardState;
 import com.hottes.caleb.ultimateticktacktoe.UltimateTickTackToe;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
@@ -18,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import com.hottes.caleb.ultimateticktacktoe.Resources.PlayerType;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class GameController {
     public GameController(String player1Name, String player2name, int boardSize, PlayerType playerOneType, PlayerType playerTwoType, Optional<EvaluatorConfiguration> playerOneEval, Optional<EvaluatorConfiguration> playerTWoEval) {
         //save constnats
         boardState = new BoardState(boardSize);
-        setUpTestState();
+        //boardState = getTestState();
         this.playerOneName = player1Name;
         this.playerTwoName = player2name;
         this.theNode = new VBox();
@@ -180,17 +180,12 @@ public class GameController {
                     //so now the computer has to play.
                     //player one, X is always denoted by X here. If it is currently player one's turn then we can just give the evaluator the board as is, however if it is player two's turn
                     //then the board needs to have the marker 1 show the player whose turn it is to move, so we need to invert the board.
-                    boolean ogWhoseTurnItis = boardState.isPlayerOneTurn();
                     boolean inversioNeeded = !boardState.isPlayerOneTurn();
+                    BoardState stateToPass = boardState.getClone();
                     if (inversioNeeded) {
-                        boardState.invertState();
-                        //temporarily invert state before passing it
+                        stateToPass.invertState();
                     }
-                    evaluator = new MCTSEvaluator(boardState.getClone(), ogWhoseTurnItis? playerOneEvaluatorConfig.get(): playerTwoEvaluatorConfig.get());
-                    if (inversioNeeded) {
-                        //bring the board back to what it actually is.
-                        boardState.invertState();
-                    }
+                    evaluator = new MCTSEvaluator(stateToPass, boardState.isPlayerOneTurn()? playerOneEvaluatorConfig.get(): playerTwoEvaluatorConfig.get());
                     if (!processPlayerInput((UltimateTickTacToeGameAction) evaluator.preformSearch())) {
                         boardState.togglePlayerOneTurn();
                         Platform.runLater(() -> {
@@ -264,6 +259,7 @@ public class GameController {
      * @return if the move was played or not.
      */
     private boolean processPlayerInput(UltimateTickTacToeGameAction proposedAction) {
+        proposedAction.setMarker(boardState.isPlayerOneTurn()?1:-1);//the evaluator always sees things as if its player one, so compensate for that.
         System.out.print("New game Action Proposed: ");
         System.out.print(proposedAction);
         System.out.println(" with marker: " + proposedAction.getMarker());
@@ -320,7 +316,7 @@ public class GameController {
 
     }
 
-    public void setUpTestState() {
+    public static  BoardState getTestState() {
         SubBoardState oneWin = new SubBoardState(new double[][]{
                 {1,1,1},
                 {0,0,0},
@@ -373,7 +369,7 @@ public class GameController {
         testState.setAllBoardsActivity(false);
         testState.setBoardActive(1, 2);
         testState.setPlayerOneTurn(true);
-        boardState = testState;
+        return testState;
 
     }
 

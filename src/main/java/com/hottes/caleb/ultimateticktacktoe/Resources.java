@@ -1,7 +1,6 @@
 package com.hottes.caleb.ultimateticktacktoe;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
-import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
 
 import javax.imageio.ImageIO;
@@ -11,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Objects;

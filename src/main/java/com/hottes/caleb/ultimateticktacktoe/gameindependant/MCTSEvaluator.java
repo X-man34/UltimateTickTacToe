@@ -2,17 +2,20 @@ package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
 import com.hottes.caleb.ultimateticktacktoe.Resources;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.BitSetBasedUTTTNodeData;
-import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.MemoryEfficientUTTTNodeData;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.NodeData;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTree;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTreeNode;
 import javafx.application.Platform;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * a MCTS evalutor takes in a inital state and returns the best move for whichever player is denoted by the marker 1.
@@ -38,15 +41,13 @@ public class MCTSEvaluator {
         TIME,
         ITERATIONS
     }
-    boolean dispalyDialogAfterSearch = true;
+    public  boolean dispalyDialogAfterSearch = true;
     public final GenericTree<NodeData> tree = new GenericTree<>();
     public MCTSEvaluator(GameState initalState) {
         this(initalState, Resources.DEFAULT_EVALUATOR_CONFIGURATION);
     }
 
     public MCTSEvaluator(GameState initalState, EvaluatorConfiguration configuration) {
-        System.out.println("Inital State: ");
-        System.out.println(initalState);
         tree.setRoot(new GenericTreeNode<>(new NodeData(1, 0, initalState, null)));
 
         C = configuration.cValue();
@@ -257,18 +258,12 @@ public class MCTSEvaluator {
      * @return the current estimation for the best move to take.
      */
     public GameAction getCurrentBestMove() {
-        double bestAvgVal = Double.NEGATIVE_INFINITY;
+        double bestVisits = Double.NEGATIVE_INFINITY;
         GameAction bestAction = null;
         for (GenericTreeNode<NodeData> child: tree.getRoot().getChildren()) {
-            if (child.getData().getNumVisits() > 0) {
-                double avgVal = child.getData().getTotalScore() / child.getData().getNumVisits();
-                if (avgVal >= bestAvgVal) {
-                    bestAction = child.getData().getActionTaken();
-                    bestAvgVal = avgVal;
-                }
-            }else if (bestAction == null) {
-                //this should never happen
+            if (child.getData().getNumVisits() >= bestVisits) {
                 bestAction = child.getData().getActionTaken();
+                bestVisits = child.getData().getNumVisits();
             }
 
         }

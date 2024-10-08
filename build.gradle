@@ -1,7 +1,6 @@
 plugins {
   id 'java'
   id 'application'
-  id 'org.javamodularity.moduleplugin' version '1.8.12'
   id 'org.openjfx.javafxplugin' version '0.0.13'
   id 'org.beryx.jlink' version '2.25.0'
 }
@@ -46,6 +45,23 @@ dependencies {
   implementation group: 'org.junit.platform', name: 'junit-platform-suite', version: '1.11.0'
 // https://mvnrepository.com/artifact/org.openjdk.jol/jol-core
   implementation group: 'org.openjdk.jol', name: 'jol-core', version: '0.17'
+
+
+
+  // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
+  implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '0.9.1'
+
+
+
+
+  // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
+  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '0.9.1'
+
+  //could use this for GPU computation, probably should change the versions of the core dependancy if so
+//// https://mvnrepository.com/artifact/org.nd4j/nd4j-cuda-8.0-platform
+//implementation group: 'org.nd4j', name: 'nd4j-cuda-8.0-platform', version: '0.9.1'
+
+
 
 }
 

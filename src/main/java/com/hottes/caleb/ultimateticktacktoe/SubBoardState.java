@@ -4,11 +4,9 @@ package com.hottes.caleb.ultimateticktacktoe;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
-import org.openjdk.jol.info.GraphLayout;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.BitSet;
 
 import static com.hottes.caleb.ultimateticktacktoe.Resources.LINE_STROKE;

@@ -4,15 +4,12 @@ package com.hottes.caleb.ultimateticktacktoe;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
-import org.openjdk.jol.info.ClassLayout;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.sql.BatchUpdateException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 
 public class BoardState extends GameState {
@@ -172,6 +169,21 @@ public class BoardState extends GameState {
 
 
     /**
+     * used for machine learning
+     * returns a vector representing the state of this board.
+     * the player whose turn it is will be represented by the number 1 and the other player will be -1.
+     * so the board may be inverted. This method will also append on the end of the array a some 1's or -1's to represent
+     * which sub boards are active. So for each index 1 means active and -1 not. The reason why  not 0 and 1 it for ML normalzation, i want to
+     * keep all the values between 1 and -1 and a boolean ought to be on the extremes
+     * @return a double[] of numbers representing the state of the board and which boards are active.
+     */
+    public double[] getValueNetworkInputVector() {
+
+        return null;
+    }
+
+
+    /**
      * updates the superclass state variable to match the evaluations of the sub boards
      */
     private void updateState() {
@@ -213,6 +225,10 @@ public class BoardState extends GameState {
         return actions;
     }
 
+    /**
+     * inverts the state of the board and all its minor boards.
+     * it also flips whose turn it is.
+     */
     @Override
     public void invertState() {
         for (int i = 0; i < state.length; i++) {

@@ -11,12 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.openjdk.jol.info.ClassLayout;
-import org.openjdk.jol.info.GraphLayout;
 
-import javax.print.DocFlavor;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -198,24 +193,23 @@ class MCTSEvaluatorTest {
         System.out.println("At this rate in 1 minute: " + iterationsIn60Secs + " iterations can be run");
         System.out.println("Tree used: " + treeMemory + " GB of memory");
         System.out.println("Average: " + memoryPerIteration + " KB used per iteration");
-        System.out.println(GraphLayout.parseInstance(evaluator.tree).toFootprint());
         System.out.println("Done Benchmarking iteration speed\n===========================");
         //if the test fails it is likly becuase of an out of memory issue.
     }
 
-    @Test
-    @Tag("benchmark")
-    void analyzeMemory() {
-        System.out.println("================\ntesting memory");
-        BoardState initialState = new BoardState(3);
-        initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1,1, 1));//this is not an arbirary move but a strategic one, giving the AI lots of options to think about and is also the best move X can take
-        String initalStateHash = initialState.getStringHash();
-        System.out.println(GraphLayout.parseInstance(initalStateHash).toFootprint());
-        System.out.println(GraphLayout.parseInstance(initialState).toFootprint());
-        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false));//most of these settings don't matter we will preform the search ourselves in this test.
-        evaluator.preformIteration(evaluator.tree.getRoot());
-
-        System.out.println(GraphLayout.parseInstance(evaluator).toFootprint());
-        System.out.println("done testing memory\n=====================");
-    }
+//    @Test
+//    @Tag("benchmark")
+//    void analyzeMemory() {
+//        System.out.println("================\ntesting memory");
+//        BoardState initialState = new BoardState(3);
+//        initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1,1, 1));//this is not an arbirary move but a strategic one, giving the AI lots of options to think about and is also the best move X can take
+//        String initalStateHash = initialState.getStringHash();
+//        System.out.println(GraphLayout.parseInstance(initalStateHash).toFootprint());
+//        System.out.println(GraphLayout.parseInstance(initialState).toFootprint());
+//        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false));//most of these settings don't matter we will preform the search ourselves in this test.
+//        evaluator.preformIteration(evaluator.tree.getRoot());
+//
+//        System.out.println(GraphLayout.parseInstance(evaluator).toFootprint());
+//        System.out.println("done testing memory\n=====================");
+//    }
 }
