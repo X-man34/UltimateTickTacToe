@@ -1,5 +1,6 @@
 package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
+import com.hottes.caleb.ultimateticktacktoe.Resources;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +9,14 @@ class StateDatumTest {
 
     @Test
     void getIndex() {
-        assertEquals(0, StateDatum.getIndex(0, 0, 0, 0));
-        assertEquals(4, StateDatum.getIndex(0, 0, 1, 1));
-        assertEquals(37, StateDatum.getIndex(1, 1, 0, 1));
-        assertEquals(69, StateDatum.getIndex(2, 1, 2, 0));
-        assertEquals(80, StateDatum.getIndex(2, 2, 2, 2));
-        assertEquals(20, StateDatum.getIndex(0, 2, 0, 2));
-        assertEquals(60, StateDatum.getIndex(2, 0, 2, 0));
-        assertEquals(49, StateDatum.getIndex(1, 2, 1, 1));
+        assertEquals(0, Resources.getIndex(0, 0, 0, 0,3 ));
+        assertEquals(4, Resources.getIndex(0, 0, 1, 1,3 ));
+        assertEquals(37,Resources.getIndex(1, 1, 0, 1,3 ));
+        assertEquals(69,Resources.getIndex(2, 1, 2, 0,3 ));
+        assertEquals(80,Resources.getIndex(2, 2, 2, 2,3 ));
+        assertEquals(20,Resources.getIndex(0, 2, 0, 2,3 ));
+        assertEquals(60,Resources.getIndex(2, 0, 2, 0,3 ));
+        assertEquals(49,Resources.getIndex(1, 2, 1, 1,3 ));
 
 
     }

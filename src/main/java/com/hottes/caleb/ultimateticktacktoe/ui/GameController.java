@@ -361,10 +361,12 @@ public class GameController {
                 {0,1,0},
                 {0,0,0}},
                 false, 3);
+        //have to create new boards so seperated boards in the board state are not tied to the same memory location.
+        //if not then setting board 1,0 active will set all of the one win boards active because they all point to the same object.
         BoardState testState = new BoardState(new SubBoardState[][]{
-                {oneWin, oneWin, topRight},
-                {oneWin, twoWin, activeBoard},
-                {bottomLeft, empty, empty}},
+                {new SubBoardState(oneWin.getStateAsCopy(), false, 3), new SubBoardState(oneWin.getStateAsCopy(), false, 3), topRight},
+                {new SubBoardState(oneWin.getStateAsCopy(), false, 3), twoWin, activeBoard},
+                {bottomLeft, new SubBoardState(empty.getStateAsCopy(), false, 3), new SubBoardState(empty.getStateAsCopy(), false, 3)}},
                 3);
         testState.setAllBoardsActivity(false);
         testState.setBoardActive(1, 2);

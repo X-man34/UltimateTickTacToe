@@ -271,6 +271,21 @@ public class Resources {
 
        return s.toString();
     }
+    /**
+     * takes in information about a ultimate tick tac toe square and converts it to a linear index.
+     * this is so the entire board can be represented as a linear array for vectorization.
+     * @param majRow the index of the major row
+     * @param majCol the index of the major column
+     * @param minRow the index of the minor row
+     * @param finalMinCol the index of the minor column
+     * @return the linear index of this spot.
+     */
+    public static int getIndex(int majRow, int majCol, int minRow, int finalMinCol, int boardSize) {
+        int majorIndex = majRow * boardSize + majCol;
+        int minorIndex = minRow * boardSize + finalMinCol;
+        return majorIndex * boardSize * boardSize + minorIndex;
+    }
+
 
 
 }

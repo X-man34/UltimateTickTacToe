@@ -66,7 +66,8 @@ class MCTSEvaluatorTest {
         assertEquals(new UltimateTickTacToeGameAction(2, 0, 1, 0, 1), botAction, "Evaluator failed the following puzzle: {1 to play, activeboardRow=2, col=0}" + testState);
     }
 
-    //if this test fails try increasing the number of iterations
+    //this test is unpredictable, it will fail one run and succed another time at least right now.
+    //as the evaluator gets better hopefully it will always pass and not take so long.
     @Test
     void forceOPlaySoXCanWin() {
 
@@ -94,14 +95,13 @@ class MCTSEvaluatorTest {
         testState.setBoardActive(1, 2);
         testState.setPlayerOneTurn(true);
 
-        MCTSEvaluator evaluator = new MCTSEvaluator(testState);
-        for (int i = 0; i < 40000; i++) {
-            evaluator.preformIteration(evaluator.tree.getRoot());
-
-        }
-
-        GameAction botAction = evaluator.getCurrentBestMove();
-        assertEquals(new UltimateTickTacToeGameAction(1, 2, 0, 2, 1), botAction, "Evaluator failed the following puzzle: {1 to play, activeboardRow=1, col=2}" + testState);
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 30, 30, 0, false, false));
+        evaluator.dispalyDialogAfterSearch = false;
+        System.out.println("Preforming search will take a bit...");
+        GameAction botAction = evaluator.preformSearch();
+        //this is how I got the actual move. I intended the acutal move to be minR0 minC2 but both my AI this one on the internet disagree with me.
+        //https://www.uttt.ai/init?state=222000000222000000101101022222000000111000000000000220020020000000000000000000000220210000250
+        assertEquals(new UltimateTickTacToeGameAction(1, 2, 1, 2, 1), botAction, "Evaluator failed the following puzzle (it might pass if you run it again...): {1 to play, activeboardRow=1, col=2}" + testState);
 
     }
 

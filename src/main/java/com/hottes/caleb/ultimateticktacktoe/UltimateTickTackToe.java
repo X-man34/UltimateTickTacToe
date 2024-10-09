@@ -22,6 +22,7 @@ import java.util.Optional;
  *5. undo/redo buttons
  * 6. load menu screen options from config file
  * 7. more documentation
+ * 8. MCTS stop thinking when confident to save time
  *
  */
 

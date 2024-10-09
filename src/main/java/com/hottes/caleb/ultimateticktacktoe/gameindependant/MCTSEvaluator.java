@@ -11,6 +11,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,11 +38,14 @@ public class MCTSEvaluator {
     private int maxDepth = 0;
     private long positionsSearched = 0;
     private long childCreationRaceConditions = 0;
+    public PrintStream logger = System.out;
+    private final PrintStream ogOut;
     public enum EndCondition {
         TIME,
         ITERATIONS
     }
     public  boolean dispalyDialogAfterSearch = true;
+    public boolean log = true;
     public final GenericTree<NodeData> tree = new GenericTree<>();
     public MCTSEvaluator(GameState initalState) {
         this(initalState, Resources.DEFAULT_EVALUATOR_CONFIGURATION);
@@ -59,11 +63,14 @@ public class MCTSEvaluator {
         computeTime = configuration.computeTime();
         useMaxCPU = configuration.maxMyCPU();
         addChildren(tree.getRoot());
+        ogOut = System.out;
+
 
     }
 
 
     public GameAction preformSearch() {
+        System.setOut(logger);
         if (!useMaxCPU && (THREADS <= 1)) {
             return singleThreadedSearch();
         }
@@ -91,6 +98,10 @@ public class MCTSEvaluator {
                 executor.shutdownNow();
 
             }
+            if (Thread.interrupted()) {
+                logger.println("Ending search becuase thread is interrupted. ");
+                break;
+            }
             try {
                 Thread.sleep(1);//don't want to overload the CPU with excessive looping
             } catch (InterruptedException _) {
@@ -104,14 +115,17 @@ public class MCTSEvaluator {
                 executor.execute(new PreformBatchOfIterationsTask(Resources.MULTTHREADED_BATCH_SIZE, tree.getRoot()));
             }
         }
-        System.out.println("Determined best move using roughly: " + getCompletedTasks() * Resources.MULTTHREADED_BATCH_SIZE + " iterations");
-        System.out.println("Searched as far ahead as: " + maxDepth + " moves");
-        System.out.println("Searched: " + positionsSearched + " states");
-        System.out.println("Detected: " + childCreationRaceConditions + " node expansion race conditions");
-        if (dispalyDialogAfterSearch) {
-            Platform.runLater(() -> displayDialog());
+        if (log) {
+            System.out.println("Determined best move using roughly: " + getCompletedTasks() * Resources.MULTTHREADED_BATCH_SIZE + " iterations");
+            System.out.println("Searched as far ahead as: " + maxDepth + " moves");
+            System.out.println("Searched: " + positionsSearched + " states");
+            System.out.println("Detected: " + childCreationRaceConditions + " node expansion race conditions");
         }
 
+        if (dispalyDialogAfterSearch) {
+            Platform.runLater(this::displayDialog);
+        }
+        System.setOut(ogOut);
         return getCurrentBestMove();
     }
 
@@ -129,10 +143,14 @@ public class MCTSEvaluator {
             }
 
         }
-        System.out.println("Determined best move using: " + iterations + "Iterations");
+        if (log) {
+            System.out.println("Determined best move using: " + iterations + "Iterations");
+        }
+
         if (dispalyDialogAfterSearch) {
             Platform.runLater(() -> displayDialog());
         }
+        System.setOut(ogOut);
         return  getCurrentBestMove();
     }
 
