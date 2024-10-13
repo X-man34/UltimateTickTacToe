@@ -1,7 +1,6 @@
 package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
-import org.bytedeco.javacpp.opencv_core;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,11 +68,11 @@ public class TraningDataCreator {
 //        System.out.println(data);
 
         PrintStream console = System.out;
-        EvaluatorConfiguration config =  new EvaluatorConfiguration(2, 1000, computeTime, 1, 0, false, false);
+        EvaluatorConfiguration config = new EvaluatorConfiguration(2, 1000, computeTime, 1, 0, false, false);
         //String description = " This data series is using a raw MCTS search to generate data." + config + " using 20 threads to sim 1000 games is the goal. ";
         try (ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads)) {
             for (int i = gameStart; i < numGames + 1; i++) {
-                executor.submit(new AdversarialGameSimulation(simFolder, new File(logFolder.getAbsolutePath() + "/game" + i + "$"  + System.currentTimeMillis() + ".log"), seriesName + ",gameNum" + i, "DataSeries: " + seriesName + " game number: " + i +  " \n\nDescription: " +  description + ". \n\nEvaluator config=" + config, config ));
+                executor.submit(new AdversarialGameSimulation(simFolder, new File(logFolder.getAbsolutePath() + "/game" + i + "$" + System.currentTimeMillis() + ".log"), seriesName + ",gameNum" + i, "DataSeries: " + seriesName + " game number: " + i + " \n\nDescription: " + description + ". \n\nEvaluator config=" + config, config));
 
             }
             while (executor.getCompletedTaskCount() < numGames) {
@@ -81,11 +80,11 @@ public class TraningDataCreator {
 
                 console.println("Completed: " + executor.getCompletedTaskCount() + " games out of " + numGames);
                 console.println("Press \"q\" to quit (up to 10 sec response delay).");
-
+                console.println("Sleeping");
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException _) {
-
+                    console.println("Finished sleeping");
                 }
                 if (scanner.hasNextLine()) {
                     if (scanner.nextLine().equalsIgnoreCase("q")) {
@@ -102,69 +101,18 @@ public class TraningDataCreator {
                             console.println("Shutting down");
                             executor.shutdownNow();
                             numGames = 0;//exit while loop
-                        }else {
+                        } else {
                             System.out.println("Shutdown aborted, continuing. ");
                         }
 
                     }
                 }
+                console.println("next iter: numGames: " + numGames + " Competed tasks: " + executor.getCompletedTaskCount());
             }
         }
 
-//        try (RecordReader recordReader = new CSVRecordReader(1, ',')) {
-//
-//            recordReader.initialize(new FileSplit(new File("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\irisData.csv")));
-//
-//            int featuresCount = 4;
-//            int classCount = 3;
-//            DataSetIterator iterator = new RecordReaderDataSetIterator(
-//                    recordReader, 150, featuresCount, classCount);
-//            org.nd4j.linalg.dataset.DataSet allData = iterator.next();
-//
-//            allData.shuffle(42);
-//            DataNormalization normalizer = new NormalizerStandardize();
-//            normalizer.fit(allData);
-//            normalizer.transform(allData);
-//
-//            SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.65);
-//            DataSet trainingData = testAndTrain.getTrain();
-//            DataSet testData = testAndTrain.getTest();
-//
-//
-//            MultiLayerConfiguration configuration
-//                    = new NeuralNetConfiguration.Builder()
-//                    .iterations(1000)
-//                    .activation(Activation.TANH)
-//                    .weightInit(WeightInit.XAVIER)
-//                    .learningRate(0.1)
-//                    .regularization(true).l2(0.0001)
-//                    .list()
-//                    .layer(0, new DenseLayer.Builder().nIn(featuresCount).nOut(3).build())
-//                    .layer(1, new DenseLayer.Builder().nIn(3).nOut(3).build())
-//                    .layer(2, new OutputLayer.Builder(
-//                            LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-//                            .activation(Activation.SOFTMAX)
-//                            .nIn(3).nOut(classCount).build())
-//                    .backprop(true).pretrain(false)
-//                    .build();
-//
-//            MultiLayerNetwork model = new MultiLayerNetwork(configuration);
-//            model.init();
-//            model.fit(trainingData);
-//
-//            INDArray output = model.output(testData.getFeatureMatrix());
-//            Evaluation eval = new Evaluation(3);
-//            eval.eval(testData.getLabels(), output);
-//
-//            System.out.println(eval.stats());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+
     }
-
-
 
 
 }

@@ -24,29 +24,25 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class MCTSEvaluator {
     public static Random rand = new Random();
-    public double C = 2;
     public final long maxRolloutDepth;//make sure rollouts don't get stuck in infinite loop
     public final int THREADS;
     public final int STUPIDITY;
     public final boolean allowForcePlay;
+    public final GenericTree<NodeData> tree = new GenericTree<>();
     private final GameState initalState;
-    private ThreadPoolExecutor executor;
     private final boolean useMaxCPU;
     private final int computeTime;
+    private final PrintStream ogOut;
+    public double C = 2;
+    public PrintStream logger = System.out;
+    public boolean dispalyDialogAfterSearch = true;
+    public boolean log = true;
+    private ThreadPoolExecutor executor;
     private long completedTasks = 0;
     private boolean searching = false;
     private int maxDepth = 0;
     private long positionsSearched = 0;
     private long childCreationRaceConditions = 0;
-    public PrintStream logger = System.out;
-    private final PrintStream ogOut;
-    public enum EndCondition {
-        TIME,
-        ITERATIONS
-    }
-    public  boolean dispalyDialogAfterSearch = true;
-    public boolean log = true;
-    public final GenericTree<NodeData> tree = new GenericTree<>();
     public MCTSEvaluator(GameState initalState) {
         this(initalState, Resources.DEFAULT_EVALUATOR_CONFIGURATION);
     }
@@ -68,6 +64,26 @@ public class MCTSEvaluator {
 
     }
 
+    //recursive method to get string representation of tree
+    private static String getNodeString(GenericTreeNode<NodeData> node, int depth, DecimalFormat format) {
+        StringBuilder builder = new StringBuilder();
+        //add stuff for this node.
+
+        if (depth > 0) {
+            builder.repeat(' ', (depth - 1) * 4);
+            builder.append("|---");
+        }
+        builder.append("Node{t=").append(node.getData().getTotalScore()).append(",n=").append(node.getData().getNumVisits()).append(",v=").append(format.format(node.getData().getTotalScore() / node.getData().getNumVisits())).append(",c=").append(node.getNumberOfChildren()).append(",").append(node.getData().getActionTaken()).append("}\n");
+        for (GenericTreeNode<NodeData> child : node.getChildren()) {
+            if (child.getData().getNumVisits() > 0) {
+                //builder.repeat(' ', depth * 4).append("|\n");
+                builder.append(getNodeString(child, depth + 1, format));
+            }
+
+        }
+        return builder.toString();
+
+    }
 
     public GameAction preformSearch() {
         System.setOut(logger);
@@ -78,7 +94,7 @@ public class MCTSEvaluator {
 
         if (useMaxCPU) {
             executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        }else {
+        } else {
             executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);
         }
 
@@ -138,7 +154,7 @@ public class MCTSEvaluator {
             iterations += 1;
             if ((System.currentTimeMillis() - startTime) >= (computeTime * 1000L)) {//convert from s to ms
                 searching = false;
-            }else if (iterations >= Resources.EVALUATION_ITERATION_HARD_LIMIT){
+            } else if (iterations >= Resources.EVALUATION_ITERATION_HARD_LIMIT) {
                 searching = false;
             }
 
@@ -151,34 +167,13 @@ public class MCTSEvaluator {
             Platform.runLater(() -> displayDialog());
         }
         System.setOut(ogOut);
-        return  getCurrentBestMove();
-    }
-
-    private class PreformBatchOfIterationsTask implements Runnable {
-
-        private final int batchSize;
-        private final GenericTreeNode<NodeData> nodeToExplore;
-        public PreformBatchOfIterationsTask(int theBatchSize, GenericTreeNode<NodeData> node) {
-            super();
-            this.batchSize = theBatchSize;
-            nodeToExplore = node;
-        }
-
-        @Override
-        public void run() {
-            for (int i = 0; i < batchSize; i++) {
-                preformIteration(nodeToExplore);
-                if (Thread.interrupted()) {
-                    return;
-                }
-            }
-            incrementCompletedTask();
-        }
+        return getCurrentBestMove();
     }
 
     /**
      * Implements the monte carlo tree search algorithm and preforms an iteration on a node
      * typically the node passes is the root node, however in multithreaded contexts each of the inital children may be explored seperatly
+     *
      * @see <a href="https://www.youtube.com/watch?v=UXW2yZndl7U">Really good MCTS exlpanation</a>
      */
     public void preformIteration(GenericTreeNode<NodeData> currentNode) {
@@ -199,14 +194,14 @@ public class MCTSEvaluator {
             if (currentNode.getData().getNumVisits() == 0) {
                 //this node has not been visited yet, so preform a rollout and
                 scoreToAdd = preformRollout(currentNode.getData().getGameState());
-            }else {
+            } else {
                 //this node has been visited but has no children yet, so determine what all its children are (if any) and roll one of them out
                 addChildren(currentNode);
                 if (currentNode.hasChildren()) {
                     incrementPositionsSearched();
                     currentNode = currentNode.getChildAt(0);//we could also try picking a random child so the order in which the action algorithm returns the actions does not bias which part of the board we often explore.
                     scoreToAdd = preformRollout(currentNode.getData().getGameState());
-                }else {
+                } else {
                     //then we must have reached a terminal state because we tried to
                     scoreToAdd = currentNode.getData().getGameState().getEvaluation();
                 }
@@ -217,7 +212,7 @@ public class MCTSEvaluator {
             currentNode.getData().changeTotalScore(scoreToAdd);
         }
         //this doesn't need to be synchronized I think even if another thread modifies one of the nodes before an iteration of this loop finishes, we shouldn't care becuase we are just adding to totals.
-        while(currentNode.getParent() != null) {//this will get to the second to last node which will have the root as its parent. It will increment the root and be done.
+        while (currentNode.getParent() != null) {//this will get to the second to last node which will have the root as its parent. It will increment the root and be done.
             currentNode = currentNode.getParent();
             currentNode.getData().incrementNumVisits();
             scoreToAdd = -scoreToAdd;//invert so it reflects who we are talking about
@@ -227,6 +222,7 @@ public class MCTSEvaluator {
 
     /**
      * uses ucb1 to choose the best child. could be replaced with a policy network.
+     *
      * @param currentNode
      * @return
      */
@@ -253,6 +249,7 @@ public class MCTSEvaluator {
 
     /**
      * expands the given node. the game actions generated
+     *
      * @param parent
      */
     private void addChildren(GenericTreeNode<NodeData> parent) {
@@ -264,21 +261,22 @@ public class MCTSEvaluator {
             //then this is a terminal state. The actions function will return actions if there are empty squares regarless of whether or not we are in a terminal state.
             return;
         }
-        double marker = parent.getData().getGameState().isPlayerOneTurn()?1:-1;
+        double marker = parent.getData().getGameState().isPlayerOneTurn() ? 1 : -1;
         for (GameAction action : parent.getData().getGameState().getActions()) {
             action.setMarker(marker);
-            parent.addChild(new GenericTreeNode<>(new BitSetBasedUTTTNodeData(0, 0, parent.getData().getGameState().simulateAction(action, false),action)));
+            parent.addChild(new GenericTreeNode<>(new BitSetBasedUTTTNodeData(0, 0, parent.getData().getGameState().simulateAction(action, false), action)));
         }
     }
 
     /**
      * Looks through the root's children and returns the action taken to reach the child with the highest UCB1 value
+     *
      * @return the current estimation for the best move to take.
      */
     public GameAction getCurrentBestMove() {
         double bestVisits = Double.NEGATIVE_INFINITY;
         GameAction bestAction = null;
-        for (GenericTreeNode<NodeData> child: tree.getRoot().getChildren()) {
+        for (GenericTreeNode<NodeData> child : tree.getRoot().getChildren()) {
             if (child.getData().getNumVisits() >= bestVisits) {
                 bestAction = child.getData().getActionTaken();
                 bestVisits = child.getData().getNumVisits();
@@ -292,7 +290,7 @@ public class MCTSEvaluator {
     /**
      * when confronted with a set of nodes to choose from, whichever node maximizes this function is the node that should be investigated.
      * this formula is the average evalulation of this state over each time it has been visited plus c * sqrt(ln(parentVisits)/visits)
-     *
+     * <p>
      * for preformance reasons this method assumes that the supplied node has a parent and that the parent node has been visited a positive number of times.
      *
      * @param node the node we are considering
@@ -308,7 +306,8 @@ public class MCTSEvaluator {
 
     /**
      * Preforms a random playout of a game. The game is played until the state becomes terminal. Then the evaluation of this state is returned.
-     *determines if player 1 won wins the game or not. whatever calls this should take care to ensure that player 1 is set appropriatly and the board may need to be inverted in that case.
+     * determines if player 1 won wins the game or not. whatever calls this should take care to ensure that player 1 is set appropriatly and the board may need to be inverted in that case.
+     *
      * @param currentState the game state
      * @return
      */
@@ -323,7 +322,8 @@ public class MCTSEvaluator {
                 break;
             }
             GameAction action = actions.get(rand.nextInt(actions.size()));
-            if (!currentState.isPlayerOneTurn()) action.invertMarker();//then we need to flip the marker so the other player plays
+            if (!currentState.isPlayerOneTurn())
+                action.invertMarker();//then we need to flip the marker so the other player plays
             currentState = currentState.simulateAction(action, false);
             isWon = currentState.getEvaluation() != 0;
             turns++;
@@ -335,27 +335,6 @@ public class MCTSEvaluator {
     @Override
     public String toString() {
         return getNodeString(tree.getRoot(), 0, new DecimalFormat("#.#"));
-    }
-
-    //recursive method to get string representation of tree
-    private static String getNodeString(GenericTreeNode<NodeData> node, int depth, DecimalFormat format) {
-        StringBuilder builder = new StringBuilder();
-        //add stuff for this node.
-
-        if (depth > 0) {
-            builder.repeat(' ', (depth - 1) * 4);
-            builder.append("|---");
-        }
-        builder.append("Node{t=").append(node.getData().getTotalScore()).append(",n=").append(node.getData().getNumVisits()).append(",v=").append(format.format(node.getData().getTotalScore() / node.getData().getNumVisits())).append(",c=").append(node.getNumberOfChildren()).append(",").append(node.getData().getActionTaken()).append("}\n");
-        for (GenericTreeNode<NodeData> child : node.getChildren()) {
-            if (child.getData().getNumVisits() > 0) {
-                //builder.repeat(' ', depth * 4).append("|\n");
-                builder.append(getNodeString(child, depth + 1, format));
-            }
-
-        }
-        return builder.toString();
-
     }
 
     public void displayDialog() {
@@ -375,8 +354,6 @@ public class MCTSEvaluator {
 
     }
 
-
-
     private void addNode(TreeItem<String> parent, GenericTreeNode<NodeData> child, DecimalFormat format) {
         TreeItem<String> newItem = new TreeItem<>(child.getData().getTreeString(format, child.getNumberOfChildren()));
         parent.getChildren().add(newItem);
@@ -395,16 +372,48 @@ public class MCTSEvaluator {
 
         searching = false;
     }
+
     private synchronized void incrementCompletedTask() {
         completedTasks++;
     }
+
     private synchronized long getCompletedTasks() {
         return completedTasks;
     }
+
     private synchronized void setMaxDepth(int depth) {
         maxDepth = depth;
     }
+
     private void incrementPositionsSearched() {
         positionsSearched++;
+    }
+
+    public enum EndCondition {
+        TIME,
+        ITERATIONS
+    }
+
+    private class PreformBatchOfIterationsTask implements Runnable {
+
+        private final int batchSize;
+        private final GenericTreeNode<NodeData> nodeToExplore;
+
+        public PreformBatchOfIterationsTask(int theBatchSize, GenericTreeNode<NodeData> node) {
+            super();
+            this.batchSize = theBatchSize;
+            nodeToExplore = node;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < batchSize; i++) {
+                preformIteration(nodeToExplore);
+                if (Thread.interrupted()) {
+                    return;
+                }
+            }
+            incrementCompletedTask();
+        }
     }
 }

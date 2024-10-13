@@ -12,23 +12,20 @@ import java.util.stream.Stream;
 
 public class Util {
 
-    enum DupKeyOption {
-        OVERWRITE, DISCARD
-    }
     public static Map<String, String> constructMapFromFile(String filePath, DupKeyOption dupKeyOption) {
         Map<String, String> map = new HashMap<>();
         try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
             lines.filter(line -> line.contains(":"))
-                .forEach(line -> {
-                    String[] keyValuePair = line.split(":", 2);
-                    String key = keyValuePair[0];
-                    String value = keyValuePair[1];
-                    if (DupKeyOption.OVERWRITE == dupKeyOption) {
-                        map.put(key, value);
-                    } else if (DupKeyOption.DISCARD == dupKeyOption) {
-                        map.putIfAbsent(key, value);
-                    }
-                });
+                    .forEach(line -> {
+                        String[] keyValuePair = line.split(":", 2);
+                        String key = keyValuePair[0];
+                        String value = keyValuePair[1];
+                        if (DupKeyOption.OVERWRITE == dupKeyOption) {
+                            map.put(key, value);
+                        } else if (DupKeyOption.DISCARD == dupKeyOption) {
+                            map.putIfAbsent(key, value);
+                        }
+                    });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,5 +43,9 @@ public class Util {
         }
 
 
+    }
+
+    enum DupKeyOption {
+        OVERWRITE, DISCARD
     }
 }

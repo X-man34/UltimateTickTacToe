@@ -14,23 +14,16 @@ import static com.hottes.caleb.ultimateticktacktoe.Resources.drawToken;
 
 public class SubBoardState extends GameState {
 
-    public enum TicTacToeResult {
-        PLAYER1_WINS,
-        PLAYER_NEG1_WINS,
-        DRAW,
-        IN_PROGRESS
-    }
-
+    public final Rectangle2D.Double[][] subBoardBoundingBoxes;
     private final int boardSize;
     private boolean active;
-    public final Rectangle2D.Double[][] subBoardBoundingBoxes;
-
     /**
      * creates a new minor board
+     *
      * @param theBoardSize the board will be square and the board size is the size of the major and minor boards
      */
     public SubBoardState(int theBoardSize, boolean isActive) {
-        super(theBoardSize , theBoardSize);
+        super(theBoardSize, theBoardSize);
         this.boardSize = theBoardSize;
         this.active = isActive;
         this.subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
@@ -49,6 +42,7 @@ public class SubBoardState extends GameState {
 
     /**
      * assumes all input data is valid
+     *
      * @param hash
      */
     public SubBoardState(String hash) {
@@ -57,13 +51,12 @@ public class SubBoardState extends GameState {
         this.subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
 
 
-
     }
 
     /**
-     *
      * Evaluations are 1 for player 1 wins, -1 for player 1 loses, 0 for intederminate state and -.25 for draw
-     *Copy past from copilot LLM
+     * Copy past from copilot LLM
+     *
      * @return the static evaluation of the game state
      */
     @Override
@@ -79,7 +72,7 @@ public class SubBoardState extends GameState {
     /**
      * takes in a graphics context and a bouding box saying where its allowed to draw and draws the current state of this sub board in that bounding box
      *
-     * @param g The graphics2D context to be used
+     * @param g           The graphics2D context to be used
      * @param boundingBox The bounding box in which board needs to be drawn.
      */
     public void render(Graphics2D g, Rectangle2D.Double boundingBox) {
@@ -96,8 +89,8 @@ public class SubBoardState extends GameState {
         double horizontalSpacing = width * Resources.HORIZONTAL_SPACING_FACTOR;
         double verticalSpacing = height * Resources.VERTICAL_SPACING_FACTOR;
 
-        double squareWidth = (width - (boardSize + 1) * horizontalSpacing)/boardSize;
-        double squareHeight = (height - (boardSize + 1) * verticalSpacing)/boardSize;
+        double squareWidth = (width - (boardSize + 1) * horizontalSpacing) / boardSize;
+        double squareHeight = (height - (boardSize + 1) * verticalSpacing) / boardSize;
 
 
         //make this method render and X or O on a board if it is won. If it is not won than do not draw an X or O but draw the grid lines and board state.
@@ -118,7 +111,7 @@ public class SubBoardState extends GameState {
             for (int j = 0; j < boardSize; j++) {
                 //for each sub board square
                 //have to offset these calculations to put them in absolute coords
-                Rectangle2D.Double tickTacToeSquareBoudingBox = new Rectangle2D.Double(boundingBox.x + (horizontalSpacing * (i + 1)) + (squareWidth * i),boundingBox.y + (verticalSpacing * (j + 1)) + (squareHeight * j) ,squareWidth,squareHeight);
+                Rectangle2D.Double tickTacToeSquareBoudingBox = new Rectangle2D.Double(boundingBox.x + (horizontalSpacing * (i + 1)) + (squareWidth * i), boundingBox.y + (verticalSpacing * (j + 1)) + (squareHeight * j), squareWidth, squareHeight);
                 subBoardBoundingBoxes[i][j] = tickTacToeSquareBoudingBox;
 
                 if (renderPlayerTokens) {
@@ -130,16 +123,14 @@ public class SubBoardState extends GameState {
 
     }//end render
 
-
-
     @Override
     public GameState simulateAction(GameAction action, boolean invertBoard) {
-       SubBoardState newState = new SubBoardState(this.getStateAsCopy(), this.isActive(), this.boardSize);//have to use this.getState() in order for this method to return a true copy.
-       newState.preformAction(action);
-       if (invertBoard) {
-        newState.invertState();
-       }
-       return newState;
+        SubBoardState newState = new SubBoardState(this.getStateAsCopy(), this.isActive(), this.boardSize);//have to use this.getState() in order for this method to return a true copy.
+        newState.preformAction(action);
+        if (invertBoard) {
+            newState.invertState();
+        }
+        return newState;
 
     }
 
@@ -160,9 +151,12 @@ public class SubBoardState extends GameState {
         this.active = isActive;
     }
 
-
-
-
+    public enum TicTacToeResult {
+        PLAYER1_WINS,
+        PLAYER_NEG1_WINS,
+        DRAW,
+        IN_PROGRESS
+    }
 
 
     //Loopuptable creation code
@@ -182,9 +176,4 @@ public class SubBoardState extends GameState {
 //        }
 
 
-
-
-
-    
-    
 }

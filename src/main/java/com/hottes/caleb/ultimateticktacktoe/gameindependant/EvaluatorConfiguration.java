@@ -1,6 +1,7 @@
 package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
-public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int computeTime, int threads, int stupidity, boolean allowForcePlay, boolean maxMyCPU) {
+public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int computeTime, int threads, int stupidity,
+                                     boolean allowForcePlay, boolean maxMyCPU) {
     @Override
     public String toString() {
         return "EvaluatorConfiguration{" +

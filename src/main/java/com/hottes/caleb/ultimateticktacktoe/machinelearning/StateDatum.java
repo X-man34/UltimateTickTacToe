@@ -26,24 +26,24 @@ public class StateDatum {
      * so if its player 2's turn we need to invert the board. this variable also has 9 more numbers representing boolean of if each board is active or not.
      */
     final double[] valueNetworkInput;
-
-    private double evalForThisState = 0;
-    private final int boardSize;
     final boolean isPlayerOneTurnOriginally;
     final BoardState boardStateForPrinting;
+    private final int boardSize;
+    private double evalForThisState = 0;
 
     /**
      * takes in a board state and root tree node and extracts as much data as possible
      * instantiates a value network inputs array as well as extracting the MCTS probabilities for each cell and storing them in a policy network input vector.
-     *  the board state should always have the player who is about to play be player 1
-     *  mutlithreading searches can cause issues with child duplication, this constructor just takes the first valid child so it is best to run the search single threaded or fix the bug when using this.
-     * @param theBoardState the board state that was just evaluated
-     * @param rootNode the root of the tree representing the evaluation
+     * the board state should always have the player who is about to play be player 1
+     * mutlithreading searches can cause issues with child duplication, this constructor just takes the first valid child so it is best to run the search single threaded or fix the bug when using this.
+     *
+     * @param theBoardState           the board state that was just evaluated
+     * @param rootNode                the root of the tree representing the evaluation
      * @param originalIsPlayerOneTurn whose turn it was origianlly (which may not be reflected correctly in the provided board state)
      */
     public StateDatum(BoardState theBoardState, GenericTreeNode<NodeData> rootNode, boolean originalIsPlayerOneTurn, int boardSize) {
         valueNetworkInput = theBoardState.getValueNetworkInputVector();
-        policyNetworkOutput = new double[ (int) Math.round(Math.pow(boardSize, 4))];
+        policyNetworkOutput = new double[(int) Math.round(Math.pow(boardSize, 4))];
         isPlayerOneTurnOriginally = originalIsPlayerOneTurn;
         boardStateForPrinting = theBoardState;
         this.boardSize = boardSize;
@@ -80,10 +80,6 @@ public class StateDatum {
     }
 
 
-    private int getActivityIndex(int majRow, int majCol) {
-        return getIndex(boardSize - 1, boardSize - 1, boardSize - 1, boardSize -1 , boardSize) + 1 + (majRow * boardSize) + majCol;
-    }
-
     public double getEvalForThisState() {
         return evalForThisState;
     }
@@ -103,7 +99,6 @@ public class StateDatum {
     }
 
 
-
     private String getStateString() {
         DecimalFormat format = new DecimalFormat(" .;-.");
         StringBuilder builder = new StringBuilder();
@@ -112,7 +107,7 @@ public class StateDatum {
             for (int minorRow = 0; minorRow < boardSize; minorRow++) {
                 for (int majorCol = 0; majorCol < boardSize; majorCol++) {
                     for (int minorCol = 0; minorCol < boardSize; minorCol++) {
-                        builder.append("|").append(valueNetworkInput[getActivityIndex(majorRow, majorCol)] == 1?"*":" ").append(format.format(valueNetworkInput[getIndex(majorRow, majorCol, minorRow, minorCol, boardSize)])).append(" ");
+                        builder.append("|").append(valueNetworkInput[Resources.getActivityIndex(majorRow, majorCol, boardSize)] == 1 ? "*" : " ").append(format.format(valueNetworkInput[getIndex(majorRow, majorCol, minorRow, minorCol, boardSize)])).append(" ");
                     }
                     builder.append("|");
 
@@ -121,7 +116,7 @@ public class StateDatum {
             }
             if (majorRow != boardSize - 1) {
                 builder.append("|=====+=====+=====||=====+=====+=====||=====+=====+=====|\n");
-            }else {
+            } else {
                 builder.append("\n");
             }
         }
@@ -145,7 +140,7 @@ public class StateDatum {
             }
             if (majorRow != 3 - 1) {
                 builder.append("|========+========+========||========+========+========||========+========+========|\n");
-            }else {
+            } else {
                 builder.append("\n");
             }
         }

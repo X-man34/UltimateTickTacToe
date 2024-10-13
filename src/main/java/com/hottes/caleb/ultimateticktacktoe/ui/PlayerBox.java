@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
  * UI class for the settings for a player
  * If the user chooses to run this player as a human than its pretty straitforeward.
  * if its a bot though then all the settings are tunable here. There are some preset options but the goal of this class is to allow the user to instantiate a bot however they want.
- *
  */
 public class PlayerBox extends VBox {
 
@@ -29,12 +28,6 @@ public class PlayerBox extends VBox {
     private final CheckBox allowForcePlay;
     private final CheckBox maxMyCPU;
     private final RadioButton timeButton;
-
-    private enum Difficulty {
-        EASY,
-        MEDIUM,
-        HARD
-    }
 
     public PlayerBox(String playerNum) {
 
@@ -52,7 +45,7 @@ public class PlayerBox extends VBox {
         nameBox.setAlignment(Pos.CENTER);
         this.getChildren().add(nameBox);
 
-       playerTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(Resources.PlayerType.HUMAN, Resources.PlayerType.COMPUTER));
+        playerTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(Resources.PlayerType.HUMAN, Resources.PlayerType.COMPUTER));
         HBox typeBox = new HBox(new Label("Type: "), playerTypeComboBox);
         typeBox.setSpacing(spacing);
         typeBox.setAlignment(Pos.CENTER);
@@ -65,7 +58,6 @@ public class PlayerBox extends VBox {
         difficultyBox.setSpacing(spacing);
         difficultyBox.setAlignment(Pos.CENTER);
         this.getChildren().add(difficultyBox);
-
 
 
         timeButton = new RadioButton("Time: ");
@@ -103,11 +95,11 @@ public class PlayerBox extends VBox {
 
         HBox threadsBox = new HBox(new Label("Threads: "), threadsSpinner);
         threadsBox.setAlignment(Pos.CENTER);
-        HBox cHBox  = new HBox(new Label("C Value: "), cSpinner);
+        HBox cHBox = new HBox(new Label("C Value: "), cSpinner);
         cHBox.setAlignment(Pos.CENTER);
-        HBox stupidHBox  =  new HBox(new Label("Stupidity: "), stupidSlider);
+        HBox stupidHBox = new HBox(new Label("Stupidity: "), stupidSlider);
         stupidHBox.setAlignment(Pos.CENTER);
-        VBox customSettingsBox = new VBox(endConditionBox, threadsBox,  stupidHBox, allowForcePlay);
+        VBox customSettingsBox = new VBox(endConditionBox, threadsBox, stupidHBox, allowForcePlay);
         customSettingsBox.setSpacing(spacing);
         customSettingsBox.setDisable(true);
 
@@ -131,15 +123,16 @@ public class PlayerBox extends VBox {
 
     /**
      * for reading the settings and getting the approroatly configured evaluator.
+     *
      * @return could be null if this PlayerBox is configured to human mode. check before calling.
      */
     public EvaluatorConfiguration getEvalulatorConfig() {
         if (playerTypeComboBox.getValue() == Resources.PlayerType.HUMAN) {
             return null;
-        }else if (difficultyComboBox.isDisabled()) {
+        } else if (difficultyComboBox.isDisabled()) {
             //then this is a custom game
             return new EvaluatorConfiguration(cSpinner.getValue(), 1000, timeSpinner.getValue(), threadsSpinner.getValue(), (int) Math.round(stupidSlider.getValue()), allowForcePlay.isSelected(), maxMyCPU.isSelected());//assumes a board size of three for now
-        }else {
+        } else {
             switch (difficultyComboBox.getValue()) {
                 case MEDIUM -> {
                     return Resources.MEDIUM_EVALUATOR_CONFIGURATION;
@@ -165,6 +158,12 @@ public class PlayerBox extends VBox {
 
     public Resources.PlayerType getPlayerType() {
         return playerTypeComboBox.getValue();
+    }
+
+    private enum Difficulty {
+        EASY,
+        MEDIUM,
+        HARD
     }
 
 }

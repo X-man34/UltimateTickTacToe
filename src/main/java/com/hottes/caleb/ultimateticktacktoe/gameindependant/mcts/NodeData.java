@@ -8,12 +8,13 @@ import java.util.BitSet;
 
 public class NodeData {
 
-    protected int numVisits;
-    protected double totalScore;
-    private final GameState gameState;
     protected final GameAction actionTaken;
     protected final String hash;
     protected final BitSet bitSet;
+    private final GameState gameState;
+    protected int numVisits;
+    protected double totalScore;
+
     public NodeData(int numVisits, double totalScore, GameState state, GameAction action) {
         this.gameState = state;
         this.numVisits = numVisits;
@@ -71,7 +72,8 @@ public class NodeData {
         return "Node{" + "numVisits=" + numVisits + ", totalScore=" + totalScore + gameState.toString() +
                 "actionTaken=" + actionTaken + '}';
     }
+
     public String getTreeString(DecimalFormat format, int numChildren) {
-        return "Node{n=" + numVisits + ",t=" + totalScore + ",v=" + format.format(totalScore / numVisits) + ",c=" + numChildren + "," + actionTaken + " , is player: " + (getGameState().isPlayerOneTurn()?" 1":"-1") + " turn}";
+        return "Node{n=" + numVisits + ",t=" + totalScore + ",v=" + format.format(totalScore / numVisits) + ",c=" + numChildren + "," + actionTaken + " , is player: " + (getGameState().isPlayerOneTurn() ? " 1" : "-1") + " turn}";
     }
 }

@@ -2,6 +2,7 @@ package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.SubBoardState;
+import com.hottes.caleb.ultimateticktacktoe.UltimateTickTackToe;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.NodeData;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTree;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTreeNode;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,14 +69,16 @@ class MCTSEvaluatorTest {
         assertEquals(new UltimateTickTacToeGameAction(2, 0, 1, 0, 1), botAction, "Evaluator failed the following puzzle: {1 to play, activeboardRow=2, col=0}" + testState);
     }
 
-    //this test is unpredictable, it will fail one run and succed another time at least right now.
-    //as the evaluator gets better hopefully it will always pass and not take so long.
+    /**
+     * this test is intended as a sort of easy turing test for whatever evaluator is being used.
+     * There is one clear best answer to this situation but it requires some forward thinking
+     */
     @Test
     void forceOPlaySoXCanWin() {
 
         SubBoardState topRight = new SubBoardState(new double[][]{
                 {-1,0,-1},
-                {-1,0,-1},
+                {-1,1,-1},
                 {0,1,1}},
                 false, 3);
         SubBoardState activeBoard = new SubBoardState(new double[][]{
@@ -82,12 +87,12 @@ class MCTSEvaluatorTest {
                 {1,1,0}},
                 false, 3);
         SubBoardState bottomLeft = new SubBoardState(new double[][]{
-                {0,1,0},
-                {0,1,0},
+                {0,1,-1},
+                {0,1,-1},
                 {0,0,0}},
                 false, 3);
         BoardState testState = new BoardState(new SubBoardState[][]{
-                {oneWin, oneWin, topRight},
+                {oneWin, draw, topRight},
                 {oneWin, twoWin, activeBoard},
                 {bottomLeft, empty, empty}},
                 3);
@@ -95,13 +100,21 @@ class MCTSEvaluatorTest {
         testState.setBoardActive(1, 2);
         testState.setPlayerOneTurn(true);
 
-        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 30, 30, 0, false, false));
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 30, 0, false, false));
         evaluator.dispalyDialogAfterSearch = false;
         System.out.println("Preforming search will take a bit...");
         GameAction botAction = evaluator.preformSearch();
-        //this is how I got the actual move. I intended the acutal move to be minR0 minC2 but both my AI this one on the internet disagree with me.
-        //https://www.uttt.ai/init?state=222000000222000000101101022222000000111000000000000220020020000000000000000000000220210000250
-        assertEquals(new UltimateTickTacToeGameAction(1, 2, 1, 2, 1), botAction, "Evaluator failed the following puzzle (it might pass if you run it again...): {1 to play, activeboardRow=1, col=2}" + testState);
+        //valididty of actual move checked here.
+        //https://www.uttt.ai/init?state=222000000212211122101121022222000000111000000000000220021021000000000000000000000230210000250
+        UltimateTickTacToeGameAction correctAction = new UltimateTickTacToeGameAction(1, 2, 0, 2, 1);
+        assertEquals(correctAction, botAction, "Evaluator failed the following puzzle (it might pass if you run it again...): {1 to play, activeboardRow=1, col=2}" + testState);
+        final double[] prob = {0};
+        for (GenericTreeNode<NodeData> child : evaluator.tree.getRoot().getChildren()) {
+            if (child.getData().getActionTaken() == correctAction) {
+                prob[0] = Math.round((double) child.getData().getNumVisits() / evaluator.tree.getRoot().getData().getNumVisits() * 100);
+            }
+        }
+        System.out.println("Move chosen with " + prob[0] + " % certainty");
 
     }
 

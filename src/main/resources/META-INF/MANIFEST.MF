@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: com.hottes.caleb.ultimateticktacktoe.Launcher
+Main-Class: com.hottes.caleb.ultimateticktacktoe.machinelearning.Traning
+ DataCreator
 

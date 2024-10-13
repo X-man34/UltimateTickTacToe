@@ -17,7 +17,6 @@ import java.util.Objects;
 public class Resources {
 
 
-
     //constants to define how much spacing is put between boards based on the window dimensions
     public static final double HORIZONTAL_SPACING_FACTOR = .01;
     public static final double VERTICAL_SPACING_FACTOR = HORIZONTAL_SPACING_FACTOR;
@@ -42,27 +41,6 @@ public class Resources {
     public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false);
     public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true);
     public static final int MULTTHREADED_BATCH_SIZE = 100000;
-    public enum PlayerType {
-        HUMAN,
-        COMPUTER
-    }
-
-    public enum Evaluation {
-        IN_PROGRESS(0),
-        DRAW(-.25),
-        PLAYER_ONE_WIN(1),
-        PLAYER_TWO_WIN(-1);
-        private final double label;
-        Evaluation(double val) {
-            label = val;
-        }
-
-        public double getlabel() {
-            return label;
-        }
-    }
-
-
 
     static {
         BufferedImage tempVar;
@@ -86,7 +64,7 @@ public class Resources {
         } catch (
                 IOException e) {
             e.printStackTrace();
-            tempVar = new BufferedImage(100,100, BufferedImage.TYPE_INT_ARGB);//size doesn't matter it gets scaled later anyways.
+            tempVar = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);//size doesn't matter it gets scaled later anyways.
             tempUndo = null;
             tempRedo = null;
             tempX = null;
@@ -103,10 +81,10 @@ public class Resources {
         OSelectedImage = tempOSelected;
     }
 
-
     /**
      * Changes all pixels of an old color into a new color, preserving the
      * alpha channel.
+     *
      * @see <a href="https://codereview.stackexchange.com/questions/146609/color-substitution-in-a-bufferedimage">Source</a>
      */
     public static BufferedImage changeColorBUfferedImage(
@@ -155,9 +133,9 @@ public class Resources {
      * Draws a red X if the token is 1 and a green O it the token is -1.
      * For other token values it returns false.
      *
-     * @param g the graphics context to draw with
+     * @param g           the graphics context to draw with
      * @param boundingBox the bouding box we are allowed to draw in
-     * @param token the token we are potentially drawing
+     * @param token       the token we are potentially drawing
      * @return whether or not something was drawn
      */
     public static boolean drawToken(Graphics2D g, Rectangle2D.Double boundingBox, double token) {
@@ -178,19 +156,20 @@ public class Resources {
             g.drawLine((int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y), (int) Math.round(scaledBox.x + scaledBox.width), (int) Math.round(scaledBox.y + scaledBox.height));
             g.drawLine((int) Math.round(scaledBox.x + scaledBox.width), (int) Math.round(scaledBox.y), (int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y + scaledBox.height));
             return true;
-        }else if (token == -1){
+        } else if (token == -1) {
             g.setPaint(Color.GREEN);
-            g.drawOval((int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y),(int) Math.round(scaledBox.width),(int)  Math.round(scaledBox.height));
+            g.drawOval((int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y), (int) Math.round(scaledBox.width), (int) Math.round(scaledBox.height));
             return true;
-        }else {
+        } else {
             return false;
         }
     }
+
     /**
-     *
      * Evaluations are 1 for player 1 wins, -1 for player 1 loses, 0 for intederminate state and -.25 for draw
-     *Copy past from copilot LLM
+     * Copy past from copilot LLM
      * this method is called roughly 350 times on average per iteration so we're looking at ~400 million calls for 1.2million iterations.
+     *
      * @return the static evaluation of the game state
      */
     public static double getTicTacToeEvaluationBruteForce(double[][] state) {
@@ -222,12 +201,13 @@ public class Resources {
                 }
             }
         }
-        return isFull ? Evaluation.DRAW.label: Evaluation.IN_PROGRESS.label;
+        return isFull ? Evaluation.DRAW.label : Evaluation.IN_PROGRESS.label;
     }
 
     /**
      * creates a hashcode for a tick tac toe board. Assumes that each element of the array is either a 1 for player 1, -1 for player two or anything else for nothing.
      * this is to be used for fast evaluation functions using lookuptables
+     *
      * @param state the state variable from a game state object
      * @return the hashcode for static evaluation for this board.
      */
@@ -261,31 +241,52 @@ public class Resources {
         }
     }
 
-
     public static String getBitSetAsString(BitSet bi) {
         StringBuilder s = new StringBuilder();
-        for( int i = 0; i < bi.length();  i++ )
-        {
-            s.append( bi.get(i) ? 1: 0 );
+        for (int i = 0; i < bi.length(); i++) {
+            s.append(bi.get(i) ? 1 : 0);
         }
 
-       return s.toString();
+        return s.toString();
     }
+
     /**
      * takes in information about a ultimate tick tac toe square and converts it to a linear index.
      * this is so the entire board can be represented as a linear array for vectorization.
-     * @param majRow the index of the major row
-     * @param majCol the index of the major column
-     * @param minRow the index of the minor row
-     * @param finalMinCol the index of the minor column
+     *
+     * @param majRow      the index of the major row
+     * @param majCol      the index of the major column
+     * @param minRow      the index of the minor row
+     * @param minCol the index of the minor column
      * @return the linear index of this spot.
      */
-    public static int getIndex(int majRow, int majCol, int minRow, int finalMinCol, int boardSize) {
+    public static int getIndex(int majRow, int majCol, int minRow, int minCol, int boardSize) {
         int majorIndex = majRow * boardSize + majCol;
-        int minorIndex = minRow * boardSize + finalMinCol;
+        int minorIndex = minRow * boardSize + minCol;
         return majorIndex * boardSize * boardSize + minorIndex;
     }
 
+
+    public enum PlayerType {
+        HUMAN,
+        COMPUTER
+    }
+
+    public enum Evaluation {
+        IN_PROGRESS(0),
+        DRAW(-.25),
+        PLAYER_ONE_WIN(1),
+        PLAYER_TWO_WIN(-1);
+        private final double label;
+
+        Evaluation(double val) {
+            label = val;
+        }
+
+        public double getlabel() {
+            return label;
+        }
+    }
 
 
 }
