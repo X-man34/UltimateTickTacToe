@@ -3,6 +3,7 @@ package com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
 
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.BitSet;
 
@@ -61,6 +62,7 @@ public class NodeData {
     public GameState getGameState() {
         return gameState;
     }
+
 
     public GameAction getActionTaken() {
         return actionTaken;

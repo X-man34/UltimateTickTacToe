@@ -1,7 +1,6 @@
 package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
-import com.hottes.caleb.ultimateticktacktoe.Resources;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
@@ -25,6 +24,7 @@ public class AdversarialGameSimulation implements Runnable {
     private final String basePolicyFilename;
     private final String logMessage;
     private final EvaluatorConfiguration config;
+    private final PrintStream console;
 
     /**
      * @param dataFolder  the folder in which to save the policy and value data for this game simulation
@@ -32,12 +32,13 @@ public class AdversarialGameSimulation implements Runnable {
      * @param dataMessage the message
      * @param logMessage  a message to put at the top of the log file.
      */
-    public AdversarialGameSimulation(File dataFolder, File logFile, String dataMessage, String logMessage, EvaluatorConfiguration evaluatorConfiguration) {
+    public AdversarialGameSimulation(File dataFolder, File logFile, String dataMessage, String logMessage, EvaluatorConfiguration evaluatorConfiguration, PrintStream console) {
         this.dataFolder = dataFolder;
         this.logFile = logFile;
         this.basePolicyFilename = "policy$" + dataMessage + "$";
         this.baseValueFilename = "value$" + dataMessage + "$";
         this.logMessage = logMessage;
+        this.console = console;
         config = evaluatorConfiguration;
 //        if (!logFile.exists()) {
 //            try {
@@ -55,13 +56,14 @@ public class AdversarialGameSimulation implements Runnable {
      * @param dataFolder the folder in which to save the policy and value data for this game simulation
      * @param logFile    the log file
      */
-    public AdversarialGameSimulation(File dataFolder, File logFile, EvaluatorConfiguration configuration) {
-        this(dataFolder, logFile, "", "", configuration);
+    public AdversarialGameSimulation(File dataFolder, File logFile, EvaluatorConfiguration configuration, PrintStream console) {
+        this(dataFolder, logFile, "", "", configuration, console);
     }
 
 
     @Override
     public void run() {
+        console.println("starting thread");
         try (PrintStream logger = new PrintStream(logFile)) {
             long startTime = System.currentTimeMillis();
             logger.println("Saving data to: " + dataFolder.getAbsolutePath());
@@ -70,7 +72,8 @@ public class AdversarialGameSimulation implements Runnable {
             logger.println("End custom message");
             //simulate game
             BoardState currentState = new BoardState(3);//here player one stays player one
-            //currentState = GameController.getTestState();
+            //currentState = GameController.getTestState();//can cause error for some reason when running as jar.
+            logger.println("board state created");
             logger.println("Inital State: ");
             logger.println(currentState);
 
@@ -84,6 +87,7 @@ public class AdversarialGameSimulation implements Runnable {
                 if (Thread.interrupted()) {
                     logger.println("Thread has been interrupted, leaving while loop. ");
                     saveData = false;
+                    console.println("Thread interrupted");
                     break;
                 }
                 BoardState stateToEval = currentState.getClone();
@@ -92,26 +96,31 @@ public class AdversarialGameSimulation implements Runnable {
                 }
                 logger.println("state to eval, currenty is playerone turn=" + currentState.isPlayerOneTurn());
                 logger.println(stateToEval);
-
-
-                MCTSEvaluator evaluator = new MCTSEvaluator(stateToEval, config);
+                MCTSEvaluator  evaluator = new MCTSEvaluator(stateToEval, config);
                 logger.println("isntantiated evaluator");
                 evaluator.dispalyDialogAfterSearch = false;
                 evaluator.log = true;
-                evaluator.logger = logger;//when preforming a search the evaluator will use this logger, the console by default
+                evaluator.logger = logger;//when preforming a search the evaluator will use this logger
                 logger.println("starting search");
+                console.println("starting search");
                 UltimateTickTacToeGameAction actionToTake = (UltimateTickTacToeGameAction) evaluator.preformSearch();
                 logger.println("search finished");
-                datums.add(new StateDatum(stateToEval, evaluator.tree.getRoot(), currentState.isPlayerOneTurn(), 3));
+                console.println("serch finished");
+                datums.add(new StateDatum(stateToEval, evaluator.tree.getRoot(), currentState.isPlayerOneTurn(), 3, console));
+                console.println("datum added");
                 actionToTake.setMarker(currentState.isPlayerOneTurn() ? 1 : -1);
+                console.println("action taken");
                 currentState.preformAction(actionToTake);
+                console.println("action preformed");
                 moves++;
                 logger.println("current State");
                 logger.println(currentState);
 
                 eval = currentState.getEvaluation();
-                if (Resources.Evaluation.IN_PROGRESS.getlabel() != eval) {
+                console.println("evaluation determined");
+                if (BoardState.Evaluation.IN_PROGRESS.getlabel() != eval) {
                     //then the game is now over.
+                    console.println("Game over");
                     break;
                 }
             }
@@ -137,22 +146,27 @@ public class AdversarialGameSimulation implements Runnable {
                 policyNetworkData.save(new File(dataFolder.getAbsolutePath() + "\\" + basePolicyFilename + finishTime + ".bin"));
                 valueNetworkData.save(new File(dataFolder.getAbsolutePath() + "\\" + baseValueFilename + finishTime + ".bin"));
                 logger.println("Took: " + (finishTime - startTime) / 1000 + " s to simulate game");
-                logger.println("Finished simulating game, see log at: " + logFile.getAbsolutePath() + " for details.");
+                String str = "Finished simulating game, see log at: " + logFile.getAbsolutePath() + " for details.";
+                logger.println(str);
+                console.println(str);
+                TrainingDataCreator.incrementCompletedGames();
             } else {
-                logger.println("Simulation interuppted, shutting down without saving data. ");
+                String str = "Simulation interuppted, shutting down without saving data. ";
+                logger.println(str);
+                console.println(str);
             }
 
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            console.println(e);
             throw new RuntimeException(e);
         }
 
 
     }
 
-    public DataSet getValueNetworkDataset(ArrayList<StateDatum> data) {
+    private DataSet getValueNetworkDataset(ArrayList<StateDatum> data) {
         double[][] inputs = new double[data.size()][data.getFirst().valueNetworkInput.length];
         double[][] outputs = new double[data.size()][1];
         for (int i = 0; i < data.size(); i++) {
@@ -162,7 +176,7 @@ public class AdversarialGameSimulation implements Runnable {
         return new DataSet(Nd4j.create(inputs), Nd4j.create(outputs));
     }
 
-    public DataSet getPolicyNetworkDataset(ArrayList<StateDatum> data) {
+    private DataSet getPolicyNetworkDataset(ArrayList<StateDatum> data) {
         double[][] inputs = new double[data.size()][data.getFirst().valueNetworkInput.length];
         double[][] outputs = new double[data.size()][data.getFirst().policyNetworkOutput.length];
         for (int i = 0; i < data.size(); i++) {

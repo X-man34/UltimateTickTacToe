@@ -1,5 +1,6 @@
 package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
+import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.Resources;
 import com.hottes.caleb.ultimateticktacktoe.SubBoardState;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +78,7 @@ class GameStateTest {
         generateMatrixPermutations(new double[3][3], 0, 0, rawPermutations);
         List<GameState> ticTacToeStates = new ArrayList<>();
         rawPermutations.forEach(doubles -> ticTacToeStates.add(new SubBoardState(doubles, false, 3)));
-        assertEquals(0, (int) Math.round(Resources.Evaluation.DRAW.getlabel()), "Draw reward does not round to 0, could cause problems with fast hashcoding");
+        assertEquals(0, (int) Math.round(BoardState.Evaluation.DRAW.getlabel()), "Draw reward does not round to 0, could cause problems with fast hashcoding");
         Set<Integer> set = new HashSet<>();
         for (GameState state : ticTacToeStates) {
             int hashcode = Resources.fastTicTacToeHashcode(state.getStateAsCopy());

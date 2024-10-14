@@ -7,6 +7,7 @@ import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.PrintStream;
 import java.util.BitSet;
 
 import static com.hottes.caleb.ultimateticktacktoe.Resources.LINE_STROKE;
@@ -61,8 +62,9 @@ public class SubBoardState extends GameState {
      */
     @Override
     public double getEvaluation() {
-        return Resources.getTicTacToeEvaluationBruteForce(state);
+        return BoardState.getTicTacToeEvaluationBruteForce(state);
     }
+
 
     @Override
     public BitSet getBitSet() {

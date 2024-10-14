@@ -32,7 +32,6 @@ public class MCTSEvaluator {
     private final GameState initalState;
     private final boolean useMaxCPU;
     private final int computeTime;
-    private final PrintStream ogOut;
     public double C = 2;
     public PrintStream logger = System.out;
     public boolean dispalyDialogAfterSearch = true;
@@ -59,7 +58,6 @@ public class MCTSEvaluator {
         computeTime = configuration.computeTime();
         useMaxCPU = configuration.maxMyCPU();
         addChildren(tree.getRoot());
-        ogOut = System.out;
 
 
     }
@@ -141,7 +139,6 @@ public class MCTSEvaluator {
         if (dispalyDialogAfterSearch) {
             Platform.runLater(this::displayDialog);
         }
-        System.setOut(ogOut);
         return getCurrentBestMove();
     }
 
@@ -166,7 +163,6 @@ public class MCTSEvaluator {
         if (dispalyDialogAfterSearch) {
             Platform.runLater(() -> displayDialog());
         }
-        System.setOut(ogOut);
         return getCurrentBestMove();
     }
 

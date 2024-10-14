@@ -1,6 +1,7 @@
 package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
 
+import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -141,8 +142,10 @@ public class ValueNetworkTrainer {
      * The input is 90 doubles the first 81 are either 1, -1, or 0 representing if X O or nobody occupies that specific square. The order of indexing is for each sub board top left to top right
      * then the next row left to right, and the third row. The order of indexing of the major boards is the same as that of the minor boards.
      *
-     * @param dataArray
-     * @return
+     * @param dataArray the array of data to convert
+     * @return the tensor representing the {@link com.hottes.caleb.ultimateticktacktoe.BoardState}
+     * @see StateDatum
+     * @see BoardState#getValueNetworkInputVector()
      */
     protected static float[][][][][] getBoardTensor(double[] dataArray) {
         int boardSize = 3;

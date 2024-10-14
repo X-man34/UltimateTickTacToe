@@ -2,6 +2,7 @@ package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
 import com.hottes.caleb.ultimateticktacktoe.Resources;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

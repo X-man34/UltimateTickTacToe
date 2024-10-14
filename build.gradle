@@ -5,6 +5,15 @@ plugins {
   id 'org.beryx.jlink' version '2.25.0'
 }
 
+jar {
+  // Exclude manifest files from all dependencies
+  from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } {
+    exclude 'META-INF/*.MF' // Exclude all manifest files
+  }
+}
+
+
+
 group 'com.hottes.caleb'
 version '1.0-SNAPSHOT'
 

@@ -1,17 +1,14 @@
 package com.hottes.caleb.ultimateticktacktoe;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
-import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.hottes.caleb.ultimateticktacktoe.Resources.generateMatrixPermutations;
 import static org.junit.jupiter.api.Assertions.*;
@@ -132,17 +129,17 @@ class BoardStateTest {
     }
     @Test
     void getEvaluation() {
-        assertEquals(Resources.Evaluation.IN_PROGRESS.getlabel(), emptyState.getEvaluation(), "Emtpy board does not evaluate to in progress");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinTopRowState.getEvaluation(), "Player one win upper row not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinTopRowState.getEvaluation(), "Player two win upper row not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinLeftSide.getEvaluation(), "Player one win left side not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinLeftSide.getEvaluation(), "Player two win left side not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinMainDiagonal.getEvaluation(), "Player one win main diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinMainDiagonal.getEvaluation(), "Player two win main diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinOffDiagonal.getEvaluation(), "Player one win off diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinOffDiagonal.getEvaluation(), "Player two win off diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.IN_PROGRESS.getlabel(), inprogressGame.getEvaluation(), "Arbitrary in progress game not evaluated correctly");
-        assertEquals(Resources.Evaluation.DRAW.getlabel(), drawState.getEvaluation(), "Draw not evaluated correctly");
+        assertEquals(BoardState.Evaluation.IN_PROGRESS.getlabel(), emptyState.getEvaluation(), "Emtpy board does not evaluate to in progress");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinTopRowState.getEvaluation(), "Player one win upper row not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinTopRowState.getEvaluation(), "Player two win upper row not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinLeftSide.getEvaluation(), "Player one win left side not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinLeftSide.getEvaluation(), "Player two win left side not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinMainDiagonal.getEvaluation(), "Player one win main diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinMainDiagonal.getEvaluation(), "Player two win main diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinOffDiagonal.getEvaluation(), "Player one win off diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinOffDiagonal.getEvaluation(), "Player two win off diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.IN_PROGRESS.getlabel(), inprogressGame.getEvaluation(), "Arbitrary in progress game not evaluated correctly");
+        assertEquals(BoardState.Evaluation.DRAW.getlabel(), drawState.getEvaluation(), "Draw not evaluated correctly");
 
         
     }

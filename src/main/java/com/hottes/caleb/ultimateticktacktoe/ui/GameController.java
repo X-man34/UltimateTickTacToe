@@ -322,12 +322,12 @@ public class GameController {
             movePlayed = true;
             //because we took an action we also need to see if the game has ended.
             double eval = boardState.getEvaluation();
-            if (eval != Resources.Evaluation.IN_PROGRESS.getlabel()) {
+            if (eval != BoardState.Evaluation.IN_PROGRESS.getlabel()) {
                 System.out.println("Game is over input no longer accepted");
                 this.stopGame();
                 Platform.runLater(() -> {
                     Alert alert;
-                    if (eval == Resources.Evaluation.DRAW.getlabel()) {
+                    if (eval == BoardState.Evaluation.DRAW.getlabel()) {
                         alert = new Alert(Alert.AlertType.INFORMATION, "The game ended in a draw!");
                     } else {
                         alert = new Alert(Alert.AlertType.INFORMATION, ((eval == 1) ? playerOneName : playerTwoName) + " Won!");

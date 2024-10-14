@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Objects;
@@ -165,44 +166,7 @@ public class Resources {
         }
     }
 
-    /**
-     * Evaluations are 1 for player 1 wins, -1 for player 1 loses, 0 for intederminate state and -.25 for draw
-     * Copy past from copilot LLM
-     * this method is called roughly 350 times on average per iteration so we're looking at ~400 million calls for 1.2million iterations.
-     *
-     * @return the static evaluation of the game state
-     */
-    public static double getTicTacToeEvaluationBruteForce(double[][] state) {
-        // Check rows, columns, and diagonals for a win
-        for (int i = 0; i < 3; i++) {
-            if (state[i][0] != 0 && state[i][0] == state[i][1] && state[i][1] == state[i][2]) {
-                return (state[i][0] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-            }
-            if (state[0][i] != 0 && state[0][i] == state[1][i] && state[1][i] == state[2][i]) {
-                return (state[0][i] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-            }
-        }
 
-        // Check diagonals
-        if (state[0][0] != 0 && state[0][0] == state[1][1] && state[1][1] == state[2][2]) {
-            return (state[0][0] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-        }
-        if (state[0][2] != 0 && state[0][2] == state[1][1] && state[1][1] == state[2][0]) {
-            return (state[0][2] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-        }
-
-        // Check if the state is full (draw) or still in progress
-        boolean isFull = true;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (state[i][j] == 0) {
-                    isFull = false;
-                    break;
-                }
-            }
-        }
-        return isFull ? Evaluation.DRAW.label : Evaluation.IN_PROGRESS.label;
-    }
 
     /**
      * creates a hashcode for a tick tac toe board. Assumes that each element of the array is either a 1 for player 1, -1 for player two or anything else for nothing.
@@ -270,22 +234,6 @@ public class Resources {
     public enum PlayerType {
         HUMAN,
         COMPUTER
-    }
-
-    public enum Evaluation {
-        IN_PROGRESS(0),
-        DRAW(-.25),
-        PLAYER_ONE_WIN(1),
-        PLAYER_TWO_WIN(-1);
-        private final double label;
-
-        Evaluation(double val) {
-            label = val;
-        }
-
-        public double getlabel() {
-            return label;
-        }
     }
 
 
