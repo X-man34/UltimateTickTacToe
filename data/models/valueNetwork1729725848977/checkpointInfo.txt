@@ -1,0 +1,3 @@
+checkpointNum,timestamp,iteration,epoch,modelType,filename
+0,1729725882649,18,0,MultiLayerNetwork,checkpoint_0_MultiLayerNetwork.zip
+1,1729725913515,36,0,MultiLayerNetwork,checkpoint_1_MultiLayerNetwork.zip

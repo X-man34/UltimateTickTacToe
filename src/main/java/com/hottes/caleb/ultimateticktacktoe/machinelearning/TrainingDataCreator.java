@@ -5,7 +5,6 @@ import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfigurati
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -111,7 +110,6 @@ public class TrainingDataCreator {
 
                 }
 
-                console.println("finished sleeping: ");
             }
         }
 

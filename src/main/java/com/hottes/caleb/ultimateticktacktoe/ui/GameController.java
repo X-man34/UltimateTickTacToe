@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Optional;
 
 /**
@@ -36,7 +37,8 @@ public class GameController {
     private final String playerTwoName;
     private final PlayerType playerOneType;
     private final PlayerType playerTwoType;
-    private BoardState boardState;
+    private final BoardState boardState;
+    private final Rectangle2D.Double[][] subBoardBoundingBoxes;
     private VBox theNode;
     private boolean isGameRunning = false;
     private Optional<EvaluatorConfiguration> playerOneEvaluatorConfig;
@@ -57,6 +59,7 @@ public class GameController {
         this.playerTwoImageView = new ImageView();
         this.playerOneType = playerOneType;
         this.playerTwoType = playerTwoType;
+        subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
 
 
         //i know repeated code, can I just do it this once?
@@ -276,10 +279,10 @@ public class GameController {
             //if it is the computers turn than don't process clicks on the board.
             return;
         }
-        for (int i = 0; i < boardState.getSubBoardBoundingBoxes().length; i++) {
-            for (int j = 0; j < boardState.getSubBoardBoundingBoxes()[0].length; j++) {
-                if ((boardState.getSubBoardBoundingBoxes()[i][j] != null) &&
-                        (boardState.getSubBoardBoundingBoxes()[i][j].contains(event.getSceneX(), event.getSceneY()))) {
+        for (int i = 0; i < subBoardBoundingBoxes.length; i++) {
+            for (int j = 0; j < subBoardBoundingBoxes[0].length; j++) {
+                if ((subBoardBoundingBoxes[i][j] != null) &&
+                        (subBoardBoundingBoxes[i][j].contains(event.getSceneX(), event.getSceneY()))) {
                     //then we are on the right sub board
 
                     SubBoardState subBoard = boardState.getMinorBoards()[i][j];
@@ -343,7 +346,7 @@ public class GameController {
 
     public void render() {
         //set the image views to the new redered images
-        gameView.setImage(SwingFXUtils.toFXImage(boardState.getRenderedImage(gameView.getFitWidth(), gameView.getFitHeight()), null));
+        gameView.setImage(SwingFXUtils.toFXImage(Resources.getRenderedImage(gameView.getFitWidth(), gameView.getFitHeight(), boardState.getBoardSize(), subBoardBoundingBoxes, boardState.getMinorBoards()), null));
         if (boardState.isPlayerOneTurn()) {
             playerOneImageView.setImage(SwingFXUtils.toFXImage(Resources.XSelectedImage, null));
             playerTwoImageView.setImage(SwingFXUtils.toFXImage(Resources.OImage, null));
@@ -365,5 +368,7 @@ public class GameController {
     public void redoAction() {
 
     }
+
+
 
 }

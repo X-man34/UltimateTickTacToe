@@ -7,7 +7,6 @@ import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.io.PrintStream;
 import java.util.BitSet;
 
 import static com.hottes.caleb.ultimateticktacktoe.Resources.LINE_STROKE;

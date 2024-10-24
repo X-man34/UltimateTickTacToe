@@ -5,11 +5,10 @@ import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.NodeData;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTreeNode;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 
-import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.Optional;
 
-import static com.hottes.caleb.ultimateticktacktoe.Resources.getIndex;
+import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getIndex;
 
 /**
  * contains data about a particular game state that can be used to train both the policy network and the value network.
@@ -81,55 +80,6 @@ public class StateDatum {
 
     }
 
-    public StateDatum(BoardState theBoardState, GenericTreeNode<NodeData> rootNode, boolean originalIsPlayerOneTurn, int boardSize, PrintStream asdf) {
-        asdf.println("constructing state datum");
-        valueNetworkInput = theBoardState.getValueNetworkInputVector();
-        asdf.println(2);
-        policyNetworkOutput = new double[(int) Math.round(Math.pow(boardSize, 4))];
-        asdf.println(3);
-        isPlayerOneTurnOriginally = originalIsPlayerOneTurn;
-        asdf.println(4);
-        boardStateForPrinting = theBoardState;
-        asdf.println(5);
-        this.boardSize = boardSize;
-        asdf.println(6);
-        //make sure the plyer who is to play is represented by 1
-        if (!theBoardState.isPlayerOneTurn()) {
-            theBoardState.invertState();
-        }
-        asdf.println(7);
-        for (int majRow = 0; majRow < boardSize; majRow++) {
-            for (int majCol = 0; majCol < boardSize; majCol++) {
-                for (int minRow = 0; minRow < boardSize; minRow++) {
-                    for (int minCol = 0; minCol < boardSize; minCol++) {
-                        //for all the cells on the main board
-                        //figure if this spot is a legal action
-                        asdf.println(8);
-                        UltimateTickTacToeGameAction actionToGetHere = new UltimateTickTacToeGameAction(majRow, majCol, minRow, minCol, 1);//marker always 1 becuase this is from the perspective of the player who is to play
-                        asdf.println(9);
-                        if (!theBoardState.isLegal(actionToGetHere)) {
-                            //if the action ain't legal, then we know the prob is 0
-                            policyNetworkOutput[getIndex(majRow, majCol, minRow, minCol, boardSize)] = 0;
-                            continue;
-                        }
-                        asdf.println(10);
-                        //I will assume that MCTS worked right and there is only one child item per child state. this should be the case, but multithreading is also a thing. To improve data accuracy, make sure that duplicate child race condition bug does not occur or that the search is preformed
-                        //on a single thread.
-
-                        //figure out which child if any took this action to get here.
-                        Optional<GenericTreeNode<NodeData>> possibleChild = rootNode.getChildren().stream().filter(nodeDataGenericTreeNode -> nodeDataGenericTreeNode.getData().getActionTaken().equals(actionToGetHere)).findFirst();
-                        asdf.println(11);
-                        policyNetworkOutput[getIndex(majRow, majCol, minRow, minCol, boardSize)] = possibleChild.map(nodeDataGenericTreeNode -> (double) nodeDataGenericTreeNode.getData().getNumVisits() / rootNode.getData().getNumVisits()).orElse(0.0);
-                        asdf.println(12);
-
-                    }
-                }
-
-            }
-        }
-
-        asdf.println("state datum cosntruvted");
-    }
 
 
     public double getEvalForThisState() {
@@ -151,7 +101,7 @@ public class StateDatum {
     }
 
 
-    private String getStateString() {
+    String getStateString() {
         DecimalFormat format = new DecimalFormat(" .;-.");
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
@@ -175,7 +125,7 @@ public class StateDatum {
         return builder.toString();
     }
 
-    private String getProbString() {
+    String getProbString() {
         DecimalFormat format = new DecimalFormat(" .####;-.####");
         StringBuilder builder = new StringBuilder();
         builder.append("\n");

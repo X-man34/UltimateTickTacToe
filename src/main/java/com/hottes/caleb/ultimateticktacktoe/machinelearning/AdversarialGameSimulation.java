@@ -63,7 +63,6 @@ public class AdversarialGameSimulation implements Runnable {
 
     @Override
     public void run() {
-        console.println("starting thread");
         try (PrintStream logger = new PrintStream(logFile)) {
             long startTime = System.currentTimeMillis();
             logger.println("Saving data to: " + dataFolder.getAbsolutePath());
@@ -73,21 +72,17 @@ public class AdversarialGameSimulation implements Runnable {
             //simulate game
             BoardState currentState = new BoardState(3);//here player one stays player one
             //currentState = GameController.getTestState();//can cause error for some reason when running as jar.
-            logger.println("board state created");
             logger.println("Inital State: ");
             logger.println(currentState);
 
             ArrayList<StateDatum> datums = new ArrayList<>();
-            logger.println("Made datums array");
             double eval = 0;
             int moves = 0;
             boolean saveData = true;
-            logger.println("entering search loop");
             while (true) {
                 if (Thread.interrupted()) {
                     logger.println("Thread has been interrupted, leaving while loop. ");
                     saveData = false;
-                    console.println("Thread interrupted");
                     break;
                 }
                 BoardState stateToEval = currentState.getClone();
@@ -97,27 +92,18 @@ public class AdversarialGameSimulation implements Runnable {
                 logger.println("state to eval, currenty is playerone turn=" + currentState.isPlayerOneTurn());
                 logger.println(stateToEval);
                 MCTSEvaluator  evaluator = new MCTSEvaluator(stateToEval, config);
-                logger.println("isntantiated evaluator");
                 evaluator.dispalyDialogAfterSearch = false;
                 evaluator.log = true;
                 evaluator.logger = logger;//when preforming a search the evaluator will use this logger
-                logger.println("starting search");
-                console.println("starting search");
                 UltimateTickTacToeGameAction actionToTake = (UltimateTickTacToeGameAction) evaluator.preformSearch();
-                logger.println("search finished");
-                console.println("serch finished");
-                datums.add(new StateDatum(stateToEval, evaluator.tree.getRoot(), currentState.isPlayerOneTurn(), 3, console));
-                console.println("datum added");
+                datums.add(new StateDatum(stateToEval, evaluator.tree.getRoot(), currentState.isPlayerOneTurn(), 3));
                 actionToTake.setMarker(currentState.isPlayerOneTurn() ? 1 : -1);
-                console.println("action taken");
                 currentState.preformAction(actionToTake);
-                console.println("action preformed");
                 moves++;
                 logger.println("current State");
                 logger.println(currentState);
 
                 eval = currentState.getEvaluation();
-                console.println("evaluation determined");
                 if (BoardState.Evaluation.IN_PROGRESS.getlabel() != eval) {
                     //then the game is now over.
                     console.println("Game over");

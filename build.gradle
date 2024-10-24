@@ -57,32 +57,37 @@ dependencies {
 
 
 //----------working------------
-//  // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
-//  implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '0.9.1'
-//
-//
-//
-//  // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
-//  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '0.9.1'
-  //----------working------------
-
-
-
-
-  //------------------------experimental----------------------
   // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
   implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-M2.1'
-
-
 
   // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
   implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'
 
-  // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-ui
-//  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-ui_2.11', version: '1.0.0-M2.1'
+// https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-ui
+  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-ui', version: '1.0.0-M2.1'
+
 
 // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.9'
+
+
+  //------------------------experimental----------------------
+
+
+//  // https://mvnrepository.com/artifact/org.nd4j/nd4j-cuda-10.0-platform
+//  implementation group: 'org.nd4j', name: 'nd4j-cuda-11.4', version: '1.0.0-M2.1'
+//
+//
+////  // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
+////  implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-M2.1'
+//
+//  // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
+//  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'
+//
+//// https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-ui
+//  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-ui', version: '1.0.0-M2.1'
+
+
 
   //------------------------experimental----------------------
 

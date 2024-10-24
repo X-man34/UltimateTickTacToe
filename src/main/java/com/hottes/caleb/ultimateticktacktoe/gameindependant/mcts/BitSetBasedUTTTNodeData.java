@@ -4,8 +4,6 @@ import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
 
-import java.io.PrintStream;
-
 public class BitSetBasedUTTTNodeData extends NodeData {
 
     public BitSetBasedUTTTNodeData(int numVisits, double totalScore, GameState state, GameAction action) {

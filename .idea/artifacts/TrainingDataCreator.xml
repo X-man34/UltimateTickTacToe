@@ -1,204 +1,89 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="TrainingDataCreator">
     <output-path>$PROJECT_DIR$/out/artifacts/TrainingDataCreator</output-path>
-    <root id="archive" name="TrainingDataCreator.jar">
-      <element id="library" level="project" name="Gradle: ch.qos.logback:logback-classic:1.5.9" />
-      <element id="library" level="project" name="Gradle: ch.qos.logback:logback-core:1.5.9" />
-      <element id="library" level="project" name="Gradle: com.clearspring.analytics:stream:2.9.8" />
-      <element id="library" level="project" name="Gradle: com.github.jai-imageio:jai-imageio-core:1.3.0" />
-      <element id="library" level="project" name="Gradle: com.github.oshi:oshi-core:3.4.2" />
-      <element id="library" level="project" name="Gradle: com.github.oshi:oshi-json:3.4.2" />
-      <element id="library" level="project" name="Gradle: com.google.code.gson:gson:2.8.0" />
-      <element id="library" level="project" name="Gradle: com.google.flatbuffers:flatbuffers-java:1.12.0" />
-      <element id="library" level="project" name="Gradle: com.jakewharton.byteunits:byteunits:0.9.1" />
-      <element id="library" level="project" name="Gradle: com.sun.activation:javax.activation:1.2.0" />
-      <element id="library" level="project" name="Gradle: com.tdunning:t-digest:3.2" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.common:common-image:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.common:common-io:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.common:common-lang:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.imageio:imageio-bmp:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.imageio:imageio-core:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.imageio:imageio-jpeg:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.imageio:imageio-metadata:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.imageio:imageio-psd:3.1.1" />
-      <element id="library" level="project" name="Gradle: com.twelvemonkeys.imageio:imageio-tiff:3.1.1" />
-      <element id="library" level="project" name="Gradle: commons-codec:commons-codec:1.10" />
-      <element id="library" level="project" name="Gradle: commons-io:commons-io:2.7" />
-      <element id="library" level="project" name="Gradle: commons-net:commons-net:3.1" />
-      <element id="library" level="project" name="Gradle: it.unimi.dsi:fastutil:8.1.1" />
-      <element id="library" level="project" name="Gradle: joda-time:joda-time:2.2" />
-      <element id="library" level="project" name="Gradle: net.ericaro:neoitertools:1.0.0" />
-      <element id="library" level="project" name="Gradle: net.java.dev.jna:jna-platform:4.3.0" />
-      <element id="library" level="project" name="Gradle: net.java.dev.jna:jna:4.3.0" />
-      <element id="library" level="project" name="Gradle: net.sf.opencsv:opencsv:2.3" />
-      <element id="library" level="project" name="Gradle: org.apache.commons:commons-collections4:4.1" />
-      <element id="library" level="project" name="Gradle: org.apache.commons:commons-compress:1.21" />
-      <element id="library" level="project" name="Gradle: org.apache.commons:commons-lang3:3.11" />
-      <element id="library" level="project" name="Gradle: org.apache.commons:commons-math3:3.5" />
-      <element id="library" level="project" name="Gradle: org.apiguardian:apiguardian-api:1.1.2" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:artoolkitplus:2.3.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg-platform:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:android-arm64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:android-arm:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:android-x86:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:android-x86_64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:linux-arm64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:linux-armhf:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:linux-ppc64le:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:linux-x86:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:linux-x86_64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:macosx-arm64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:macosx-x86_64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:windows-x86:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:ffmpeg:windows-x86_64:5.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:flandmark:1.07-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:flycapture:2.13.3.31-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5-platform:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:linux-arm64:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:linux-armhf:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:linux-ppc64le:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:linux-x86:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:linux-x86_64:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:macosx-x86_64:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:windows-x86:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:hdf5:windows-x86_64:1.12.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp-platform:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:android-arm64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:android-arm:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:android-x86:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:android-x86_64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:ios-arm64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:ios-x86_64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:linux-arm64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:linux-armhf:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:linux-ppc64le:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:linux-x86:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:linux-x86_64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:macosx-arm64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:macosx-x86_64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:windows-x86:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacpp:windows-x86_64:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:javacv:1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica-platform:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:android-arm64:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:android-arm:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:android-x86:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:android-x86_64:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:linux-arm64:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:linux-armhf:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:linux-ppc64le:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:linux-x86:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:linux-x86_64:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:macosx-x86_64:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:windows-x86:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:leptonica:windows-x86_64:1.82.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:libdc1394:2.2.6-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:libfreenect2:0.2.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:libfreenect:0.5.7-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:librealsense2:2.50.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:librealsense:1.12.4-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl-platform:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl:linux-x86:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl:linux-x86_64:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl:macosx-x86_64:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl:windows-x86:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:mkl:windows-x86_64:2022.0-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas-platform:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:android-arm64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:android-arm:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:android-x86:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:android-x86_64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:ios-arm64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:ios-x86_64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:linux-arm64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:linux-armhf:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:linux-ppc64le:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:linux-x86:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:linux-x86_64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:macosx-arm64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:macosx-x86_64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:windows-x86:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:openblas:windows-x86_64:0.3.19-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv-platform:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:android-arm64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:android-arm:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:android-x86:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:android-x86_64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:ios-arm64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:ios-x86_64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:linux-arm64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:linux-armhf:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:linux-ppc64le:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:linux-x86:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:linux-x86_64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:macosx-arm64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:macosx-x86_64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:windows-x86:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:opencv:windows-x86_64:4.5.5-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:tesseract:5.0.1-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.bytedeco:videoinput:0.200-1.5.7" />
-      <element id="library" level="project" name="Gradle: org.controlsfx:controlsfx:11.2.1" />
-      <element id="library" level="project" name="Gradle: org.datavec:datavec-api:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.datavec:datavec-data-image:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-datasets:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-datavec-iterators:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-modelimport:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-nn:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-ui-components:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:deeplearning4j-utility-iterators:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.deeplearning4j:resources:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.freemarker:freemarker:2.3.23" />
-      <element id="library" level="project" name="Gradle: org.glassfish:javax.json:1.0.4" />
-      <element id="library" level="project" name="Gradle: org.json:json:20240303" />
-      <element id="library" level="project" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-commons:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-engine:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-launcher:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-suite-api:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-suite-commons:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-suite-engine:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.junit.platform:junit-platform-suite:1.11.0" />
-      <element id="library" level="project" name="Gradle: org.nd4j:guava:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:jackson:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-api:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-common:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native-api:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native-platform:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native-preset:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:android-arm64:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:android-arm:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:android-x86:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:android-x86_64:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:linux-armhf:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:linux-x86_64:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:macosx-x86_64:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-native:windows-x86_64:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:nd4j-presets-common:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.nd4j:protobuf:1.0.0-M2.1" />
-      <element id="library" level="project" name="Gradle: org.openjdk.jol:jol-core:0.17" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-base:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-base:win:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-controls:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-controls:win:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-fxml:win:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-graphics:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-graphics:win:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-swing:win:22.0.1" />
-      <element id="library" level="project" name="Gradle: org.opentest4j:opentest4j:1.3.0" />
-      <element id="library" level="project" name="Gradle: org.slf4j:slf4j-api:2.0.15" />
-      <element id="library" level="project" name="Gradle: org.threeten:threetenbp:1.3.3" />
+    <root id="archive" name="UltimateTickTackToe.main.jar">
       <element id="module-output" name="UltimateTickTackToe.main" />
-      <element id="dir-copy" path="$PROJECT_DIR$/src/main/java/META-INF" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-modelimport/1.0.0-M2.1/243b6fe760e61d75917392c4d61f318716504f1e/deeplearning4j-modelimport-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-ui-components/1.0.0-M2.1/30fb80decc9b8e0254a60a5e03480be803321ebf/deeplearning4j-ui-components-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jakewharton.byteunits/byteunits/0.9.1/202a0c874feafe7ece9be0a53e9640c9a26f2197/byteunits-0.9.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/mkl-platform/2022.0-1.5.7/11521326c8ab8b6a6f2d3d6f33c493a88fe4945d/mkl-platform-2022.0-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-core/1.0.0-M2.1/3c0a62ab5038ce86439355a2b7463bd425e8984b/deeplearning4j-core-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.2/a5f29a7acaddea3f4af307e8cf2d0cc82645fd7d/joda-time-2.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/4.3.0/112d185ecfff7a3e6c33a114c566f9bf6f832244/jna-platform-4.3.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/libdc1394/2.2.6-1.5.7/701dd85ae73b0415d56765f9e1644b7b0ffc7d37/libdc1394-2.2.6-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/librealsense/1.12.4-1.5.7/c3920b47661f17aba5c858441704c6feb415f673/librealsense-1.12.4-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.11/68e9a6adf7cf8eb7e9d31bbc554c7c75eeaac568/commons-lang3-3.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/librealsense2/2.50.0-1.5.7/6be42e39c46284b6e9d0e101ee07350b6c92263e/librealsense2-2.50.0-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/openblas-platform/0.3.19-1.5.7/495e17ad5b8cb8bb73c1ac96523d70ca185ef443/openblas-platform-0.3.19-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-datasets/1.0.0-M2.1/9cb5832e1c75b96777d081a11eebdbcd116546f2/deeplearning4j-datasets-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/flycapture/2.13.3.31-1.5.7/ba89841fb088ae41280e34891b048585a25b089a/flycapture-2.13.3.31-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.datavec/datavec-data-image/1.0.0-M2.1/34041719b1f7db41db910d41c8a2d7114029cfc0/datavec-data-image-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/guava/1.0.0-M2.1/9dc687d6fd2fb2ea25beeae58949844132e50c8a/guava-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/hdf5-platform/1.12.1-1.5.7/46328a93933d7aa2398e1f6bdf022e5657b7c306/hdf5-platform-1.12.1-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-presets-common/1.0.0-M2.1/beed5ec6ba8d874cf6015f77c9351113528d8420/nd4j-presets-common-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-nn/1.0.0-M2.1/e791863b878b292996228cf8eb68c6ac3a57200a/deeplearning4j-nn-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-native-platform/1.0.0-M2.1/dc78bd09ffbc22bb9d2d6c37f2ade960d5254843/nd4j-native-platform-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-native/1.0.0-M2.1/984db2d7dc2f3c87645fc07bcf5aa9d0f5e9f122/nd4j-native-1.0.0-M2.1-macosx-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/javacpp-platform/1.5.7/bc75b0de1e511e43967a9214aeb910e8483413cb/javacpp-platform-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/mkl/2022.0-1.5.7/99195dd81e6930b5f33c53dc66d6cf8d1ff64df3/mkl-2022.0-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.12.0/8201cc7b511177a37071249e891f2f2fea4b32e9/flatbuffers-java-1.12.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-native-preset/1.0.0-M2.1/559d3242315dec504eca56b26f3896d9b3331aef/nd4j-native-preset-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.controlsfx/controlsfx/11.2.1/e0f2568b8ee6e7a1639741f21b0024277ecbb7a7/controlsfx-11.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.1.1/5f0cc29ae9c2ea9a04db247abf2444cd6f14e0b4/fastutil-8.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/c4ba5371a29ac9b2ad6129b1d39ea38750043eff/gson-2.8.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/openblas/0.3.19-1.5.7/40165d3c20580f7815f85fc0a93f8a2a69618b68/openblas-0.3.19-1.5.7-windows-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jai-imageio/jai-imageio-core/1.3.0/268feccd3a0fe32058ede66db41a21d9c7a9e535/jai-imageio-core-1.3.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/jackson/1.0.0-M2.1/55fc9c838077558dd2852a1399be93f81d6f0d65/jackson-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twelvemonkeys.common/common-io/3.1.1/b6aec796ca2d20b145b6fa88bbe068724a258450/common-io-3.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.5.9/6795e3b5a78102540bb9a9555ddb33ee22ce60c2/logback-core-1.5.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/resources/1.0.0-M2.1/61c641c6fe75c5f00d652a2d5c8bca2641b0e13d/resources-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/javacv/1.5.7/478f5e78cc279158a2622c284edcffc0422ac329/javacv-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/openblas/0.3.19-1.5.7/4dc31fc7fc9591b0f4d4dbaa36c493fd23e33f44/openblas-0.3.19-1.5.7-windows-x86.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.opencsv/opencsv/2.3/c23708cdb9e80a144db433e23344a788a1fd6599/opencsv-2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/3.4.2/18dfa6fad54d8cebed5600a67aefa8c6601ebd77/oshi-core-3.4.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-api/1.0.0-M2.1/4b64944e3f662a0ec69fd5a30cfc736f76a8005/nd4j-api-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.15/35ed0d9a6b7c011bb8656087f79e371263b3b485/slf4j-api-2.0.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.freemarker/freemarker/2.3.23/cd143cd8c02a9f838e3cb75a6dfe133750437f6d/freemarker-2.3.23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/protobuf/1.0.0-M2.1/ff384242ac639034a2d819073491bb0f69b623fd/protobuf-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.clearspring.analytics/stream/2.9.8/5ef966e6c758c508c9076928d380108ae3f9843c/stream-2.9.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.5.9/2275f630b341df293d66d7fe13e25f41672df83b/logback-classic-1.5.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/3.1/2298164a7c2484406f2aa5ac85b205d39019896f/commons-net-3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/mkl/2022.0-1.5.7/11075e0f897efef37c410e171fac510d4c412fb2/mkl-2022.0-1.5.7-windows-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/flandmark/1.07-1.5.7/46a358f2ad95c60e663fbe2258723e0fce234d5e/flandmark-1.07-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/javacpp/1.5.7/6898a937260e59e56cef732f67f148d6ec438d7b/javacpp-1.5.7-windows-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-math3/3.5/13af68e9a11576953f5c4b09436f8207be9d3a27/commons-math3-3.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/libfreenect/0.5.7-1.5.7/b184c11c08a7eed2e60c8ff9383b96723f295011/libfreenect-0.5.7-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/tesseract/5.0.1-1.5.7/6196e1edc1f6cdc4830d35506f9e36001b96ecb8/tesseract-5.0.1-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.1/a4cf4688fe1c7e3a63aa636cc96d013af537768e/commons-collections4-4.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.datavec/datavec-api/1.0.0-M2.1/1a673759bcace286bcffa7405a9a18f2776ffd2/datavec-api-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-utility-iterators/1.0.0-M2.1/78b5007cb94c01f0a326d96bfecb33883772f797/deeplearning4j-utility-iterators-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/javacpp/1.5.7/b014c3f3b291ef0dd5be1ed0363f7e0493532b1e/javacpp-1.5.7-windows-x86.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/videoinput/0.200-1.5.7/2cdf33bf87ae390bae40c923ec800b7bef987f8/videoinput-0.200-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-json/3.4.2/30b223f7746ab8482e85b83d358a5b056511a83c/oshi-json-3.4.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.3.0/152ea56b3a72f655d4fd677fc0ef2596c3dd5e6e/opentest4j-1.3.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-native/1.0.0-M2.1/73619011d65287749f775609dd084afa157f421f/nd4j-native-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/ffmpeg/5.0-1.5.7/e1eb7f5d8f74825b125fe8dfee1aa44d08b45ee3/ffmpeg-5.0-1.5.7-windows-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twelvemonkeys.common/common-lang/3.1.1/a9b5f8094211a8fbe5e9f469ebb266c1886d3666/common-lang-3.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/hdf5/1.12.1-1.5.7/7bae805e11e76742cd2f671211481b237dd5231d/hdf5-1.12.1-1.5.7-windows-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.threeten/threetenbp/1.3.3/3ea31c96676ff12ab56be0b1af6fff61d1a4f1f2/threetenbp-1.3.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.7/3f2bd4ba11c4162733c13cc90ca7c7ea09967102/commons-io-2.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/libfreenect2/0.2.0-1.5.7/a97b9124a3ad4979ebefb929708ab3e8377f9778/libfreenect2-0.2.0-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/artoolkitplus/2.3.1-1.5.7/8891f8a4c875d6d5debcd54c5e161f1ac5b423ec/artoolkitplus-2.3.1-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/mkl/2022.0-1.5.7/6abfa5c476acedad080f5bc8006dd5ca7027cb3c/mkl-2022.0-1.5.7-windows-x86.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/hdf5/1.12.1-1.5.7/c2192b145af423eb2e5b208a37addb7c60856fcd/hdf5-1.12.1-1.5.7-windows-x86.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/openblas/0.3.19-1.5.7/6e496b5f310f7ad7ff8d233c77e9bb655bc3e3f7/openblas-0.3.19-1.5.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.deeplearning4j/deeplearning4j-datavec-iterators/1.0.0-M2.1/499fcbbdd16fd183c2ff4f7745d599cc26278193/deeplearning4j-datavec-iterators-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-common/1.0.0-M2.1/84c2716c0783a4f34ae329003fa0869a324ddbbc/nd4j-common-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.tdunning/t-digest/3.2/2ab94758b0276a8a26102adf8d528cf6d0567b9a/t-digest-3.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-native-api/1.0.0-M2.1/aaf9aa55cdbdcfc047d6a3728c9535ddce8fe3df/nd4j-native-api-1.0.0-M2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.nd4j/nd4j-native/1.0.0-M2.1/717e00171c1c86733813fbb5b90243a86e384ea0/nd4j-native-1.0.0-M2.1-windows-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twelvemonkeys.common/common-image/3.1.1/c86b3bc138b0caee17ce4193275636543cf28bfe/common-image-3.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjdk.jol/jol-core/0.17/4c98e9e61b3f189241057cb21b4331d1093e5b85/jol-core-0.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bytedeco/ffmpeg/5.0-1.5.7/6c0c56b5f8f5e4b6b2631913c3bc103858c84665/ffmpeg-5.0-1.5.7-windows-x86.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/4.3.0/f11d386a05132f54a51c99085f016e496f345ea3/jna-4.3.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

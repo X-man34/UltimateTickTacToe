@@ -21,9 +21,9 @@ class ValueNetworkTrainerTest {
         evaluator.log = false;
         evaluator.preformSearch();
         StateDatum datum = new StateDatum(testState, evaluator.tree.getRoot(), true, 3);
-        float[][][][][] testTensor = ValueNetworkTrainer.getBoardTensor(datum.valueNetworkInput);
-        float[][][][] xChannel = new float[][][][]{
-                {//maj row 0
+        double[][][][] testTensor = ValueNetworkTrainer.getBoardTensor(datum.valueNetworkInput);
+        double[][][] xChannel = new double[][][]{
+                //maj row 0
                     {{1,1,1},//col 0
                      {0,0,0},
                      {0,0,0}},
@@ -34,20 +34,20 @@ class ValueNetworkTrainerTest {
 
                     {{0,0,0},//col2
                     {0,0,0},
-                    {0,1,1}}},
-                {//maj row 1
+                    {0,1,1}},
+
                     {{1,1,1},//col 0
                     {0,0,0},
                     {0,0,0}},
-
+            //maj row 1
                     {{0,0,0},//col 1
                     {0,0,0},
                     {0,0,0}},
 
                     {{0,0,0},//col 2
                     {0,0,0},
-                    {1,1,0}}},
-                {//maj row 2
+                    {1,1,0}},
+                //maj row 2
                     {{0,1,0},//col 0
                      {0,1,0},
                      {0,0,0}},
@@ -58,12 +58,12 @@ class ValueNetworkTrainerTest {
 
                     {{0,0,0},//col 2
                      {0,0,0},
-                     {0,0,0}}}
+                     {0,0,0}}
                 };
 
 
-        float[][][][] oChannel = new float[][][][]{
-                {//maj row 0
+        double[][][] oChannel = new double[][][]{
+                //maj row 0
                         {{0,0,0},//col 0
                                 {0,0,0},
                                 {0,0,0}},
@@ -74,8 +74,8 @@ class ValueNetworkTrainerTest {
 
                         {{1,0,1},//col2
                                 {1,0,1},
-                                {0,0,0}}},
-                {//maj row 1
+                                {0,0,0}},
+                //maj row 1
                         {{0,0,0},//col 0
                                 {0,0,0},
                                 {0,0,0}},
@@ -86,8 +86,8 @@ class ValueNetworkTrainerTest {
 
                         {{0,0,0},//col 2
                                 {0,0,0},
-                                {0,0,0}}},
-                {//maj row 2
+                                {0,0,0}},
+                //maj row 2
                         {{0,0,0},//col 0
                                 {0,0,0},
                                 {0,0,0}},
@@ -98,12 +98,12 @@ class ValueNetworkTrainerTest {
 
                         {{0,0,0},//col 2
                                 {0,0,0},
-                                {0,0,0}}}
+                                {0,0,0}}
         };
 
 
-        float[][][][] emptyChannel = new float[][][][]{
-                {//maj row 0
+        double[][][] emptyChannel = new double[][][]{
+                //maj row 0
                         {{0,0,0},//col 0
                                 {1,1,1},
                                 {1,1,1}},
@@ -114,8 +114,8 @@ class ValueNetworkTrainerTest {
 
                         {{0,1,0},//col2
                                 {0,1,0},
-                                {1,0,0}}},
-                {//maj row 1
+                                {1,0,0}},
+                //maj row 1
                         {{0,0,0},//col 0
                                 {1,1,1},
                                 {1,1,1}},
@@ -126,8 +126,8 @@ class ValueNetworkTrainerTest {
 
                         {{1,1,1},//col 2
                                 {1,1,1},
-                                {0,0,1}}},
-                {//maj row 2
+                                {0,0,1}},
+                //maj row 2
                         {{1,0,1},//col 0
                                 {1,0,1},
                                 {1,1,1}},
@@ -138,11 +138,11 @@ class ValueNetworkTrainerTest {
 
                         {{1,1,1},//col 2
                                 {1,1,1},
-                                {1,1,1}}}
+                                {1,1,1}}
         };
 
-        float[][][][] activityChannel = new float[][][][]{
-                {//maj row 0
+        double[][][] activityChannel = new double[][][]{
+                //maj row 0
                         {{0,0,0},//col 0
                                 {0,0,0},
                                 {0,0,0}},
@@ -153,8 +153,8 @@ class ValueNetworkTrainerTest {
 
                         {{0,0,0},//col 2
                                 {0,0,0},
-                                {0,0,0}}},
-                {//maj row 1
+                                {0,0,0}},
+                //maj row 1
                         {{0,0,0},//col 0
                                 {0,0,0},
                                 {0,0,0}},
@@ -165,8 +165,8 @@ class ValueNetworkTrainerTest {
 
                         {{1,1,1},//col 2
                                 {1,1,1},
-                                {1,1,1}}},
-                {//maj row 2
+                                {1,1,1}},
+                //maj row 2
                         {{0,0,0},//col 0
                                 {0,0,0},
                                 {0,0,0}},
@@ -177,10 +177,10 @@ class ValueNetworkTrainerTest {
 
                         {{0,0,0},//col 2
                                 {0,0,0},
-                                {0,0,0}}}
+                                {0,0,0}}
         };
 
-        float[][][][][] expectedTensor = new float[][][][][] {xChannel, oChannel, emptyChannel, activityChannel};
+        double[][][][] expectedTensor = new double[][][][] {xChannel, oChannel, emptyChannel, activityChannel};
 
         assertTrue(Arrays.deepEquals(xChannel, testTensor[0]), "X Channel not equal: Expected:\n" + Arrays.deepToString(xChannel) + "\n Actual:\n" + Arrays.deepToString(testTensor[0]));
         assertTrue(Arrays.deepEquals(oChannel, testTensor[1]), "O Channel not equal: Expected:\n" + Arrays.deepToString(oChannel) + "\n Actual:\n" + Arrays.deepToString(testTensor[1]));

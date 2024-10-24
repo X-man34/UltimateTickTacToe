@@ -5,14 +5,11 @@ import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import static com.hottes.caleb.ultimateticktacktoe.Resources.getIndex;
+import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getIndex;
 
 /**
  * Board state represents a state of an ultimate tick tac toe board. It is square and has a board size. so far only a board size of three has been used, but the code is hopefully able to support larger sizes too.
@@ -26,7 +23,6 @@ public class BoardState extends GameState {
 
     private final SubBoardState[][] minorBoards;
 
-    private final Rectangle2D.Double[][] subBoardBoundingBoxes;
 
     /**
      * creates a new empty major board
@@ -37,7 +33,6 @@ public class BoardState extends GameState {
         super(theBoardSize, theBoardSize);
         this.boardSize = theBoardSize;
         this.minorBoards = new SubBoardState[theBoardSize][theBoardSize];
-        this.subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
         for (int i = 0; i < minorBoards.length; i++) {
             for (int j = 0; j < minorBoards[0].length; j++) {
                 this.minorBoards[i][j] = new SubBoardState(boardSize);
@@ -56,7 +51,6 @@ public class BoardState extends GameState {
         super(theBoardSize, theBoardSize);
         this.boardSize = theBoardSize;
         this.minorBoards = minorBoardsInit;
-        this.subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
     }
 
     /**
@@ -80,7 +74,6 @@ public class BoardState extends GameState {
     public BoardState(BitSet bitSet) {
         super(bitSet.toByteArray()[0]);
         boardSize = bitSet.toByteArray()[0];
-        this.subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
         this.minorBoards = new SubBoardState[boardSize][boardSize];
         int index = 8;
         //decode whose turn it is
@@ -119,7 +112,6 @@ public class BoardState extends GameState {
     private BoardState(String[] hashTokens) {
         super(Integer.parseInt(hashTokens[0]));
         this.boardSize = Integer.parseInt(hashTokens[0]);
-        this.subBoardBoundingBoxes = new Rectangle2D.Double[boardSize][boardSize];
         this.minorBoards = new SubBoardState[boardSize][boardSize];
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
@@ -344,39 +336,7 @@ public class BoardState extends GameState {
     }
 
 
-    /**
-     * renders an image of the current state of the board
-     * The height and width used are arbitrary as the image view will rescale the image to the correct size before displaying it.
-     *
-     * @return a buffered image representing the board
-     */
-    public BufferedImage getRenderedImage(double width, double height) {
-        if (width <= 0) {
-            width = 1;
-        }
-        if (height <= 0) {
-            height = 1;
-        }
-        BufferedImage output = new BufferedImage((int) Math.round(width), (int) Math.round(height), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = (Graphics2D) output.getGraphics();
-        //all math done with doubles, rounded at the last possible moment
-        double horizontalSpacing = width * Resources.HORIZONTAL_SPACING_FACTOR;
-        double verticalSpacing = height * Resources.VERTICAL_SPACING_FACTOR;
 
-        double subBoardWidth = (width - (boardSize + 1) * horizontalSpacing) / boardSize;
-        double subBoardHeight = (height - (boardSize + 1) * verticalSpacing) / boardSize;
-
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
-                Rectangle2D.Double subBoardBoundingBox = new Rectangle2D.Double((horizontalSpacing * (i + 1)) + (subBoardWidth * i), (verticalSpacing * (j + 1)) + (subBoardHeight * j), subBoardWidth, subBoardHeight);
-                subBoardBoundingBoxes[j][i] = subBoardBoundingBox;
-                minorBoards[j][i].render(g, subBoardBoundingBox);
-            }
-        }
-
-
-        return output;
-    }
 
     /**
      * checks that the argument is both a UTT action and is legal.
@@ -501,9 +461,6 @@ public class BoardState extends GameState {
     }
 
 
-    public Rectangle2D.Double[][] getSubBoardBoundingBoxes() {
-        return subBoardBoundingBoxes;
-    }
 
     /**
      * inverts the minor boards
@@ -575,6 +532,10 @@ public class BoardState extends GameState {
             }
         }
         return builder.toString();
+    }
+
+    public int getBoardSize() {
+        return boardSize;
     }
 
     public enum Evaluation {

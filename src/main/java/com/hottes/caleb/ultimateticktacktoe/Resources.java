@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Objects;
@@ -214,26 +213,43 @@ public class Resources {
         return s.toString();
     }
 
-    /**
-     * takes in information about a ultimate tick tac toe square and converts it to a linear index.
-     * this is so the entire board can be represented as a linear array for vectorization.
-     *
-     * @param majRow      the index of the major row
-     * @param majCol      the index of the major column
-     * @param minRow      the index of the minor row
-     * @param minCol the index of the minor column
-     * @return the linear index of this spot.
-     */
-    public static int getIndex(int majRow, int majCol, int minRow, int minCol, int boardSize) {
-        int majorIndex = majRow * boardSize + majCol;
-        int minorIndex = minRow * boardSize + minCol;
-        return majorIndex * boardSize * boardSize + minorIndex;
-    }
-
 
     public enum PlayerType {
         HUMAN,
         COMPUTER
+    }
+    /**
+     * renders an image of the current state of the board
+     * The height and width used are arbitrary as the image view will rescale the image to the correct size before displaying it.
+     *
+     * @return a buffered image representing the board
+     */
+    public static BufferedImage getRenderedImage(double width, double height, int boardSize, Rectangle2D.Double[][] subBoardBoundingBoxes, SubBoardState[][] minorBoards) {
+        if (width <= 0) {
+            width = 1;
+        }
+        if (height <= 0) {
+            height = 1;
+        }
+        BufferedImage output = new BufferedImage((int) Math.round(width), (int) Math.round(height), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) output.getGraphics();
+        //all math done with doubles, rounded at the last possible moment
+        double horizontalSpacing = width * Resources.HORIZONTAL_SPACING_FACTOR;
+        double verticalSpacing = height * Resources.VERTICAL_SPACING_FACTOR;
+
+        double subBoardWidth = (width - (boardSize + 1) * horizontalSpacing) / boardSize;
+        double subBoardHeight = (height - (boardSize + 1) * verticalSpacing) / boardSize;
+
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                Rectangle2D.Double subBoardBoundingBox = new Rectangle2D.Double((horizontalSpacing * (i + 1)) + (subBoardWidth * i), (verticalSpacing * (j + 1)) + (subBoardHeight * j), subBoardWidth, subBoardHeight);
+                subBoardBoundingBoxes[j][i] = subBoardBoundingBox;
+                minorBoards[j][i].render(g, subBoardBoundingBox);
+            }
+        }
+
+
+        return output;
     }
 
 
