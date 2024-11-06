@@ -1,0 +1,17 @@
+checkpointNum,timestamp,iteration,epoch,modelType,filename
+0,1730665879802,6,0,MultiLayerNetwork,checkpoint_0_MultiLayerNetwork.zip
+1,1730665909998,12,0,MultiLayerNetwork,checkpoint_1_MultiLayerNetwork.zip
+2,1730665945891,19,0,MultiLayerNetwork,checkpoint_2_MultiLayerNetwork.zip
+3,1730665975960,25,0,MultiLayerNetwork,checkpoint_3_MultiLayerNetwork.zip
+4,1730666010441,32,0,MultiLayerNetwork,checkpoint_4_MultiLayerNetwork.zip
+5,1730666040872,38,0,MultiLayerNetwork,checkpoint_5_MultiLayerNetwork.zip
+6,1730666071312,44,0,MultiLayerNetwork,checkpoint_6_MultiLayerNetwork.zip
+7,1730666101870,50,0,MultiLayerNetwork,checkpoint_7_MultiLayerNetwork.zip
+8,1730666132104,56,0,MultiLayerNetwork,checkpoint_8_MultiLayerNetwork.zip
+9,1730666164205,62,0,MultiLayerNetwork,checkpoint_9_MultiLayerNetwork.zip
+10,1730666194636,67,0,MultiLayerNetwork,checkpoint_10_MultiLayerNetwork.zip
+11,1730666227432,73,0,MultiLayerNetwork,checkpoint_11_MultiLayerNetwork.zip
+12,1730666257492,79,0,MultiLayerNetwork,checkpoint_12_MultiLayerNetwork.zip
+13,1730666287536,85,0,MultiLayerNetwork,checkpoint_13_MultiLayerNetwork.zip
+14,1730666317551,91,0,MultiLayerNetwork,checkpoint_14_MultiLayerNetwork.zip
+15,1730666347922,97,0,MultiLayerNetwork,checkpoint_15_MultiLayerNetwork.zip

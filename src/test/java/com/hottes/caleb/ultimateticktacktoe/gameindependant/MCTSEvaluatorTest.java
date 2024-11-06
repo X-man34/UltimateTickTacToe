@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,7 +101,7 @@ class MCTSEvaluatorTest {
         testState.setBoardActive(1, 2);
         testState.setPlayerOneTurn(true);
 
-        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 30, 0, false, false));
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 30, 0, false, false, Optional.empty()));
         evaluator.dispalyDialogAfterSearch = false;
         System.out.println("Preforming search will take a bit...");
         GameAction botAction = evaluator.preformSearch();
@@ -189,7 +190,7 @@ class MCTSEvaluatorTest {
         BoardState initialState = new BoardState(3);
         initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1,1, 1));//this is not an arbirary move but a strategic one, giving the AI lots of options to think about and is also the best move X can take
 
-        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false));//most of these settings don't matter we will preform the search ourselves in this test.
+        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false, Optional.empty()));//most of these settings don't matter we will preform the search ourselves in this test.
 
         long numIterations = 10000;//can't do too many or it will run out of heap space.
         long startTime = System.currentTimeMillis();

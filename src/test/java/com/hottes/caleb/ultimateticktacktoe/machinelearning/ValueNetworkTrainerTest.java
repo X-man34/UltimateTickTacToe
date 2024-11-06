@@ -3,11 +3,12 @@ package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
+import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.StateDatum;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
 import org.junit.jupiter.api.Test;
-import org.nd4j.linalg.exception.ND4UnresolvedOutputVariables;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +17,7 @@ class ValueNetworkTrainerTest {
     @Test
     void getBoardTensor() {
         BoardState testState = GameController.getTestState();
-        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 1, 0, false, false));
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 1, 0, false, false, Optional.empty()));
         evaluator.dispalyDialogAfterSearch = false;
         evaluator.log = false;
         evaluator.preformSearch();

@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Optional;
+
 
 /**
  * UI class for the settings for a player
@@ -131,7 +133,7 @@ public class PlayerBox extends VBox {
             return null;
         } else if (difficultyComboBox.isDisabled()) {
             //then this is a custom game
-            return new EvaluatorConfiguration(cSpinner.getValue(), 1000, timeSpinner.getValue(), threadsSpinner.getValue(), (int) Math.round(stupidSlider.getValue()), allowForcePlay.isSelected(), maxMyCPU.isSelected());//assumes a board size of three for now
+            return new EvaluatorConfiguration(cSpinner.getValue(), 1000, timeSpinner.getValue(), threadsSpinner.getValue(), (int) Math.round(stupidSlider.getValue()), allowForcePlay.isSelected(), maxMyCPU.isSelected(), Optional.empty());//assumes a board size of three for now
         } else {
             switch (difficultyComboBox.getValue()) {
                 case MEDIUM -> {

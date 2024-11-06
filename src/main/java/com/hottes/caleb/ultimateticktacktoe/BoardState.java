@@ -543,7 +543,7 @@ public class BoardState extends GameState {
         DRAW(-.25),
         PLAYER_ONE_WIN(1),
         PLAYER_TWO_WIN(-1);
-        private final double label;
+        public final double label;
 
         Evaluation(double val) {
             label = val;

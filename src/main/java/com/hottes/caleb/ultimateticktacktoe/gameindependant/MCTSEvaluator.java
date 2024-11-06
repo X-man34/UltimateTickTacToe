@@ -1,38 +1,46 @@
 package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
+import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.Resources;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.BitSetBasedUTTTNodeData;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.NodeData;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTree;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTreeNode;
 import javafx.application.Platform;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.zip.ZipOutputStream;
 
 /**
  * a MCTS evalutor takes in a inital state and returns the best move for whichever player is denoted by the marker 1.
  * whatever is creating the evaluator needs to take care that the markers mean the right thing.
  */
 public class MCTSEvaluator {
-    public static Random rand = new Random();
     public final long maxRolloutDepth;//make sure rollouts don't get stuck in infinite loop
     public final int THREADS;
     public final int STUPIDITY;
     public final boolean allowForcePlay;
-    public final GenericTree<NodeData> tree = new GenericTree<>();
-    private final GameState initalState;
     private final boolean useMaxCPU;
     private final int computeTime;
     public double C = 2;
+    private final Optional<MultiLayerNetwork> optionalValueNetwork;
+
+
+
+    public static Random rand = new Random();
+    public final GenericTree<NodeData> tree = new GenericTree<>();
+    private final GameState initalState;
     public PrintStream logger = System.out;
     public boolean dispalyDialogAfterSearch = true;
     public boolean log = true;
@@ -42,6 +50,8 @@ public class MCTSEvaluator {
     private int maxDepth = 0;
     private long positionsSearched = 0;
     private long childCreationRaceConditions = 0;
+
+    private ArrayList<String> warnings = new ArrayList<>();
     public MCTSEvaluator(GameState initalState) {
         this(initalState, Resources.DEFAULT_EVALUATOR_CONFIGURATION);
     }
@@ -57,10 +67,15 @@ public class MCTSEvaluator {
         this.initalState = initalState;
         computeTime = configuration.computeTime();
         useMaxCPU = configuration.maxMyCPU();
+        optionalValueNetwork = configuration.valueNetwork();
+        optionalValueNetwork.ifPresent(MultiLayerNetwork::init);
         addChildren(tree.getRoot());
 
 
     }
+
+
+
 
     //recursive method to get string representation of tree
     private static String getNodeString(GenericTreeNode<NodeData> node, int depth, DecimalFormat format) {
@@ -84,10 +99,12 @@ public class MCTSEvaluator {
     }
 
     public GameAction preformSearch() {
+
         System.setOut(logger);
         if (!useMaxCPU && (THREADS <= 1)) {
             return singleThreadedSearch();
         }
+        warnings.clear();
         searching = true;
 
         if (useMaxCPU) {
@@ -134,6 +151,9 @@ public class MCTSEvaluator {
             System.out.println("Searched as far ahead as: " + maxDepth + " moves");
             System.out.println("Searched: " + positionsSearched + " states");
             System.out.println("Detected: " + childCreationRaceConditions + " node expansion race conditions");
+            if (!warnings.isEmpty()) {
+                System.out.println("Warnings while preforming search: " + warnings);
+            }
         }
 
         if (dispalyDialogAfterSearch) {
@@ -143,6 +163,7 @@ public class MCTSEvaluator {
     }
 
     private GameAction singleThreadedSearch() {
+        warnings.clear();
         searching = true;
         long startTime = System.currentTimeMillis();
         int iterations = 0;
@@ -158,6 +179,10 @@ public class MCTSEvaluator {
         }
         if (log) {
             System.out.println("Determined best move using: " + iterations + "Iterations");
+            if (!warnings.isEmpty()) {
+                System.out.println("Warnings while preforming search: " + warnings);
+            }
+
         }
 
         if (dispalyDialogAfterSearch) {
@@ -189,14 +214,14 @@ public class MCTSEvaluator {
 
             if (currentNode.getData().getNumVisits() == 0) {
                 //this node has not been visited yet, so preform a rollout and
-                scoreToAdd = preformRollout(currentNode.getData().getGameState());
+                scoreToAdd = evaluateEndPoint(currentNode.getData().getGameState());
             } else {
                 //this node has been visited but has no children yet, so determine what all its children are (if any) and roll one of them out
                 addChildren(currentNode);
                 if (currentNode.hasChildren()) {
                     incrementPositionsSearched();
                     currentNode = currentNode.getChildAt(0);//we could also try picking a random child so the order in which the action algorithm returns the actions does not bias which part of the board we often explore.
-                    scoreToAdd = preformRollout(currentNode.getData().getGameState());
+                    scoreToAdd = evaluateEndPoint(currentNode.getData().getGameState());
                 } else {
                     //then we must have reached a terminal state because we tried to
                     scoreToAdd = currentNode.getData().getGameState().getEvaluation();
@@ -326,6 +351,28 @@ public class MCTSEvaluator {
 
         }
         return currentState.getEvaluation();
+    }
+
+    /**
+     * this method is called when MCTS has visited  a new node and wants an evaluation of it. traditionally this is preformed by a random rollout but this function
+     * will attempt to load a value network and use it. If anything goes wrong the default behavior is a random rollout
+     * @param currentState the state to evaluate
+     * @return the evaluation of that state
+     */
+    private double evaluateEndPoint(GameState currentState) {
+        if (optionalValueNetwork.isPresent()) {
+            //model is initzlized in constructor
+            try {
+                return optionalValueNetwork.get().output(com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getValueNetworkInputV1_0( (BoardState) currentState)).getDouble(0,0) * (currentState.isPlayerOneTurn()?1:-1);//the AI always sees the board as if its player 1's turn, so invert the score if otherwise.
+            } catch (Exception e) {
+                warnings.add("Failed to use value network to make prediction: " + e);
+                return preformRollout(currentState);
+            }
+
+        }else {
+            return preformRollout(currentState);
+        }
+
     }
 
     @Override

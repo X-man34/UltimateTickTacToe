@@ -2,6 +2,7 @@ package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
 
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
+import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.StateDatum;
 import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.concurrent.TimeUnit;
 
+import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getBoardIndex;
 import static org.nd4j.linalg.indexing.NDArrayIndex.all;
 import static org.nd4j.linalg.indexing.NDArrayIndex.interval;
 
@@ -40,17 +42,20 @@ public class ValueNetworkTrainer {
 
 
         try {
+
+//            DataSet dataFromFile = getInputDataSetFromRawFilepath("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data", "series1", "value");
+//            dataFromFile.save(new File("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\series1DataCombinedValue.bin"));
+//            System.exit(0);
+
             String baseDir = "C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\models\\";
             String modelDir = baseDir + "valueNetwork" + System.currentTimeMillis() + "\\";
             new File(modelDir).mkdirs();
-            outStream = new PrintStream(new File(modelDir + "info.log"));
-            String dataset = "C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\series1DataCombined.bin";
+            outStream = new PrintStream(new File(modelDir + "trainingLog.log"));
+            String dataset = "C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\series1DataCombinedValue.bin";
 
             //comcatenate all the data files together and massage the data into a usable format. Only needs to be done once and then the dataset can be accesses and laded when it is needed
 
-//        DataSet dataFromFile = getInputDataSetFromRawFilepath("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data", "series1", "value");
-//        dataFromFile.save(new File("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\series1DataCombined.bin"));
-//        System.exit(0);
+
 
             DataSet inputData = new DataSet();
             inputData.load(new File(dataset));
@@ -70,7 +75,7 @@ public class ValueNetworkTrainer {
 
 
             //90 data points
-            int numHiddenNeurons = 50;
+            int numHiddenNeurons = 100;
             Subsampling3DLayer subsampling3DLayer = new Subsampling3DLayer();
             subsampling3DLayer.setKernelSize(new int[]{3, 3, 3});
             subsampling3DLayer.setDataFormat(Convolution3D.DataFormat.NDHWC);
@@ -87,13 +92,9 @@ public class ValueNetworkTrainer {
                     .list()
                     .layer(0, new Convolution3D.Builder().nIn(4).nOut(4).kernelSize(3, 3, 3).padding(1, 1, 1).stride(1, 1, 1).activation(Activation.IDENTITY).dataFormat(Convolution3D.DataFormat.NDHWC).build())
                     .layer(1, new Convolution3D.Builder().nIn(4).nOut(4).kernelSize(3, 3, 3).padding(1, 1, 1).dataFormat(Convolution3D.DataFormat.NDHWC).build())
-                    //.layer(2, subsampling3DLayer)
-//                    .layer(2, new Convolution3D.Builder().nIn(4).nOut(4).kernelSize(3, 3, 3).padding(1, 1, 1).dataFormat(Convolution3D.DataFormat.NDHWC).build())
                     .layer(2, new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
                     .layer(3, new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
-                    .layer(4, new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
-                    .layer(5, new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
-                    .layer(6, new OutputLayer.Builder(
+                    .layer(4, new OutputLayer.Builder(
                             LossFunctions.LossFunction.MSE)
                             .activation(Activation.IDENTITY)
                             .nIn(numHiddenNeurons).nOut(classCount).build())
@@ -148,7 +149,7 @@ public class ValueNetworkTrainer {
 
 
 
-            model.save(new File(modelDir + "valueNetworkMSE" + eval.averageMeanSquaredError() + ".model"));
+            model.save(new File(modelDir + "valueNetworkMSE" + eval.averageMeanSquaredError() + ".zip"));
             log("Model Saved\n\n\nConfiguration\n\n\n");
             outStream.println(configuration.toJson());//dont' want this going to the console
         } catch (IOException e) {
@@ -248,9 +249,7 @@ public class ValueNetworkTrainer {
         return tensor;
     }//end method
 
-    private static int getBoardIndex(int row, int col, int boardSize) {
-        return row * boardSize + col;
-    }
+
 
     /**
      * takes in a dataset of any rank and splits it into training and testing datasets at the given percentage.

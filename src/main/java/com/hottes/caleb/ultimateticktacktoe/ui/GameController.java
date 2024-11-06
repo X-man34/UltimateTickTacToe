@@ -244,6 +244,7 @@ public class GameController {
                         stateToPass.invertState();
                     }
                     evaluator = new MCTSEvaluator(stateToPass, boardState.isPlayerOneTurn() ? playerOneEvaluatorConfig.get() : playerTwoEvaluatorConfig.get());
+
                     if (!processPlayerInput((UltimateTickTacToeGameAction) evaluator.preformSearch())) {
                         boardState.togglePlayerOneTurn();
                         Platform.runLater(() -> {
@@ -367,6 +368,12 @@ public class GameController {
 
     public void redoAction() {
 
+        if (playerTwoEvaluatorConfig.isPresent()) {
+            playerTwoEvaluatorConfig.get().saveEvaluator("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\evaluators\\goodValueNetwork.zip");
+            System.out.println("Saved player two config");
+        }else {
+            System.out.println("No player two config to save. ");
+        }
     }
 
 

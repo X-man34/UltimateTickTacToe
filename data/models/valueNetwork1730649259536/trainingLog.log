@@ -1,0 +1,578 @@
+beginning training
+See web UI at http://localhost:9000/train/overview
+Validation Stats for Epoch 0: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.98728e-01    9.97966e-01    9.99364e-01    1.00092e+00    2.25172e-02    -9.16399e-04   
+
+Validation Stats for Epoch 2: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.97010e-01    9.96915e-01    9.98504e-01    9.99194e-01    2.87396e-02    8.05864e-04    
+
+Validation Stats for Epoch 4: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.97328e-01    9.98303e-01    9.98663e-01    9.99514e-01    4.59106e-02    4.86651e-04    
+
+Validation Stats for Epoch 6: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.98320e-01    9.98928e-01    9.99160e-01    1.00051e+00    6.85812e-02    -5.07393e-04   
+
+Validation Stats for Epoch 8: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.98064e-01    9.98746e-01    9.99032e-01    1.00025e+00    8.91368e-02    -2.51103e-04   
+
+Validation Stats for Epoch 10: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.96538e-01    9.98000e-01    9.98267e-01    9.98721e-01    1.04718e-01    1.27866e-03    
+
+Validation Stats for Epoch 12: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.94497e-01    9.96918e-01    9.97245e-01    9.96676e-01    1.15543e-01    3.32378e-03    
+
+Validation Stats for Epoch 14: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.92534e-01    9.95707e-01    9.96260e-01    9.94708e-01    1.19605e-01    5.29150e-03    
+
+Validation Stats for Epoch 16: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.90516e-01    9.94356e-01    9.95247e-01    9.92686e-01    1.24545e-01    7.31373e-03    
+
+Validation Stats for Epoch 18: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.88141e-01    9.92725e-01    9.94053e-01    9.90306e-01    1.34798e-01    9.69410e-03    
+
+Validation Stats for Epoch 20: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.84955e-01    9.90312e-01    9.92449e-01    9.87113e-01    1.47263e-01    1.28865e-02    
+
+Validation Stats for Epoch 22: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.79014e-01    9.85884e-01    9.89451e-01    9.81159e-01    1.62933e-01    1.88410e-02    
+
+Validation Stats for Epoch 24: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.71626e-01    9.80022e-01    9.85711e-01    9.73755e-01    1.83294e-01    2.62455e-02    
+
+Validation Stats for Epoch 26: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.62840e-01    9.72128e-01    9.81244e-01    9.64950e-01    2.03459e-01    3.50498e-02    
+
+Validation Stats for Epoch 28: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.53673e-01    9.62549e-01    9.76562e-01    9.55763e-01    2.23965e-01    4.42372e-02    
+
+Validation Stats for Epoch 30: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.44412e-01    9.52169e-01    9.71808e-01    9.46481e-01    2.45877e-01    5.35189e-02    
+
+Validation Stats for Epoch 32: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.39618e-01    9.44155e-01    9.69339e-01    9.41677e-01    2.65653e-01    5.83235e-02    
+
+Validation Stats for Epoch 34: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.19958e-01    9.30604e-01    9.59145e-01    9.21975e-01    2.82901e-01    7.80258e-02    
+
+Validation Stats for Epoch 36: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.09210e-01    9.20583e-01    9.53525e-01    9.11202e-01    3.02066e-01    8.87978e-02    
+
+Validation Stats for Epoch 38: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     9.05325e-01    9.12469e-01    9.51486e-01    9.07309e-01    3.22591e-01    9.26912e-02    
+
+Validation Stats for Epoch 40: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.85103e-01    8.97656e-01    9.40799e-01    8.87042e-01    3.39302e-01    1.12958e-01    
+
+Validation Stats for Epoch 42: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.72227e-01    8.84298e-01    9.33931e-01    8.74138e-01    3.56407e-01    1.25861e-01    
+
+Validation Stats for Epoch 44: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.63142e-01    8.74230e-01    9.29054e-01    8.65034e-01    3.74100e-01    1.34967e-01    
+
+Validation Stats for Epoch 46: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.59898e-01    8.63982e-01    9.27307e-01    8.61782e-01    3.91547e-01    1.38218e-01    
+
+Validation Stats for Epoch 48: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.39075e-01    8.52205e-01    9.16010e-01    8.40914e-01    4.08940e-01    1.59086e-01    
+
+Validation Stats for Epoch 50: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.20443e-01    8.36179e-01    9.05783e-01    8.22241e-01    4.23156e-01    1.77759e-01    
+
+Validation Stats for Epoch 52: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.07273e-01    8.24700e-01    8.98484e-01    8.09042e-01    4.38290e-01    1.90958e-01    
+
+Validation Stats for Epoch 54: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     8.03750e-01    8.15323e-01    8.96521e-01    8.05511e-01    4.54135e-01    1.94489e-01    
+
+Validation Stats for Epoch 56: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.96074e-01    8.04488e-01    8.92230e-01    7.97819e-01    4.69065e-01    2.02182e-01    
+
+Validation Stats for Epoch 58: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.66997e-01    7.89191e-01    8.75784e-01    7.68678e-01    4.82890e-01    2.31322e-01    
+
+Validation Stats for Epoch 60: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.55310e-01    7.75475e-01    8.69086e-01    7.56966e-01    4.95504e-01    2.43035e-01    
+
+Validation Stats for Epoch 62: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.38778e-01    7.65608e-01    8.59522e-01    7.40397e-01    5.09915e-01    2.59604e-01    
+
+Validation Stats for Epoch 64: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.40723e-01    7.58448e-01    8.60652e-01    7.42346e-01    5.21675e-01    2.57654e-01    
+
+Validation Stats for Epoch 66: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.33735e-01    7.50466e-01    8.56583e-01    7.35342e-01    5.32970e-01    2.64658e-01    
+
+Validation Stats for Epoch 68: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     7.02928e-01    7.35199e-01    8.38408e-01    7.04467e-01    5.43824e-01    2.95532e-01    
+
+Validation Stats for Epoch 70: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.95427e-01    7.25664e-01    8.33922e-01    6.96951e-01    5.52497e-01    3.03050e-01    
+
+Validation Stats for Epoch 72: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.83680e-01    7.18502e-01    8.26850e-01    6.85178e-01    5.63326e-01    3.14821e-01    
+
+Validation Stats for Epoch 74: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.86841e-01    7.14010e-01    8.28759e-01    6.88346e-01    5.71861e-01    3.11654e-01    
+
+Validation Stats for Epoch 76: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.66677e-01    7.02540e-01    8.16503e-01    6.68138e-01    5.80995e-01    3.31862e-01    
+
+Validation Stats for Epoch 78: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.51297e-01    6.91859e-01    8.07030e-01    6.52724e-01    5.89437e-01    3.47275e-01    
+
+Validation Stats for Epoch 80: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.41956e-01    6.84537e-01    8.01222e-01    6.43363e-01    5.98018e-01    3.56637e-01    
+
+Validation Stats for Epoch 82: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.32485e-01    6.77665e-01    7.95290e-01    6.33871e-01    6.05903e-01    3.66129e-01    
+
+Validation Stats for Epoch 84: 
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.31272e-01    6.72723e-01    7.94526e-01    6.32655e-01    6.13474e-01    3.67345e-01    
+
+overfitting detected
+training MSE=0.5422587349747643
+
+Column    MSE            MAE            RMSE           RSE            PC             R^2            
+col_0     6.31272e-01    6.72723e-01    7.94526e-01    6.32655e-01    6.13474e-01    3.67345e-01    
+
+TestDataLabels: 
+[[-1.0000], 
+ [1.0000], 
+ [-1.0000], 
+  ..., 
+ [-1.0000], 
+ [1.0000], 
+ [1.0000]]
+Actual labels: 
+[[-0.5556], 
+ [0.2707], 
+ [-0.4759], 
+  ..., 
+ [-0.4859], 
+ [0.2945], 
+ [0.2504]]
+Trained for: 85epochs
+Trained on dataset: C:\Users\Caleb\IdeaProjects\UltimateTickTacToe\data\series1DataCombinedValue.bin
+Saving model
+Model Saved
+
+
+Configuration
+
+
+
+{
+  "backpropType" : "Standard",
+  "cacheMode" : "NONE",
+  "confs" : [ {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.Convolution3D",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationIdentity"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "cnn2dDataFormat" : "NCHW",
+      "constraints" : null,
+      "convolutionMode" : "Truncate",
+      "cudnnAlgoMode" : "PREFER_FASTEST",
+      "cudnnAllowFallback" : true,
+      "cudnnBwdDataAlgo" : null,
+      "cudnnBwdFilterAlgo" : null,
+      "cudnnFwdAlgo" : null,
+      "dataFormat" : "NDHWC",
+      "dilation" : [ 1, 1, 1 ],
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "kernelSize" : [ 3, 3, 3 ],
+      "layerName" : "layer0",
+      "mode" : "Same",
+      "nin" : 4,
+      "nout" : 4,
+      "padding" : [ 1, 1, 1 ],
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "stride" : [ 1, 1, 1 ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.Convolution3D",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationReLU",
+        "max" : null,
+        "negativeSlope" : null,
+        "threshold" : null
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "cnn2dDataFormat" : "NCHW",
+      "constraints" : null,
+      "convolutionMode" : "Truncate",
+      "cudnnAlgoMode" : "PREFER_FASTEST",
+      "cudnnAllowFallback" : true,
+      "cudnnBwdDataAlgo" : null,
+      "cudnnBwdFilterAlgo" : null,
+      "cudnnFwdAlgo" : null,
+      "dataFormat" : "NDHWC",
+      "dilation" : [ 1, 1, 1 ],
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "kernelSize" : [ 3, 3, 3 ],
+      "layerName" : "layer1",
+      "mode" : "Same",
+      "nin" : 4,
+      "nout" : 4,
+      "padding" : [ 1, 1, 1 ],
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "stride" : [ 1, 1, 1 ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationReLU",
+        "max" : null,
+        "negativeSlope" : null,
+        "threshold" : null
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "hasLayerNorm" : false,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "layerName" : "layer2",
+      "nin" : 324,
+      "nout" : 50,
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationReLU",
+        "max" : null,
+        "negativeSlope" : null,
+        "threshold" : null
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "hasLayerNorm" : false,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "layerName" : "layer3",
+      "nin" : 50,
+      "nout" : 50,
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationReLU",
+        "max" : null,
+        "negativeSlope" : null,
+        "threshold" : null
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "hasLayerNorm" : false,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "layerName" : "layer4",
+      "nin" : 50,
+      "nout" : 50,
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationReLU",
+        "max" : null,
+        "negativeSlope" : null,
+        "threshold" : null
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "hasLayerNorm" : false,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "layerName" : "layer5",
+      "nin" : 50,
+      "nout" : 50,
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "dataType" : "FLOAT",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.OutputLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationIdentity"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "gainInit" : 1.0,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Adam",
+        "beta1" : 0.9,
+        "beta2" : 0.999,
+        "epsilon" : 1.0E-8,
+        "learningRate" : 0.001
+      },
+      "layerName" : "layer6",
+      "lossFn" : {
+        "@class" : "org.nd4j.linalg.lossfunctions.impl.LossMSE"
+      },
+      "nin" : 50,
+      "nout" : 1,
+      "regularization" : [ ],
+      "regularizationBias" : [ ],
+      "timeDistributedFormat" : null,
+      "weightInitFn" : {
+        "@class" : "org.deeplearning4j.nn.weights.WeightInitXavier"
+      },
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "seed" : 2039402,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  } ],
+  "dataType" : "FLOAT",
+  "epochCount" : 0,
+  "inferenceWorkspaceMode" : "ENABLED",
+  "inputPreProcessors" : {
+    "2" : {
+      "@class" : "org.deeplearning4j.nn.conf.preprocessor.Cnn3DToFeedForwardPreProcessor",
+      "inputDepth" : 9,
+      "inputHeight" : 3,
+      "inputWidth" : 3,
+      "numChannels" : 4,
+      "ncdhw" : false
+    }
+  },
+  "iterationCount" : 85,
+  "tbpttBackLength" : 20,
+  "tbpttFwdLength" : 20,
+  "trainingWorkspaceMode" : "ENABLED",
+  "validateOutputLayerConfig" : true
+}

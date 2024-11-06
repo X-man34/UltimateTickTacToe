@@ -2,6 +2,9 @@ package com.hottes.caleb.ultimateticktacktoe;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -9,10 +12,13 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.BitSet;
+import java.io.PrintStream;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
+import java.util.zip.ZipOutputStream;
 
 public class Resources {
 
@@ -36,11 +42,9 @@ public class Resources {
     public static final int EVALUATION_ITERATION_HARD_LIMIT = 50000000;
     public static final int MAX_ITERS_USER_CAN_ENTER = 10000000;
 
-    public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false);
-    public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false);
-    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false);
-    public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true);
     public static final int MULTTHREADED_BATCH_SIZE = 100000;
+
+    public static Optional<MultiLayerNetwork> valueNetwork = Optional.empty();//will try to load in static block
 
     static {
         BufferedImage tempVar;
@@ -79,7 +83,22 @@ public class Resources {
         OImage = tempO;
         XSelectedImage = tempXSelected;
         OSelectedImage = tempOSelected;
+
+        try {
+            valueNetwork = Optional.of(MultiLayerNetwork.load(new File(Resources.class.getResource("valueNetworkV1_1.zip").getPath()), false));
+        } catch (IOException e) {
+            valueNetwork = Optional.empty();
+            System.out.println("Failed to load value network");
+            e.printStackTrace();
+        }
+
     }
+
+    public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false, Optional.empty());
+    public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false, Optional.empty());
+    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false, valueNetwork);
+    public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true, Optional.empty());
+
 
     /**
      * Changes all pixels of an old color into a new color, preserving the

@@ -1,10 +1,17 @@
 package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
+import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.AdversarialGameSimulation;
+import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.GameSimulationResult;
+import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.StateDatum;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -79,11 +86,11 @@ public class TrainingDataCreator {
 
 
         PrintStream console = System.out;
-        EvaluatorConfiguration config = new EvaluatorConfiguration(2, 1000, computeTime, 1, 0, false, false);
+        EvaluatorConfiguration config = new EvaluatorConfiguration(2, 1000, computeTime, 1, 0, false, false, Optional.empty());
         //String description = " This data series is using a raw MCTS search to generate data." + config + " using 20 threads to sim 1000 games is the goal. ";
         try (ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads)) {
             for (int i = gameStart; i < numGames + 1; i++) {
-                executor.submit(new AdversarialGameSimulation(simFolder, new File(logFolder.getAbsolutePath() + "/game" + i + "$" + System.currentTimeMillis() + ".log"), seriesName + ",gameNum" + i, "DataSeries: " + seriesName + " game number: " + i + " \n\nDescription: " + description + ". \n\nEvaluator config=" + config, config, console));
+                executor.submit(new TrainingGameSimulation(simFolder, new File(logFolder.getAbsolutePath() + "/game" + i + "$" + System.currentTimeMillis() + ".log"), seriesName + ",gameNum" + i, "DataSeries: " + seriesName + " game number: " + i + " \n\nDescription: " + description + ". \n\nEvaluator config=" + config, config, console));
 
             }
             while (completedGames < numGames - 1) {
@@ -97,7 +104,7 @@ public class TrainingDataCreator {
                     }
                     if (executor.getActiveCount() == 0) {
                         for (int i = numGames; i < numGames + 5; i++) {
-                            executor.submit(new AdversarialGameSimulation(simFolder, new File(logFolder.getAbsolutePath() + "/game" + i + "$" + System.currentTimeMillis() + ".log"), seriesName + ",gameNum" + i, "DataSeries: " + seriesName + " Game submitted because inactive thread pool detected but completed game count not met consider changing game number, a task might have run into an error game number: " + i + " \n\nDescription: " + description + ". \n\nEvaluator config=" + config, config, console));
+                            executor.submit(new TrainingGameSimulation(simFolder, new File(logFolder.getAbsolutePath() + "/game" + i + "$" + System.currentTimeMillis() + ".log"), seriesName + ",gameNum" + i, "DataSeries: " + seriesName + " Game submitted because inactive thread pool detected but completed game count not met consider changing game number, a task might have run into an error game number: " + i + " \n\nDescription: " + description + ". \n\nEvaluator config=" + config, config, console));
 
                         }
                     }
@@ -116,8 +123,117 @@ public class TrainingDataCreator {
         console.println("Done creating training data");
     }
 
-    protected static void incrementCompletedGames() {
+    public static void incrementCompletedGames() {
         completedGames++;
+    }
+
+
+    /**
+     * The purpose of this class is to abstract the simulation of games and handle the data saving here and make {@link AdversarialGameSimulation} more abstract
+     * so it can be used more generally.
+     */
+    private static class TrainingGameSimulation implements Runnable{
+
+        private final File dataFolder;
+        private final File logFile;
+        private final String baseValueFilename;
+        private final String basePolicyFilename;
+        private final String logMessage;
+        private final EvaluatorConfiguration config;
+        private final PrintStream console;
+
+
+
+        /**
+         * @param dataFolder  the folder in which to save the policy and value data for this game simulation
+         * @param logFile     the log file
+         * @param dataMessage the message
+         * @param logMessage  a message to put at the top of the log file.
+         */
+        public TrainingGameSimulation(File dataFolder, File logFile, String dataMessage, String logMessage, EvaluatorConfiguration evaluatorConfiguration, PrintStream console) {
+            this.dataFolder = dataFolder;
+            this.logFile = logFile;
+            this.basePolicyFilename = "policy$" + dataMessage + "$";
+            this.baseValueFilename = "value$" + dataMessage + "$";
+            this.logMessage = logMessage;
+            this.console = console;
+            config = evaluatorConfiguration;
+
+
+
+        }
+
+        @Override
+        public void run() {
+            try (PrintStream logger = new PrintStream(logFile)) {
+                logger.println("Saving data to: " + dataFolder.getAbsolutePath());
+                logger.println("Begin custom message: ");
+                logger.println(logMessage);
+                logger.println("End custom message");
+                AdversarialGameSimulation sim = new AdversarialGameSimulation(logger, config,config, console);//because we are doing training data creation we want to use the same agent for both player one and player two.
+                GameSimulationResult results = sim.run();
+                //simulate game
+
+                if (results != null) {
+                    logger.println("Game ended in: " + results.numMoves() + " moves");
+                    //set the evaluations
+                    results.datums().forEach(stateDatum -> stateDatum.setEvalForThisState(stateDatum.isPlayerOneTurnOriginally ? results.finalEval() : -results.finalEval()));
+                    logger.println("Actual data created in graphical format: ");
+                    logger.println(results.datums());
+
+                    DataSet valueNetworkData = getValueNetworkDataset(results.datums());
+                    DataSet policyNetworkData = getPolicyNetworkDataset(results.datums());
+
+                    logger.println("Value network data: ");
+                    logger.println(valueNetworkData);
+
+                    logger.println("Policy network data: ");
+                    logger.println(policyNetworkData);
+
+                    logger.println(dataFolder.getAbsolutePath() + "\\" + basePolicyFilename + results.finishTime() + ".bin");
+                    policyNetworkData.save(new File(dataFolder.getAbsolutePath() + "\\" + basePolicyFilename + results.finishTime() + ".bin"));
+                    valueNetworkData.save(new File(dataFolder.getAbsolutePath() + "\\" + baseValueFilename + results.finishTime() + ".bin"));
+                    logger.println("Took: " + results.simTime() / 1000 + " s to simulate game");
+                    String str = "Finished simulating game, see log at: " + logFile.getAbsolutePath() + " for details.";
+                    logger.println(str);
+                    console.println(str);
+                    TrainingDataCreator.incrementCompletedGames();
+                } else {
+                    String str = "Simulation interrupted, shutting down without saving data. ";
+                    logger.println(str);
+                    console.println(str);
+                }
+
+
+            } catch (Exception e) {
+
+                console.println(e);
+            }
+
+
+
+        }
+
+        private DataSet getValueNetworkDataset(ArrayList<StateDatum> data) {
+            double[][] inputs = new double[data.size()][data.getFirst().valueNetworkInput.length];
+            double[][] outputs = new double[data.size()][1];
+            for (int i = 0; i < data.size(); i++) {
+                inputs[i] = data.get(i).valueNetworkInput;
+                outputs[i] = new double[]{data.get(i).getEvalForThisState()};
+            }
+            return new DataSet(Nd4j.create(inputs), Nd4j.create(outputs));
+        }
+
+        private DataSet getPolicyNetworkDataset(ArrayList<StateDatum> data) {
+            double[][] inputs = new double[data.size()][data.getFirst().valueNetworkInput.length];
+            double[][] outputs = new double[data.size()][data.getFirst().policyNetworkOutput.length];
+            for (int i = 0; i < data.size(); i++) {
+                inputs[i] = data.get(i).valueNetworkInput;
+                outputs[i] = data.get(i).policyNetworkOutput;
+            }
+            return new DataSet(Nd4j.create(inputs), Nd4j.create(outputs));
+        }
+
     }
 
 
