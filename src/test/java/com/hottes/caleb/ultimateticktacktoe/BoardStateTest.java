@@ -392,7 +392,7 @@ class BoardStateTest {
                 0,0,0,0,0,0,0,0,0,
                 -1,-1,-1,1,-1,-1,-1,-1,-1};//activity vals
         testState.setPlayerOneTurn(true);
-        assertTrue(Arrays.equals(expectedVector, testState.getValueNetworkInputVector()), "Input vector was not the same as Expected: " + Arrays.toString(expectedVector) + " Actual: " + Arrays.toString(testState.getValueNetworkInputVector()));
+        assertTrue(Arrays.equals(expectedVector, testState.getBoardStateFlatVector()), "Input vector was not the same as Expected: " + Arrays.toString(expectedVector) + " Actual: " + Arrays.toString(testState.getBoardStateFlatVector()));
 
     }
 

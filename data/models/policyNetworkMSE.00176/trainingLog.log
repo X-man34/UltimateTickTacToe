@@ -1,0 +1,446 @@
+beginning training
+See web UI at http://localhost:9000/train/overview
+
+Validation Stats for Epoch 0: 
+0.004190364302518177
+
+Training Stats for Epoch 0: 
+0.004181964362348148
+
+Validation Stats for Epoch 2: 
+0.0031858048343705583
+
+Training Stats for Epoch 2: 
+0.0031938491894791246
+
+Validation Stats for Epoch 4: 
+0.003102227992483219
+
+Training Stats for Epoch 4: 
+0.003109184737321348
+
+Validation Stats for Epoch 6: 
+0.0030765793675238532
+
+Training Stats for Epoch 6: 
+0.0030815881997931687
+
+Validation Stats for Epoch 8: 
+0.003038572643543932
+
+Training Stats for Epoch 8: 
+0.0030425315739632847
+
+Validation Stats for Epoch 10: 
+0.0030092244459739713
+
+Training Stats for Epoch 10: 
+0.003012491595342953
+
+Validation Stats for Epoch 12: 
+0.002966460667482367
+
+Training Stats for Epoch 12: 
+0.0029701599562056845
+
+Validation Stats for Epoch 14: 
+0.002942484007770355
+
+Training Stats for Epoch 14: 
+0.002946863995181983
+
+Validation Stats for Epoch 16: 
+0.002920180103644681
+
+Training Stats for Epoch 16: 
+0.0029244444599725635
+
+Validation Stats for Epoch 18: 
+0.0029041173896925186
+
+Training Stats for Epoch 18: 
+0.0029082043399670677
+
+Validation Stats for Epoch 20: 
+0.0028855062412430394
+
+Training Stats for Epoch 20: 
+0.002889978839369036
+
+Validation Stats for Epoch 22: 
+0.0028669467922238447
+
+Training Stats for Epoch 22: 
+0.0028722434777673383
+
+Validation Stats for Epoch 24: 
+0.002846047933557829
+
+Training Stats for Epoch 24: 
+0.002852249224948224
+
+Validation Stats for Epoch 26: 
+0.002820386792465014
+
+Training Stats for Epoch 26: 
+0.002827208406378278
+
+Validation Stats for Epoch 28: 
+0.0027933761965632446
+
+Training Stats for Epoch 28: 
+0.0028003763545764223
+
+Validation Stats for Epoch 30: 
+0.002765324200803241
+
+Training Stats for Epoch 30: 
+0.00277260573204026
+
+Validation Stats for Epoch 32: 
+0.0027355896692726474
+
+Training Stats for Epoch 32: 
+0.002743291667803336
+
+Validation Stats for Epoch 34: 
+0.0027033298670585313
+
+Training Stats for Epoch 34: 
+0.0027113435722092064
+
+Validation Stats for Epoch 36: 
+0.0026711219707220815
+
+Training Stats for Epoch 36: 
+0.002679016272712525
+
+Validation Stats for Epoch 38: 
+0.0026376627383889375
+
+Training Stats for Epoch 38: 
+0.002645033804102244
+
+Validation Stats for Epoch 40: 
+0.0026005791261709617
+
+Training Stats for Epoch 40: 
+0.0026077407282932923
+
+Validation Stats for Epoch 42: 
+0.0025631031429703024
+
+Training Stats for Epoch 42: 
+0.002569950964345454
+
+Validation Stats for Epoch 44: 
+0.002522629193387601
+
+Training Stats for Epoch 44: 
+0.002529469192135655
+
+Validation Stats for Epoch 46: 
+0.002480025367828404
+
+Training Stats for Epoch 46: 
+0.002487074350957926
+
+Validation Stats for Epoch 48: 
+0.002438584746085278
+
+Training Stats for Epoch 48: 
+0.0024452514682298705
+
+Validation Stats for Epoch 50: 
+0.002395681692765118
+
+Training Stats for Epoch 50: 
+0.0024017676553946235
+
+Validation Stats for Epoch 52: 
+0.002352404823703106
+
+Training Stats for Epoch 52: 
+0.002358301167241158
+
+Validation Stats for Epoch 54: 
+0.0023076572359740323
+
+Training Stats for Epoch 54: 
+0.0023138111759201546
+
+Validation Stats for Epoch 56: 
+0.002261387445978977
+
+Training Stats for Epoch 56: 
+0.00226762670394983
+
+Validation Stats for Epoch 58: 
+0.0022164140141934146
+
+Training Stats for Epoch 58: 
+0.0022231912856891974
+
+Validation Stats for Epoch 60: 
+0.0021711602122601514
+
+Training Stats for Epoch 60: 
+0.002178384834837589
+
+Validation Stats for Epoch 62: 
+0.0021258037017096105
+
+Training Stats for Epoch 62: 
+0.0021334924924296794
+
+Validation Stats for Epoch 64: 
+0.002086117739903959
+
+Training Stats for Epoch 64: 
+0.002093983990358953
+
+Validation Stats for Epoch 66: 
+0.0020511014365498445
+
+Training Stats for Epoch 66: 
+0.002059255261445799
+
+Validation Stats for Epoch 68: 
+0.0020207121008302027
+
+Training Stats for Epoch 68: 
+0.0020291330046610908
+
+Validation Stats for Epoch 70: 
+0.0019942439204116524
+
+Training Stats for Epoch 70: 
+0.0020025397984826743
+
+Validation Stats for Epoch 72: 
+0.0019719503125886955
+
+Training Stats for Epoch 72: 
+0.0019804937572659434
+
+Validation Stats for Epoch 74: 
+0.0019511631784518207
+
+Training Stats for Epoch 74: 
+0.0019601515074900247
+
+Validation Stats for Epoch 76: 
+0.0019295003945985455
+
+Training Stats for Epoch 76: 
+0.0019387341766607534
+
+Validation Stats for Epoch 78: 
+0.0019110470011466758
+
+Training Stats for Epoch 78: 
+0.001920633299510803
+
+Validation Stats for Epoch 80: 
+0.0018909800451618033
+
+Training Stats for Epoch 80: 
+0.0019008535170362286
+
+Validation Stats for Epoch 82: 
+0.001874000895622512
+
+Training Stats for Epoch 82: 
+0.0018840204160628206
+
+Validation Stats for Epoch 84: 
+0.0018566578648398294
+
+Training Stats for Epoch 84: 
+0.0018666468565350363
+
+Validation Stats for Epoch 86: 
+0.0018422133063536825
+
+Training Stats for Epoch 86: 
+0.0018524416245530838
+
+Validation Stats for Epoch 88: 
+0.0018283555140882143
+
+Training Stats for Epoch 88: 
+0.0018386033634843946
+
+Validation Stats for Epoch 90: 
+0.0018171586909987937
+
+Training Stats for Epoch 90: 
+0.0018274451977435765
+
+Validation Stats for Epoch 92: 
+0.0018077629493141534
+
+Training Stats for Epoch 92: 
+0.0018181688783870595
+
+Validation Stats for Epoch 94: 
+0.0017994272826348879
+
+Training Stats for Epoch 94: 
+0.0018098959831650374
+
+Validation Stats for Epoch 96: 
+0.001793178319404485
+
+Training Stats for Epoch 96: 
+0.0018035917850066942
+
+Validation Stats for Epoch 98: 
+0.0017884670482500083
+
+Training Stats for Epoch 98: 
+0.0017988072933806123
+
+Validation Stats for Epoch 100: 
+0.0017848665776834147
+
+Training Stats for Epoch 100: 
+0.0017952612235523884
+
+Validation Stats for Epoch 102: 
+0.0017835862660662116
+
+Training Stats for Epoch 102: 
+0.0017940863613810896
+
+Validation Stats for Epoch 104: 
+0.0017824667853041365
+
+Training Stats for Epoch 104: 
+0.0017929425372664772
+
+Validation Stats for Epoch 106: 
+0.0017777450875139957
+
+Training Stats for Epoch 106: 
+0.0017881265937012521
+
+Validation Stats for Epoch 108: 
+0.0017759829558494041
+
+Training Stats for Epoch 108: 
+0.0017862703037767643
+
+Validation Stats for Epoch 110: 
+0.0017741473111900585
+
+Training Stats for Epoch 110: 
+0.0017842765683882354
+
+Validation Stats for Epoch 112: 
+0.0017734248986100332
+
+Training Stats for Epoch 112: 
+0.001783554479029346
+
+Validation Stats for Epoch 114: 
+0.0017717190739060234
+
+Training Stats for Epoch 114: 
+0.0017815238716137828
+
+Validation Stats for Epoch 116: 
+0.001770974017801324
+
+Training Stats for Epoch 116: 
+0.001780555122905979
+
+Validation Stats for Epoch 118: 
+0.0017700081547478263
+
+Training Stats for Epoch 118: 
+0.0017794926543210467
+
+Validation Stats for Epoch 120: 
+0.001769764755364868
+
+Training Stats for Epoch 120: 
+0.0017789819754955854
+
+Validation Stats for Epoch 122: 
+0.0017687724461926686
+
+Training Stats for Epoch 122: 
+0.0017777962783611285
+
+Validation Stats for Epoch 124: 
+0.0017684871452889636
+
+Training Stats for Epoch 124: 
+0.001777272702457901
+
+Validation Stats for Epoch 126: 
+0.0017680332946917482
+
+Training Stats for Epoch 126: 
+0.0017765992792122783
+
+Validation Stats for Epoch 128: 
+0.0017676571089756063
+
+Training Stats for Epoch 128: 
+0.001776177025279064
+
+Validation Stats for Epoch 130: 
+0.0017672341274759405
+
+Training Stats for Epoch 130: 
+0.0017755116273915092
+
+Validation Stats for Epoch 132: 
+0.0017669835420556807
+
+Training Stats for Epoch 132: 
+0.001775091678481248
+
+Validation Stats for Epoch 134: 
+0.0017666240493832406
+
+Training Stats for Epoch 134: 
+0.00177465095413119
+
+Validation Stats for Epoch 136: 
+0.0017663633542970415
+
+Training Stats for Epoch 136: 
+0.0017741782357289478
+
+Validation Stats for Epoch 138: 
+0.001766072277037178
+
+Training Stats for Epoch 138: 
+0.0017737952109719752
+
+Validation Stats for Epoch 140: 
+0.0017657539143144433
+
+Training Stats for Epoch 140: 
+0.0017733540831647114
+
+Validation Stats for Epoch 142: 
+0.0017656323939610969
+
+Training Stats for Epoch 142: 
+0.0017730042054926625
+
+Validation Stats for Epoch 144: 
+0.0017653883794066351
+
+Training Stats for Epoch 144: 
+0.001772608914385597
+
+Validation Stats for Epoch 146: 
+0.0017651052128352504
+
+Training Stats for Epoch 146: 
+0.0017722223877868813

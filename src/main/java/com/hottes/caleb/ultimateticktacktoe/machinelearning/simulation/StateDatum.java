@@ -28,7 +28,7 @@ public class StateDatum {
      */
     public final double[] valueNetworkInput;
     public final boolean isPlayerOneTurnOriginally;
-    final BoardState boardStateForPrinting;
+    public  BoardState boardStateForPrinting;
     private final int boardSize;
     private double evalForThisState = 0;
 
@@ -44,7 +44,7 @@ public class StateDatum {
      */
     public StateDatum(BoardState theBoardState, GenericTreeNode<NodeData> rootNode, boolean originalIsPlayerOneTurn, int boardSize) {
 
-        valueNetworkInput = theBoardState.getValueNetworkInputVector();
+        valueNetworkInput = theBoardState.getBoardStateFlatVector();
         policyNetworkOutput = new double[(int) Math.round(Math.pow(boardSize, 4))];
         isPlayerOneTurnOriginally = originalIsPlayerOneTurn;
         boardStateForPrinting = theBoardState;
@@ -94,7 +94,7 @@ public class StateDatum {
     @Override
     public String toString() {
         return "StateDatum{" +
-                "MCTSProbabilites=" + getProbString() +
+                "MCTSProbabilites=" + getProbString(policyNetworkOutput) +
                 ", state=" + getStateString() +
                 ", evalForThisState=" + evalForThisState +
                 ", isPlayerOneTurnOriginally=" + isPlayerOneTurnOriginally +
@@ -126,7 +126,7 @@ public class StateDatum {
         return builder.toString();
     }
 
-    String getProbString() {
+    public static String getProbString(double[] policyNetworkOutput) {
         DecimalFormat format = new DecimalFormat(" .####;-.####");
         StringBuilder builder = new StringBuilder();
         builder.append("\n");

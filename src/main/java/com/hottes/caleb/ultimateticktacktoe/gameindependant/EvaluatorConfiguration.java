@@ -15,12 +15,12 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int computeTime, int threads, int stupidity,
-                                     boolean allowForcePlay, boolean maxMyCPU, Optional<MultiLayerNetwork> valueNetwork) {
+                                     boolean allowForcePlay, boolean maxMyCPU, Optional<MultiLayerNetwork> valueNetwork, Optional<MultiLayerNetwork> policyNetwork) {
 
     private static final String EVALUATOR_CONFIG_NAME = "evaluatorConfig.json";
     private static final String TEMP_DIR = System.getenv("TEMP") + "\\ultimateTickTackToe\\";
     private static final String VALUE_NETWORK_NAME = "value";
-
+    private static final String POLICY_NETWORK_NAME = "policy";
     @Override
     public String toString() {
         return "EvaluatorConfiguration{" +
@@ -32,6 +32,7 @@ public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int co
                 ", allowForcePlay=" + allowForcePlay +
                 ", maxMyCPU=" + maxMyCPU +
                 ", valueNetwork=" + (valueNetwork.isPresent()?valueNetwork.get().conf().toJson():"not present") +
+                ", policyNetwork=" + (policyNetwork.isPresent()?policyNetwork.get().conf().toJson():"not present") +
                 '}';
     }
 
@@ -59,6 +60,12 @@ public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int co
                 valueNetwork.get().save(valueNetworkFile);
                 filesToZip.add(valueNetworkFile);
                 neuralNets.put(VALUE_NETWORK_NAME);
+            }
+            if (policyNetwork.isPresent()) {
+                File policyNetworkFile = new File(TEMP_DIR + POLICY_NETWORK_NAME + ".zip");
+                policyNetwork.get().save(policyNetworkFile);
+                filesToZip.add(policyNetworkFile);
+                neuralNets.put(POLICY_NETWORK_NAME);
             }
             //could also save the policy network when thats made.
 
@@ -130,6 +137,7 @@ public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int co
         jsonIN.close();
         JSONArray neuralNets = jsonObject.optJSONArray("NeuralNets", new JSONArray());
         Optional<MultiLayerNetwork> valueNetwork = Optional.empty();
+        Optional<MultiLayerNetwork> policyNetwork = Optional.empty();
         //try and load any neural networks that were specified
         for (int i = 0; i < neuralNets.length(); i++) {
             String networkName = neuralNets.getString(i);
@@ -137,7 +145,8 @@ public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int co
             switch (networkName) {
                 case "value":
                     valueNetwork = Optional.of(MultiLayerNetwork.load(new File(TEMP_DIR + networkName + ".zip"), false));
-                    //TODO add case for policy network or any other networks that are used.
+                case "policy":
+                    policyNetwork = Optional.of(MultiLayerNetwork.load(new File(TEMP_DIR + networkName + ".zip"), false));
             }
         }
         new File(TEMP_DIR).delete();
@@ -149,6 +158,7 @@ public record EvaluatorConfiguration(double cValue, long maxRolloutDepth, int co
                 jsonObject.optInt("Stupidity", 0),
                 jsonObject.optBoolean("AllowForcePlay", false),
                 jsonObject.optBoolean("MaxTheCPU", false),
-                valueNetwork);
+                valueNetwork,
+                policyNetwork);
     }
 }

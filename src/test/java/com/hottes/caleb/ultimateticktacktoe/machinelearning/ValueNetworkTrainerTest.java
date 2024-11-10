@@ -17,7 +17,7 @@ class ValueNetworkTrainerTest {
     @Test
     void getBoardTensor() {
         BoardState testState = GameController.getTestState();
-        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 1, 0, false, false, Optional.empty()));
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 1, 0, false, false, Optional.empty(), Optional.empty()));
         evaluator.dispalyDialogAfterSearch = false;
         evaluator.log = false;
         evaluator.preformSearch();

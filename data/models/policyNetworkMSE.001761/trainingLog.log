@@ -1,0 +1,210 @@
+beginning training
+See web UI at http://localhost:9000/train/overview
+
+Validation Stats for Epoch 0: 
+0.004752453245703139
+TrainTestDifference: 0.05987853469352009 %
+
+Validation Stats for Epoch 2: 
+0.003172447663461909
+TrainTestDifference: 0.12547989160555983 %
+
+Validation Stats for Epoch 4: 
+0.0030663611853299385
+TrainTestDifference: 0.17827110446044492 %
+
+Validation Stats for Epoch 6: 
+0.0030249455770857735
+TrainTestDifference: 0.1894183225974924 %
+
+Validation Stats for Epoch 8: 
+0.0029891193003506464
+TrainTestDifference: 0.19580330778079014 %
+
+Validation Stats for Epoch 10: 
+0.0029630826356330563
+TrainTestDifference: 0.19497452694548295 %
+
+Validation Stats for Epoch 12: 
+0.0029494971860484897
+TrainTestDifference: 0.18254503287334237 %
+
+Validation Stats for Epoch 14: 
+0.0029332542602108244
+TrainTestDifference: 0.1718095039354875 %
+
+Validation Stats for Epoch 16: 
+0.002919304964833428
+TrainTestDifference: 0.1606796771711 %
+
+Validation Stats for Epoch 18: 
+0.0029116035326763696
+TrainTestDifference: 0.14779883808265692 %
+
+Validation Stats for Epoch 20: 
+0.0029024464900473295
+TrainTestDifference: 0.13967926133029887 %
+
+Validation Stats for Epoch 22: 
+0.0028940441127104175
+TrainTestDifference: 0.1382241478189803 %
+
+Validation Stats for Epoch 24: 
+0.0028846041996264484
+TrainTestDifference: 0.1401027090444931 %
+
+Validation Stats for Epoch 26: 
+0.002867884351132167
+TrainTestDifference: 0.14310069250292123 %
+
+Validation Stats for Epoch 28: 
+0.002846955947551333
+TrainTestDifference: 0.14309005066037414 %
+
+Validation Stats for Epoch 30: 
+0.002821665492124345
+TrainTestDifference: 0.15350353379687756 %
+
+Validation Stats for Epoch 32: 
+0.0027904929836480028
+TrainTestDifference: 0.18590309355396975 %
+
+Validation Stats for Epoch 34: 
+0.002756343516375163
+TrainTestDifference: 0.2247958569987166 %
+
+Validation Stats for Epoch 36: 
+0.0027180890534465175
+TrainTestDifference: 0.24174958192706703 %
+
+Validation Stats for Epoch 38: 
+0.002675435561650994
+TrainTestDifference: 0.2637118605901732 %
+
+Validation Stats for Epoch 40: 
+0.0026296143286502287
+TrainTestDifference: 0.2835624981935674 %
+
+Validation Stats for Epoch 42: 
+0.0025836881505188337
+TrainTestDifference: 0.29189318964932226 %
+
+Validation Stats for Epoch 44: 
+0.002535972054781465
+TrainTestDifference: 0.2895287718853516 %
+
+Validation Stats for Epoch 46: 
+0.0024849741911085587
+TrainTestDifference: 0.28454422787030464 %
+
+Validation Stats for Epoch 48: 
+0.0024334432615166373
+TrainTestDifference: 0.28517555794203825 %
+
+Validation Stats for Epoch 50: 
+0.0023755237967066412
+TrainTestDifference: 0.31071946016072205 %
+
+Validation Stats for Epoch 52: 
+0.0023168077911503607
+TrainTestDifference: 0.343436975531009 %
+
+Validation Stats for Epoch 54: 
+0.002250827885306761
+TrainTestDifference: 0.3355621953758477 %
+
+Validation Stats for Epoch 56: 
+0.0021866138511619647
+TrainTestDifference: 0.3460091482954794 %
+
+Validation Stats for Epoch 58: 
+0.0021258800861998265
+TrainTestDifference: 0.3828247222854215 %
+
+Validation Stats for Epoch 60: 
+0.0020668833413929463
+TrainTestDifference: 0.41144724388367837 %
+
+Validation Stats for Epoch 62: 
+0.002013947077523555
+TrainTestDifference: 0.44471505327694105 %
+
+Validation Stats for Epoch 64: 
+0.0019665043066561657
+TrainTestDifference: 0.47813421841275516 %
+
+Validation Stats for Epoch 66: 
+0.0019271351268952803
+TrainTestDifference: 0.49246779444105704 %
+
+Validation Stats for Epoch 68: 
+0.001895694030369543
+TrainTestDifference: 0.5046957963534469 %
+
+Validation Stats for Epoch 70: 
+0.0018703278546290285
+TrainTestDifference: 0.524195103198655 %
+
+Validation Stats for Epoch 72: 
+0.0018499630680523735
+TrainTestDifference: 0.5521709091193473 %
+
+Validation Stats for Epoch 74: 
+0.0018337038526818098
+TrainTestDifference: 0.5730515561688446 %
+
+Validation Stats for Epoch 76: 
+0.0018200758353144784
+TrainTestDifference: 0.5909417009291381 %
+
+Validation Stats for Epoch 78: 
+0.0018085343921057278
+TrainTestDifference: 0.5965207649880957 %
+
+Validation Stats for Epoch 80: 
+0.0017990088732149586
+TrainTestDifference: 0.590310005180498 %
+
+Validation Stats for Epoch 82: 
+0.0017921213327685944
+TrainTestDifference: 0.5861424486282056 %
+
+Validation Stats for Epoch 84: 
+0.0017871627783093737
+TrainTestDifference: 0.5778503970942981 %
+
+Validation Stats for Epoch 86: 
+0.0017832041309117606
+TrainTestDifference: 0.57416656649303 %
+
+Validation Stats for Epoch 88: 
+0.0017801003592016484
+TrainTestDifference: 0.5732938422050019 %
+
+Validation Stats for Epoch 90: 
+0.0017778176381302785
+TrainTestDifference: 0.5715360695894065 %
+
+Validation Stats for Epoch 92: 
+0.0017761176627688756
+TrainTestDifference: 0.570348469980275 %
+
+Validation Stats for Epoch 94: 
+0.0017745431917783056
+TrainTestDifference: 0.5753783336482834 %
+
+Validation Stats for Epoch 96: 
+0.0017732603496166265
+TrainTestDifference: 0.570431831619015 %
+
+Validation Stats for Epoch 98: 
+0.001772087265520599
+TrainTestDifference: 0.5614473283333791 %
+
+Validation Stats for Epoch 100: 
+0.0017709201840387242
+TrainTestDifference: 0.5541720446844294 %
+
+Validation Stats for Epoch 102: 
+0.0017698206077241332
+TrainTestDifference: 0.549101918316831 %

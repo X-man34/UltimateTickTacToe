@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getActivityIndex;
 import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getIndex;
 
 /**
@@ -237,7 +238,7 @@ public class BoardState extends GameState {
      *
      * @return a double[] of numbers representing the state of the board and which boards are active.
      */
-    public double[] getValueNetworkInputVector() {
+    public double[] getBoardStateFlatVector() {
         double[] output = new double[(int) Math.round(Math.pow(boardSize, 4) + (boardSize * boardSize))];//enough space for a number for each of the cells on the board and one more number to represent the activity of each sub board.
         for (int majRow = 0; majRow < boardSize; majRow++) {
             for (int majCol = 0; majCol < boardSize; majCol++) {
@@ -245,6 +246,26 @@ public class BoardState extends GameState {
                 for (int minRow = 0; minRow < boardSize; minRow++) {
                     for (int minCol = 0; minCol < boardSize; minCol++) {
                         output[getIndex(majRow, majCol, minRow, minCol, boardSize)] = isPlayerOneTurn() ? getMinorBoardAt(majRow, majCol).itemAt(minRow, minCol) : -getMinorBoardAt(majRow, majCol).itemAt(minRow, minCol);//make sure the player who is to play is represented by 1's
+                    }
+                }
+
+            }
+        }
+        return output;
+    }
+
+    public static BoardState getBoardStateFromFlatVector(double[] vector, int boardSize) {
+        BoardState output = new BoardState(3);
+        output.setPlayerOneTurn(true);
+        output.setAllBoardsActivity(false);
+        for (int majRow = 0; majRow < boardSize; majRow++) {
+            for (int majCol = 0; majCol < boardSize; majCol++) {
+                if (vector[getActivityIndex(majRow, majCol, boardSize)] == 1) {
+                    output.setBoardActive(majRow, majCol);
+                }
+                for (int minRow = 0; minRow < boardSize; minRow++) {
+                    for (int minCol = 0; minCol < boardSize; minCol++) {
+                        output.getMinorBoardAt(majRow, majCol).preformAction(new GameAction(minCol, minRow, vector[getIndex(majRow, majCol, minRow, minCol, boardSize)]));
                     }
                 }
 
@@ -553,4 +574,6 @@ public class BoardState extends GameState {
             return label;
         }
     }
+
+
 }

@@ -6,21 +6,23 @@ import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.BitSetBasedUTTT
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.NodeData;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTree;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTreeNode;
+import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.StateDatum;
+import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.zip.ZipOutputStream;
+
+import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getIndex;
 
 /**
  * a MCTS evalutor takes in a inital state and returns the best move for whichever player is denoted by the marker 1.
@@ -35,6 +37,7 @@ public class MCTSEvaluator {
     private final int computeTime;
     public double C = 2;
     private final Optional<MultiLayerNetwork> optionalValueNetwork;
+    private final Optional<MultiLayerNetwork> optionalPolicyNetwork;
 
 
 
@@ -69,34 +72,13 @@ public class MCTSEvaluator {
         useMaxCPU = configuration.maxMyCPU();
         optionalValueNetwork = configuration.valueNetwork();
         optionalValueNetwork.ifPresent(MultiLayerNetwork::init);
+        optionalPolicyNetwork = configuration.policyNetwork();
+        optionalPolicyNetwork.ifPresent(MultiLayerNetwork::init);
         addChildren(tree.getRoot());
 
 
     }
 
-
-
-
-    //recursive method to get string representation of tree
-    private static String getNodeString(GenericTreeNode<NodeData> node, int depth, DecimalFormat format) {
-        StringBuilder builder = new StringBuilder();
-        //add stuff for this node.
-
-        if (depth > 0) {
-            builder.repeat(' ', (depth - 1) * 4);
-            builder.append("|---");
-        }
-        builder.append("Node{t=").append(node.getData().getTotalScore()).append(",n=").append(node.getData().getNumVisits()).append(",v=").append(format.format(node.getData().getTotalScore() / node.getData().getNumVisits())).append(",c=").append(node.getNumberOfChildren()).append(",").append(node.getData().getActionTaken()).append("}\n");
-        for (GenericTreeNode<NodeData> child : node.getChildren()) {
-            if (child.getData().getNumVisits() > 0) {
-                //builder.repeat(' ', depth * 4).append("|\n");
-                builder.append(getNodeString(child, depth + 1, format));
-            }
-
-        }
-        return builder.toString();
-
-    }
 
     public GameAction preformSearch() {
 
@@ -241,14 +223,83 @@ public class MCTSEvaluator {
         }
     }
 
+
+
     /**
-     * uses ucb1 to choose the best child. could be replaced with a policy network.
-     *
+     * if there is a policy network for the config present than that is used to decide on an action via the given probability distribution.
+     * for details see {@link MCTSEvaluator#getChildToExploreFromPolicyNetworkOutput(INDArray, BoardState, int)}
+     *if there is no policy network available or the best child cannot be found, UCB is used as a default.
      * @param currentNode
      * @return
      */
     private GenericTreeNode<NodeData> getBestChild(GenericTreeNode<NodeData> currentNode) {
+        if (optionalPolicyNetwork.isPresent()) {
+            BoardState state =  (BoardState) currentNode.getData().getGameState();
+            UltimateTickTacToeGameAction actionToTake = getChildToExploreFromPolicyNetworkOutput(optionalPolicyNetwork.get().output(com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getPolicyNetworkInputV1( (BoardState) currentNode.getData().getGameState())), state, state.getBoardSize());
+            for (GenericTreeNode<NodeData> child : currentNode.getChildren()) {
+                if (child.getData().getActionTaken() == actionToTake) {
+                    return child;
+                }
+            }
+        }
+        return getBestChildViaUCB(currentNode);
 
+
+    }
+
+    /**
+     * This method uses the output from the policy network to determine which legal action to explore.
+     * it does this by treating the output from the neural network as a probability mass function and choosing a random move accordingly.
+     * before using the pmf illegal moves are set to 0 and the data is scaled.
+     * @return
+     */
+    public UltimateTickTacToeGameAction getChildToExploreFromPolicyNetworkOutput(INDArray output, BoardState currentState, int boardSize) {
+        //make all illegal moves 0
+        for (int majorRow = 0; majorRow < boardSize; majorRow++) {
+            for (int minorRow = 0; minorRow < boardSize; minorRow++) {
+                for (int majorCol = 0; majorCol < boardSize; majorCol++) {
+                    for (int minorCol = 0; minorCol < boardSize; minorCol++) {
+                        UltimateTickTacToeGameAction actionHere = new UltimateTickTacToeGameAction(majorRow, majorCol, minorRow, minorCol, currentState.isPlayerOneTurn() ? 1 : -1);
+                        if (!currentState.isLegal(actionHere)) {
+                            output.put(0, getIndex(majorRow, majorCol, minorRow, minorCol, boardSize), 0);
+                        }
+
+
+                    }
+
+                }
+            }
+        }
+        double rand = Math.random();
+        //normalize so its a valid pmf
+        output = output.div(output.sum(1));
+
+        //choose a pseudorandom action guided by the normalized and legalized pmf
+        UltimateTickTacToeGameAction actionToTake = null;
+        for (int majorRow = 0; majorRow < boardSize; majorRow++) {
+            for (int minorRow = 0; minorRow < boardSize; minorRow++) {
+                for (int majorCol = 0; majorCol < boardSize; majorCol++) {
+                    for (int minorCol = 0; minorCol < boardSize; minorCol++) {
+                        if (output.getDouble(0,  getIndex(majorRow, majorCol, minorRow, minorCol, boardSize)) >= rand) {
+                            actionToTake = new UltimateTickTacToeGameAction(majorRow, majorCol, minorRow, minorCol, currentState.isPlayerOneTurn() ? 1 : -1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return actionToTake;
+    }
+
+
+    /**
+     * uses the upper confidence bound function to determine what the best child is.
+     *
+     * @param currentNode the parent to consider
+     * @return the best child
+     * @see MCTSEvaluator#getUCB1(GenericTreeNode)
+     */
+    private GenericTreeNode<NodeData> getBestChildViaUCB(GenericTreeNode<NodeData> currentNode) {
         double bestUCB1 = Double.NEGATIVE_INFINITY;
         GenericTreeNode<NodeData> bestChild = null;//will not produce null pointer because of context if algorithm is implemented correctly.
 
@@ -267,6 +318,30 @@ public class MCTSEvaluator {
         }
         return bestChild;
     }
+
+
+
+    /**
+     * when confronted with a set of nodes to choose from, whichever node maximizes this function is the node that should be investigated.
+     * this formula is the average evalulation of this state over each time it has been visited plus c * sqrt(ln(parentVisits)/visits)
+     * this formula is designed to strike a balance between exploration of uninvestigated moves and further examining moves that have already shown good potential.
+     * That balance is determined through the C value
+     * <p>
+     * for preformance reasons this method assumes that the supplied node has a parent and that the parent node has been visited a positive number of times.
+     *
+     * @param node the node we are considering
+     * @return a double representing how interesting this node is.
+     */
+    double getUCB1(GenericTreeNode<NodeData> node) {
+        if (node.getData().getNumVisits() <= 0) {//>= as opposed to == in case somehow this node has a negative value this would prevent a negative in the square root function.
+            return Double.POSITIVE_INFINITY;//we can't divide by zero and this is the intended behaviour
+        }
+        return (node.getData().getTotalScore() / node.getData().getNumVisits()) + (C * Math.sqrt(Math.log(node.getParent().getData().getNumVisits()) / node.getData().getNumVisits()));
+
+    }
+
+
+
 
     /**
      * expands the given node. the game actions generated
@@ -289,41 +364,32 @@ public class MCTSEvaluator {
         }
     }
 
+
+
+
     /**
-     * Looks through the root's children and returns the action taken to reach the child with the highest UCB1 value
-     *
-     * @return the current estimation for the best move to take.
+     * this method is called when MCTS has visited  a new node and wants an evaluation of it. traditionally this is preformed by a random rollout but this function
+     * will attempt to load a value network and use it. If anything goes wrong the default behavior is a random rollout
+     * @param currentState the state to evaluate
+     * @return the evaluation of that state
      */
-    public GameAction getCurrentBestMove() {
-        double bestVisits = Double.NEGATIVE_INFINITY;
-        GameAction bestAction = null;
-        for (GenericTreeNode<NodeData> child : tree.getRoot().getChildren()) {
-            if (child.getData().getNumVisits() >= bestVisits) {
-                bestAction = child.getData().getActionTaken();
-                bestVisits = child.getData().getNumVisits();
+    private double evaluateEndPoint(GameState currentState) {
+        if (optionalValueNetwork.isPresent()) {
+            //model is initzlized in constructor
+            try {
+                return optionalValueNetwork.get().output(com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getValueNetworkInputV1( (BoardState) currentState)).getDouble(0,0) * (currentState.isPlayerOneTurn()?1:-1);//the AI always sees the board as if its player 1's turn, so invert the score if otherwise.
+            } catch (Exception e) {
+                warnings.add("Failed to use value network to make prediction: " + e);
+                return preformRollout(currentState);
             }
 
+        }else {
+            return preformRollout(currentState);
         }
 
-        return bestAction;
     }
 
-    /**
-     * when confronted with a set of nodes to choose from, whichever node maximizes this function is the node that should be investigated.
-     * this formula is the average evalulation of this state over each time it has been visited plus c * sqrt(ln(parentVisits)/visits)
-     * <p>
-     * for preformance reasons this method assumes that the supplied node has a parent and that the parent node has been visited a positive number of times.
-     *
-     * @param node the node we are considering
-     * @return a double representing how interesting this node is.
-     */
-    double getUCB1(GenericTreeNode<NodeData> node) {
-        if (node.getData().getNumVisits() <= 0) {//>= as opposed to == in case somehow this node has a negative value this would prevent a negative in the square root function.
-            return Double.POSITIVE_INFINITY;//we can't divide by zero and this is the intended behaviour
-        }
-        return (node.getData().getTotalScore() / node.getData().getNumVisits()) + (C * Math.sqrt(Math.log(node.getParent().getData().getNumVisits()) / node.getData().getNumVisits()));
 
-    }
 
     /**
      * Preforms a random playout of a game. The game is played until the state becomes terminal. Then the evaluation of this state is returned.
@@ -354,31 +420,53 @@ public class MCTSEvaluator {
     }
 
     /**
-     * this method is called when MCTS has visited  a new node and wants an evaluation of it. traditionally this is preformed by a random rollout but this function
-     * will attempt to load a value network and use it. If anything goes wrong the default behavior is a random rollout
-     * @param currentState the state to evaluate
-     * @return the evaluation of that state
+     * Looks through the root's children and returns the action taken to reach the child with the highest UCB1 value
+     *
+     * @return the current estimation for the best move to take.
      */
-    private double evaluateEndPoint(GameState currentState) {
-        if (optionalValueNetwork.isPresent()) {
-            //model is initzlized in constructor
-            try {
-                return optionalValueNetwork.get().output(com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getValueNetworkInputV1_0( (BoardState) currentState)).getDouble(0,0) * (currentState.isPlayerOneTurn()?1:-1);//the AI always sees the board as if its player 1's turn, so invert the score if otherwise.
-            } catch (Exception e) {
-                warnings.add("Failed to use value network to make prediction: " + e);
-                return preformRollout(currentState);
+    public GameAction getCurrentBestMove() {
+        double bestVisits = Double.NEGATIVE_INFINITY;
+        GameAction bestAction = null;
+        for (GenericTreeNode<NodeData> child : tree.getRoot().getChildren()) {
+            if (child.getData().getNumVisits() >= bestVisits) {
+                bestAction = child.getData().getActionTaken();
+                bestVisits = child.getData().getNumVisits();
             }
 
-        }else {
-            return preformRollout(currentState);
         }
 
+        return bestAction;
     }
+
+
+
+
 
     @Override
     public String toString() {
         return getNodeString(tree.getRoot(), 0, new DecimalFormat("#.#"));
     }
+    //recursive method to get string representation of tree
+    private static String getNodeString(GenericTreeNode<NodeData> node, int depth, DecimalFormat format) {
+        StringBuilder builder = new StringBuilder();
+        //add stuff for this node.
+
+        if (depth > 0) {
+            builder.repeat(' ', (depth - 1) * 4);
+            builder.append("|---");
+        }
+        builder.append("Node{t=").append(node.getData().getTotalScore()).append(",n=").append(node.getData().getNumVisits()).append(",v=").append(format.format(node.getData().getTotalScore() / node.getData().getNumVisits())).append(",c=").append(node.getNumberOfChildren()).append(",").append(node.getData().getActionTaken()).append("}\n");
+        for (GenericTreeNode<NodeData> child : node.getChildren()) {
+            if (child.getData().getNumVisits() > 0) {
+                //builder.repeat(' ', depth * 4).append("|\n");
+                builder.append(getNodeString(child, depth + 1, format));
+            }
+
+        }
+        return builder.toString();
+
+    }
+
 
     public void displayDialog() {
         DecimalFormat format = new DecimalFormat("#.#");

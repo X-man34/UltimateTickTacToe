@@ -38,7 +38,7 @@ class StateDatumTest {
         boardState.preformAction(new UltimateTickTacToeGameAction(2, 2, 1, 1, -1));
 
         //ask the computer what the best move is and in doing so create a search tree
-        MCTSEvaluator evaluator = new MCTSEvaluator(boardState, new EvaluatorConfiguration(2, 1000, 5, 1, 0, false, false, Optional.empty()));//low compute time, this doesn't need to be accurate.
+        MCTSEvaluator evaluator = new MCTSEvaluator(boardState, new EvaluatorConfiguration(2, 1000, 5, 1, 0, false, false, Optional.empty(), Optional.empty()));//low compute time, this doesn't need to be accurate.
         evaluator.dispalyDialogAfterSearch = false;
         evaluator.log = false;
         evaluator.preformSearch();//make the tree

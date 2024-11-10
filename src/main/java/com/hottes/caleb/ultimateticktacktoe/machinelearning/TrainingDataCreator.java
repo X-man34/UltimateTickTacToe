@@ -37,14 +37,7 @@ public class TrainingDataCreator {
     public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter filepath of data folder: ");
-        String baseFolderInput = scanner.nextLine();
-
-        File dataFolder = new File(baseFolderInput);
-        if (!dataFolder.isDirectory() && dataFolder.exists()) {
-            System.out.println("Invalid data folder path. Exiting. ");
-            System.exit(1);
-        }
+        File dataFolder = Resources.getDataFolderFromUser(scanner);
 
 
         //so the data folder either doesn't exist or is actually a folder.
@@ -86,7 +79,7 @@ public class TrainingDataCreator {
 
 
         PrintStream console = System.out;
-        EvaluatorConfiguration config = new EvaluatorConfiguration(2, 1000, computeTime, 1, 0, false, false, Optional.empty());
+        EvaluatorConfiguration config = new EvaluatorConfiguration(2, 1000, computeTime, 1, 0, false, false, Optional.empty(), Optional.empty());
         //String description = " This data series is using a raw MCTS search to generate data." + config + " using 20 threads to sim 1000 games is the goal. ";
         try (ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads)) {
             for (int i = gameStart; i < numGames + 1; i++) {

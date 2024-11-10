@@ -45,6 +45,7 @@ public class Resources {
     public static final int MULTTHREADED_BATCH_SIZE = 100000;
 
     public static Optional<MultiLayerNetwork> valueNetwork = Optional.empty();//will try to load in static block
+    public static Optional<MultiLayerNetwork> policyNetwork = Optional.empty();
 
     static {
         BufferedImage tempVar;
@@ -92,12 +93,21 @@ public class Resources {
             e.printStackTrace();
         }
 
+        try {
+            policyNetwork = Optional.of(MultiLayerNetwork.load(new File(Resources.class.getResource("policyNetworkV1_0.zip").getPath()), false));
+        } catch (IOException e) {
+            policyNetwork = Optional.empty();
+            System.out.println("Failed to load policy network");
+            e.printStackTrace();
+        }
+
+
     }
 
-    public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false, Optional.empty());
-    public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false, Optional.empty());
-    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false, valueNetwork);
-    public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true, Optional.empty());
+    public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false, Optional.empty(), Optional.empty());
+    public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false, Optional.empty(), Optional.empty());
+    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false, valueNetwork, policyNetwork);
+    public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true, Optional.empty(), Optional.empty());
 
 
     /**
