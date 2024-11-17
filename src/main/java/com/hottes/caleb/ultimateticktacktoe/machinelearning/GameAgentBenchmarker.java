@@ -47,8 +47,8 @@ public class GameAgentBenchmarker {
         try {
             EvaluatorConfiguration playerOneConfig = EvaluatorConfiguration.getInstance(new File("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\evaluators\\valueAndPolicy.zip"));
             System.out.println(playerOneConfig.computeTime());
-            EvaluatorConfiguration playerTwoConfig = new EvaluatorConfiguration(2, 1000, 30, 10, 0, false, false, Optional.empty(), Optional.empty());
-            new GameAgentBenchmarker(playerOneConfig, playerTwoConfig, 50, new PrintStream("F:\\asdf.log"), 5).benchMarkAgents();
+            EvaluatorConfiguration playerTwoConfig = new EvaluatorConfiguration(2, 1000, 30, 20, 0, false, false, Optional.empty(), Optional.empty());
+            new GameAgentBenchmarker(playerOneConfig, playerTwoConfig, 50, new PrintStream("F:\\asdf.log"), 1).benchMarkAgents();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

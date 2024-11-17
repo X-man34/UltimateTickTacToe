@@ -106,7 +106,7 @@ public class Resources {
 
     public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false, Optional.empty(), Optional.empty());
     public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false, Optional.empty(), Optional.empty());
-    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false, valueNetwork, policyNetwork);
+    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 25, 50, true, false, valueNetwork, policyNetwork);
     public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true, Optional.empty(), Optional.empty());
 
 

@@ -61,7 +61,11 @@ dependencies {
   implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-M2.1'
 
   // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
-  implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'
+  //implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'
+
+  implementation('org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1') {
+      exclude(group: 'ffmpeg-5.0-1.5.7-android-arm.jar')
+  }
 
 // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-ui
   implementation group: 'org.deeplearning4j', name: 'deeplearning4j-ui', version: '1.0.0-M2.1'
@@ -77,6 +81,7 @@ dependencies {
   // https://mvnrepository.com/artifact/com.opencsv/opencsv
   implementation group: 'com.opencsv', name: 'opencsv', version: '5.9'
 
+  implementation 'org.apache.commons:commons-math3:3.6.1'
 
 
 //  // https://mvnrepository.com/artifact/org.nd4j/nd4j-cuda-10.0-platform
@@ -113,3 +118,21 @@ jlink {
 jlinkZip {
   group = 'distribution'
 }
+jar {
+  // Use a custom manifest file you created
+  manifest {
+    attributes(
+            'Main-Class': 'com.hottes.caleb.ultimateticktacktoe.Launcher'  // replace with your main class
+    )
+  }
+
+  // Exclude all manifests from dependencies
+  from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }) {
+    exclude 'META-INF/MANIFEST.MF'
+  }
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE  // Keeps the first occurrence of duplicate entries
+
+
+
+}
+

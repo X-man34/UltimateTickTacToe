@@ -6,6 +6,7 @@ import com.hottes.caleb.ultimateticktacktoe.SubBoardState;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
+import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getIndex;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResourcesTest {
 
@@ -96,4 +100,21 @@ class ResourcesTest {
         //new ValueNetworkTrainer().train("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\");
 
     }
+
+    @Test
+    void testGetActionFromFlatIndex() {
+        int boardSize = 3;
+        for (int majorRow = 0; majorRow < boardSize; majorRow++) {
+            for (int minorRow = 0; minorRow < boardSize; minorRow++) {
+                for (int majorCol = 0; majorCol < boardSize; majorCol++) {
+                    for (int minorCol = 0; minorCol < boardSize; minorCol++) {
+                        UltimateTickTacToeGameAction actionHere = new UltimateTickTacToeGameAction(majorRow, majorCol, minorRow, minorCol, 1);
+                        UltimateTickTacToeGameAction newAction = Resources.getActionFromFlatIndex(Resources.getIndex(majorRow, majorCol, minorRow, minorCol, boardSize), 1, boardSize);
+                        assertEquals(actionHere, newAction, "Game Action at: " + actionHere + " was not brought back from flat index correctly");
+                    }
+                }
+            }
+        }
+    }
+
 }

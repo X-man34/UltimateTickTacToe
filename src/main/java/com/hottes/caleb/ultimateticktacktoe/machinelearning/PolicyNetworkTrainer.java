@@ -1,14 +1,6 @@
 package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 
-import com.hottes.caleb.ultimateticktacktoe.BoardState;
-import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.writable.NDArrayWritable;
-import org.datavec.image.recordreader.ImageRecordReader;
 import org.deeplearning4j.core.storage.StatsStorage;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
-import org.deeplearning4j.nn.conf.CNN2DFormat;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.inputs.InputType;
@@ -19,17 +11,14 @@ import org.deeplearning4j.optimize.listeners.CheckpointListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.model.stats.StatsListener;
 import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
-import org.nd4j.enums.DataFormat;
 import org.nd4j.evaluation.regression.RegressionEvaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
-import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.indexing.INDArrayIndex;
-import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -43,47 +32,34 @@ import java.util.concurrent.TimeUnit;
 public class PolicyNetworkTrainer extends NetworkTrainer {
     @Override
     public void train(String baseDir) {
-
-
         try {
-
-//            preprocessPolicyImageInput("F:\\UltimateTickTackToeAITrainingData\\policyNetworkInputImages\\");
+//            preprocessPolicyImageInput("F:\\UltimateTickTackToeAITrainingData\\policyNetworkImageData\\", baseDir, "series1", .8, 3, 1);
 //            System.exit(0);
             String thisModelDir = baseDir + "models\\policyNetwork" + System.currentTimeMillis() + "\\";
             new File(thisModelDir).mkdirs();
             outStream = new PrintStream(thisModelDir + "trainingLog.log");
-            String datasetDir = "F:\\UltimateTickTackToeAITrainingData\\policyNetworkInputImages\\";
-            String labelsFile =  datasetDir + "labels.csv";
+            String dataDir = "F:\\UltimateTickTackToeAITrainingData\\policyNetworkImageData\\";
+            String trainDir = dataDir + "train";
+            String testDir = dataDir + "test";
+
             int height = 76;
             int width = 76;
             int channels = 3;
+            int batchSize = 1000;
 
-//            ImageRegressionDataSetIterator iterator = new ImageRegressionDataSetIterator(width, height, channels, new File(datasetDir), 5);
-//
-//            System.out.println(matrix);
-//            System.out.println(matrix.shapeInfoToString());
+            DataSetPreProcessor normalizationPreProcessor = toPreProcess -> {
+                DataNormalization normalizer = new NormalizerMinMaxScaler();
+                normalizer.fit(toPreProcess);
+                normalizer.transform(toPreProcess);
+            };
+            ImageRegressionDataSetIterator trainingDataIterator = new ImageRegressionDataSetIterator( width, height, channels, new File(trainDir), batchSize, "png");
+            trainingDataIterator.setPreProcessor(normalizationPreProcessor);
+            ImageRegressionDataSetIterator testDataIterator = new ImageRegressionDataSetIterator( width, height, channels, new File(testDir), batchSize, "png");
+            testDataIterator.setPreProcessor(normalizationPreProcessor);
+            DataSet validationSet = testDataIterator.next(6000);
+            int classCount = trainingDataIterator.totalOutcomes();
 
-
-            DataSet inputData = new DataSet();
-            System.out.println("loading data");
-          //  inputData.load(new File(dataset));
-            System.out.println("data loaded");
-
-            int featuresCount = inputData.numInputs();
-            int classCount = inputData.numOutcomes();
-            inputData.shuffle(42);
-            //doesn't work with rank 6 data, but the data should already be normalized.
-//        DataNormalization normalizer = new NormalizerMinMaxScaler();
-//        normalizer.fit(inputData);
-//        normalizer.transform(inputData);
-
-
-            SplitTestAndTrain testAndTrain = inputData.splitTestAndTrain(.8);
-            DataSet trainingData = testAndTrain.getTrain();
-            DataSet testData = testAndTrain.getTest();
-
-
-            int numHiddenNeurons = 250;
+            int numHiddenNeurons = 300;
             Subsampling3DLayer subsampling3DLayer = new Subsampling3DLayer();
             subsampling3DLayer.setKernelSize(new int[]{3, 3, 3});
             subsampling3DLayer.setDataFormat(Convolution3D.DataFormat.NDHWC);
@@ -98,12 +74,17 @@ public class PolicyNetworkTrainer extends NetworkTrainer {
                     .weightInit(WeightInit.XAVIER)
                     .updater(new Adam.Builder().learningRate(.006).build())
                     .list()
-                    .layer(new ConvolutionLayer.Builder().nIn(3).nOut(3).kernelSize(4, 4).padding(1, 1).stride(1, 1).activation(Activation.IDENTITY).build())
+                    .layer(new ConvolutionLayer.Builder().nIn(3).nOut(3).kernelSize(5, 5).padding(1, 1).stride(1, 1).activation(Activation.IDENTITY).build())
+                    .layer(new SubsamplingLayer.Builder(PoolingType.MAX).kernelSize(2,2).stride(2,2).build())
+                    .layer(new ConvolutionLayer.Builder().nIn(3).nOut(3).kernelSize(5, 5).padding(1, 1).stride(1, 1).activation(Activation.IDENTITY).build())
                     .layer(new SubsamplingLayer.Builder(PoolingType.MAX).kernelSize(2,2).stride(2,2).build())
                     .layer(new ConvolutionLayer.Builder().nIn(3).nOut(3).kernelSize(4, 4).padding(1, 1).stride(1, 1).activation(Activation.IDENTITY).build())
                     .layer(new SubsamplingLayer.Builder(PoolingType.MAX).kernelSize(2,2).stride(2,2).build())
                     .layer(new ConvolutionLayer.Builder().nIn(3).nOut(3).kernelSize(4, 4).padding(1, 1).stride(1, 1).activation(Activation.IDENTITY).build())
                     .layer(new SubsamplingLayer.Builder(PoolingType.MAX).kernelSize(2,2).stride(2,2).build())
+                    .layer(new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
+                    .layer(new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
+                    .layer(new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
                     .layer(new DenseLayer.Builder().nIn(numHiddenNeurons).nOut(numHiddenNeurons).build())
                     .layer(new OutputLayer.Builder(
                             LossFunctions.LossFunction.MSE)
@@ -115,11 +96,13 @@ public class PolicyNetworkTrainer extends NetworkTrainer {
             model.init();
 
             UIServer uiServer = UIServer.getInstance();
-            StatsStorage statsStorage = new InMemoryStatsStorage();
+            InMemoryStatsStorage statsStorage = new InMemoryStatsStorage();
             uiServer.attach(statsStorage);
 
-
             model.addListeners(new CheckpointListener.Builder(thisModelDir).saveEvery(30, TimeUnit.SECONDS).keepLast(2).build());
+
+
+
 
             log("beginning training");
             String link = "http://localhost:9000/train/overview";
@@ -128,49 +111,57 @@ public class PolicyNetworkTrainer extends NetworkTrainer {
                 Desktop.getDesktop().browse(new URI(link));
             }
             int maxEpochs = 500;
-            int epochsTrained = 0;
-            for (int epoch = 0; epoch < maxEpochs; epoch++) {
-                if (epoch == 2) {
-                    model.addListeners(new StatsListener(statsStorage, 1));//only add this after a bit so scale the graph so its useful
+            int epoch = 0;
+            int batch = 0;
+            int lastEval = 0;
+            for (epoch = 0; epoch < maxEpochs;) {
+                if (!trainingDataIterator.hasNext()) {
+                    trainingDataIterator.reset();
+                    epoch++;
                 }
-                model.fit(trainingData);
-                epochsTrained++;
-                if (epoch % 2 == 0) {
-                    // Evaluate on validation set
-                    INDArray validationOutput = model.output(testData.getFeatures());
+                model.fit(trainingDataIterator.next());
+                batch++;
+                if (batch == 4) {
+                    model.addListeners(new StatsListener(statsStorage, 1));
+
+                }
+                if (epoch > lastEval) {
+                    System.out.println("Evaluating");
+                    INDArray validationOutput = model.output(validationSet.getFeatures());
                     RegressionEvaluation validationEvaluator = new RegressionEvaluation();
-                    validationEvaluator.eval(testData.getLabels(), validationOutput);
+                    validationEvaluator.eval(validationSet.getLabels(), validationOutput);
 
-
-                    INDArray trainOutput = model.output(trainingData.getFeatures());
+                    trainingDataIterator.reset();
+                    INDArray trainOutput = model.output(trainingDataIterator);
                     RegressionEvaluation trainindEval = new RegressionEvaluation();
-                    trainindEval.eval(trainingData.getLabels(), trainOutput);
+                    trainindEval.eval(trainingDataIterator.getAllLabels(), trainOutput);
 
                     double percentDiff = Math.abs(trainindEval.averageMeanSquaredError() - validationEvaluator.averageMeanSquaredError()) / validationEvaluator.averageMeanSquaredError() * 100;
                     log("\nValidation Stats for Epoch " + epoch + ": \n" + validationEvaluator.averageMeanSquaredError() + "\nTrainTestDifference: " + percentDiff + " %");
-                    if (percentDiff > 1) {
-                        log("overfitting detected, Difference: " + percentDiff + " %");
+                    lastEval++;
+                    trainingDataIterator.reset();//so it doesn't loop forever
+                    if (percentDiff > 2.5) {
                         break;
                     }
-
                 }
 
             }
 
-            INDArray output = model.output(testData.getFeatures());
+            INDArray output = model.output(validationSet.getFeatures());
             RegressionEvaluation eval = new RegressionEvaluation();
-            eval.eval(testData.getLabels(), output);
+            eval.eval(validationSet.getLabels(), output);
+
             log("\n" + eval.averageMeanSquaredError());
-            log("TestDataLabels: \n" + testData.getLabels());
+            log("TestDataLabels: \n" + validationSet.getLabels());
             log("Actual labels: \n" + output);
-            log("Trained for: " + epochsTrained + "epochs");
+            log("Trained for: " + epoch + "epochs");
             //log("Trained on dataset: " + dataset);
             log("Saving model");
 
 
 
 
-            model.save(new File(thisModelDir + "valueNetworkMSE" + eval.averageMeanSquaredError() + ".zip"));
+            model.save(new File(thisModelDir + "valueNetworkMSE" + eval.averageMeanSquaredError()+  ".zip"));
             log("Model Saved\n\n\nConfiguration\n\n\n");
             outStream.println(configuration.toJson());//dont' want this going to the console
         } catch (IOException | URISyntaxException e) {
@@ -207,10 +198,33 @@ public class PolicyNetworkTrainer extends NetworkTrainer {
 
     public static void main(String[] args) {
 
-        String folderPath = "C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data";//for development
+        if (args.length > 1)  {
+            printHelpString();
+        }
+//        for (String arg : args) {
+//            if (arg.equalsIgnoreCase("-h"))
+//                printHelpString();
+//            if (arg.equalsIgnoreCase("-s"))
+//                showToString = false;
+//            if (arg.equalsIgnoreCase("-m"))
+//                printSectionSummaries = false;
+//        }
+        //printHelpString();
+
+
+        String folderPath = "C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\";//for development
 //        Scanner scanner = new Scanner(System.in);
 //        File dataFolder = Resources.getDataFolderFromUser(scanner);
         //String folderPath = dataFolder.getAbsolutePath();
         new PolicyNetworkTrainer().train(folderPath + "\\");
+    }
+
+    private static void printHelpString() {
+        System.err.println("Right now none of these options are supported and only exist as a sort of todo list for the developer\n");
+        System.out.println("At most one argument allowed, basically you can switch which \"script\" is run\n");
+        System.out.println("Anything input needed will be gathered through the command line and not args\n");
+        System.out.println("Use \"-d\" to process raw data into policy network training data. This option generates a whole bunch of images and puts them in train and test directories along with the labels\n");
+        System.out.println("Use \"-t\" to train a neural network\n");
+        System.exit(0);
     }
 }

@@ -326,6 +326,9 @@ public class BoardState extends GameState {
      * @return true if the action is legal
      */
     public boolean isLegal(UltimateTickTacToeGameAction action) {
+        if (action == null) {
+            return false;
+        }
         if ((isPlayerOneTurn() && action.getMarker() == -1) || (!isPlayerOneTurn() && action.getMarker() == 1)) {
             //then we have the wrong marker.
             return false;

@@ -5,27 +5,18 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.util.Pair;
 import org.datavec.image.loader.NativeImageLoader;
-import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.Op;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.INDArrayIndex;
 import org.nd4j.linalg.indexing.NDArrayIndex;
-import org.nd4j.linalg.indexing.conditions.Condition;
 
-import javax.xml.crypto.Data;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.LongBuffer;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.rmi.UnexpectedException;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class ImageRegressionDataSetIterator implements DataSetIterator {
 
@@ -36,7 +27,7 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
     private final int batchSize;
     private final File labelFile;
     private final String extension;
-    private Iterator<File> randomImageFileIterator;
+    private Iterator<File> imageFileIterator;
     private final ArrayList<Pair<Integer, List<Double>>> labelData;
     private DataSetPreProcessor preProcessor;
 
@@ -64,7 +55,7 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
         if (!labelFile.exists()) {
             throw new FileNotFoundException("Could not find label file: " + labelFile.getAbsolutePath());
         }
-        randomImageFileIterator = getRandomFileIterator(imageDir, List.of(extension));
+        imageFileIterator = getFileIterator(imageDir, List.of(extension));
         labelData = loadLabels(labelFile);
 
     }
@@ -108,7 +99,7 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
     }
 
 
-    private Iterator<File> getRandomFileIterator(File imageDir, List<String> extensions) throws FileNotFoundException {
+    private Iterator<File> getFileIterator(File imageDir, List<String> extensions) throws FileNotFoundException {
         if (!imageDir.isDirectory()) {
             throw new IllegalArgumentException();
         }
@@ -123,17 +114,12 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
                     }
                 }
             }
-            Collections.shuffle(fileList);
             return fileList.iterator();
         } else {
              throw new FileNotFoundException("No file found :(");
         }
     }
 
-    private INDArray loadImage(File imageFile) throws IOException {
-        NativeImageLoader loader = new NativeImageLoader(height, width, channels);
-        return loader.asMatrix(imageFile);
-    }
 
     /**
      * returns a dataset with the number of examples equal to the batch size
@@ -148,21 +134,22 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
      * This method loads the specifed number of images and their labels into a dataset and returns it.
      * If there are some but not enough images to finish the batch then as many as are left are loaded.
      * If errors are ecountered the image what was attempted to be loaded is skipped
-     * if the iterator does not have any images this will return null, use {@link ImageRegressionDataSetIterator#hasNext()} to avoid this
+     * if the iterator does not have any images it will return null, use {@link ImageRegressionDataSetIterator#hasNext()} to avoid this
      * @param num the number of examples
      * @return a dataset of num datapoint.
      */
     @Override
     public DataSet next(int num) {
         if (!hasNext()) {
-            return next();
+           return null;
         }
         int imagesLoaded = 0;
         INDArray featuresArray = Nd4j.create(num, channels, width, height);
         INDArray labelsArray = Nd4j.create(num, 81);
-        while (randomImageFileIterator.hasNext()) {
+        long startTime = System.currentTimeMillis();
+        while (imageFileIterator.hasNext()) {
             try {
-                File imageFile = randomImageFileIterator.next();
+                File imageFile = imageFileIterator.next();
                 INDArray matrix = loadImage(imageFile);
                 featuresArray.put(new INDArrayIndex[]{NDArrayIndex.point(imagesLoaded), NDArrayIndex.all(), NDArrayIndex.all(), NDArrayIndex.all()}, matrix);
                 labelsArray.put(new INDArrayIndex[]{NDArrayIndex.point(imagesLoaded), NDArrayIndex.all()}, findLabel(Integer.parseInt(imageFile.getName().split("\\.")[0])));
@@ -173,9 +160,18 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
             if (imagesLoaded >= num) {
                 break;
             }
+            if (!imageFileIterator.hasNext()) {
+                System.out.println();
+            }
         }
+        //System.out.println("Took: " + (System.currentTimeMillis() - startTime) + " ms to load " + imagesLoaded + " images");
+        // Trim the features and labels arrays to only the rows that have been populated (based on imagesLoaded)
+        INDArray featuresTrimmed = featuresArray.get(NDArrayIndex.interval(0, imagesLoaded), NDArrayIndex.all(), NDArrayIndex.all(), NDArrayIndex.all());
+        INDArray labelsTrimmed = labelsArray.get(NDArrayIndex.interval(0, imagesLoaded), NDArrayIndex.all());
 
-        DataSet dataSet = new DataSet(featuresArray, labelsArray);
+        // Create the DataSet with trimmed arrays
+        DataSet dataSet = new DataSet(featuresTrimmed, labelsTrimmed);
+
         if (preProcessor != null) {
             preProcessor.preProcess(dataSet);
         }
@@ -184,12 +180,12 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
 
     @Override
     public int inputColumns() {
-        throw new UnsupportedOperationException("Not applicable, input data rank is 4, so columns don't really mean anything. ");
+        return -1;//Not applicable, input data rank is 4, so columns don't really mean anything.
     }
 
     @Override
     public int totalOutcomes() {
-        throw new UnsupportedOperationException();
+        return labelData.getFirst().getValue().size();
     }
 
     @Override
@@ -205,7 +201,7 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
     @Override
     public void reset() {
         try {
-            randomImageFileIterator = getRandomFileIterator(imageDir, List.of(extension));
+            imageFileIterator = getFileIterator(imageDir, List.of(extension));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -233,8 +229,32 @@ public class ImageRegressionDataSetIterator implements DataSetIterator {
 
     @Override
     public boolean hasNext() {
-        return randomImageFileIterator.hasNext();
+        return imageFileIterator.hasNext();
     }
+
+
+    private INDArray loadImage(File imageFile) throws IOException {
+        NativeImageLoader loader = new NativeImageLoader(height, width, channels);
+        return loader.asMatrix(imageFile);
+    }
+
+    public INDArray getFirstNLabels(int n) {
+        INDArray output = Nd4j.create(n, labelData.get(0).getValue().size());
+
+        for (int i = 0; i < n; i++) {
+            Pair<Integer, List<Double>> label = labelData.get(i);
+            double[] labelArray = label.getValue().stream().mapToDouble(Double::doubleValue).toArray();
+            INDArray labels = Nd4j.create(labelArray);
+            output.putRow(label.getKey(), labels);
+        }
+
+        return output;
+    }
+
+    public INDArray getAllLabels() {
+        return  getFirstNLabels(labelData.size());
+    }
+
 
 
 }

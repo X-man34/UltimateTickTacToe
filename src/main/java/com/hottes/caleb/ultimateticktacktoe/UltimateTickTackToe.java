@@ -23,6 +23,7 @@ import java.util.Optional;
  * 6. load menu screen options from config file
  * 7. more documentation
  * 8. MCTS stop thinking when confident to save time
+ * 9.  use UCB with policy network with the prob being the first term
  */
 
 

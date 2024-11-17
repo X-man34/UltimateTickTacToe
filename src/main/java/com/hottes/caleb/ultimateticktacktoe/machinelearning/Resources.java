@@ -4,29 +4,23 @@ import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
-import org.apache.commons.io.filefilter.DelegateFileFilter;
-import org.nd4j.linalg.api.buffer.DataType;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.TDistribution;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class Resources {
-
 
 
     public static int getActivityIndex(int majRow, int majCol, int boardSize) {
@@ -48,6 +42,20 @@ public class Resources {
         int majorIndex = majRow * boardSize + majCol;
         int minorIndex = minRow * boardSize + minCol;
         return majorIndex * boardSize * boardSize + minorIndex;
+    }
+
+
+    public static UltimateTickTacToeGameAction getActionFromFlatIndex(int flatIndex, double marker, int boardSize) {
+        if (flatIndex < 0 || flatIndex > Math.pow(boardSize, 4)) {
+            return null;
+        }
+        int majorIndex = Math.floorDiv(flatIndex, boardSize * boardSize);
+        int majRow = Math.floorDiv(majorIndex, boardSize);
+        int majCol = majorIndex % boardSize;
+        int minorIndex = flatIndex - (majorIndex * boardSize * boardSize);
+        int minRow = Math.floorDiv(minorIndex, boardSize);
+        int minCol = minorIndex % boardSize;
+        return new UltimateTickTacToeGameAction(majRow,majCol,minRow,minCol,marker);
     }
 
     /**
@@ -355,5 +363,33 @@ public class Resources {
             long time = System.currentTimeMillis() - startTime;
             times.add(time);
         }
+    }
+
+
+    public static RandomSampleStatistics getSampleStatistics(List<Double> data, double desiredConfidence, String units) {
+        return getSampleStatistics(data.stream().mapToDouble(Double::doubleValue).toArray(), desiredConfidence, units);
+    }
+    public static RandomSampleStatistics getSampleStatistics(double[] data, double desiredConfidence, String units) {
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        for (double num : data) {
+            stats.addValue(num);
+        }
+
+        double mean = stats.getMean();
+        double standardDeviation = stats.getStandardDeviation();
+        int n = data.length;  // Number of data points
+        double alpha = 1 - desiredConfidence;
+        double zValue = 0;
+        if (n > 100) {
+            NormalDistribution normalDistribution = new NormalDistribution();
+            zValue = normalDistribution.inverseCumulativeProbability(1 - alpha / 2);
+        }else if (n > 1){
+            TDistribution tDistribution = new TDistribution(n - 1);
+            zValue = tDistribution.inverseCumulativeProbability(1 - alpha / 2);
+        }else {
+            return null;
+        }
+        double marginOfError = zValue * (standardDeviation / Math.sqrt(n));
+        return new RandomSampleStatistics(mean, marginOfError, desiredConfidence, standardDeviation, units);
     }
 }

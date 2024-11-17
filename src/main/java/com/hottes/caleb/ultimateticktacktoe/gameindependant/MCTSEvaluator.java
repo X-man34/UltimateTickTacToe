@@ -53,6 +53,9 @@ public class MCTSEvaluator {
     private int maxDepth = 0;
     private long positionsSearched = 0;
     private long childCreationRaceConditions = 0;
+    private long traversalTimeSum = 0;
+    private int traversalCount;
+
 
     private ArrayList<String> warnings = new ArrayList<>();
     public MCTSEvaluator(GameState initalState) {
@@ -102,6 +105,8 @@ public class MCTSEvaluator {
         maxDepth = 0;
         positionsSearched = 0;
         childCreationRaceConditions = 0;
+        traversalCount = 0;
+        traversalTimeSum = 0;
         long submittedTasks = 0;
         while (searching) {
             //check if we have satisfied the end condition.
@@ -131,6 +136,8 @@ public class MCTSEvaluator {
         if (log) {
             System.out.println("Determined best move using roughly: " + getCompletedTasks() * Resources.MULTTHREADED_BATCH_SIZE + " iterations");
             System.out.println("Searched as far ahead as: " + maxDepth + " moves");
+            double avgTraversalTime = (double) traversalTimeSum / traversalCount;
+            System.out.println("Average traversal time: " + avgTraversalTime + " ms");
             System.out.println("Searched: " + positionsSearched + " states");
             System.out.println("Detected: " + childCreationRaceConditions + " node expansion race conditions");
             if (!warnings.isEmpty()) {
@@ -147,6 +154,8 @@ public class MCTSEvaluator {
     private GameAction singleThreadedSearch() {
         warnings.clear();
         searching = true;
+        traversalTimeSum = 0;
+        traversalCount = 0;
         long startTime = System.currentTimeMillis();
         int iterations = 0;
         while (searching) {
@@ -161,6 +170,8 @@ public class MCTSEvaluator {
         }
         if (log) {
             System.out.println("Determined best move using: " + iterations + "Iterations");
+            double avgTraversalTime = (double) traversalTimeSum / traversalCount;
+            System.out.println("Average traversal time: " + avgTraversalTime + " ms");
             if (!warnings.isEmpty()) {
                 System.out.println("Warnings while preforming search: " + warnings);
             }
@@ -182,6 +193,7 @@ public class MCTSEvaluator {
     public void preformIteration(GenericTreeNode<NodeData> currentNode) {
         //traverse tree to leaf node using UCB1 algorithm
         int depth = 0;
+        long traversalStart = System.currentTimeMillis();
         while (currentNode.hasChildren()) {
             currentNode = getBestChild(currentNode);
             depth++;
@@ -189,6 +201,8 @@ public class MCTSEvaluator {
         if (depth > maxDepth) {
             setMaxDepth(depth);
         }
+        traversalTimeSum += System.currentTimeMillis() - traversalStart;
+        traversalCount++;
         double scoreToAdd;
         //now that we have traversed the tree we are deep in and it is unlikly that another thread will have to wait for this node to unlock.
         synchronized (currentNode) {
@@ -214,6 +228,7 @@ public class MCTSEvaluator {
             currentNode.getData().incrementNumVisits();
             currentNode.getData().changeTotalScore(scoreToAdd);
         }
+
         //this doesn't need to be synchronized I think even if another thread modifies one of the nodes before an iteration of this loop finishes, we shouldn't care becuase we are just adding to totals.
         while (currentNode.getParent() != null) {//this will get to the second to last node which will have the root as its parent. It will increment the root and be done.
             currentNode = currentNode.getParent();
@@ -270,25 +285,38 @@ public class MCTSEvaluator {
                 }
             }
         }
-        double rand = Math.random();
         //normalize so its a valid pmf
         output = output.div(output.sum(1));
+        UltimateTickTacToeGameAction action = getActionFromPMF(output.getRow(0).toDoubleVector(), currentState.isPlayerOneTurn() ? 1 : -1);
+        if (!currentState.isLegal(action)) {
+            System.out.println("Defaulting to first legal action");
+            return (UltimateTickTacToeGameAction) currentState.getActions().getFirst();
+        }else {
+            return action;
+        }
 
-        //choose a pseudorandom action guided by the normalized and legalized pmf
-        UltimateTickTacToeGameAction actionToTake = null;
-        for (int majorRow = 0; majorRow < boardSize; majorRow++) {
-            for (int minorRow = 0; minorRow < boardSize; minorRow++) {
-                for (int majorCol = 0; majorCol < boardSize; majorCol++) {
-                    for (int minorCol = 0; minorCol < boardSize; minorCol++) {
-                        if (output.getDouble(0,  getIndex(majorRow, majorCol, minorRow, minorCol, boardSize)) >= rand) {
-                            actionToTake = new UltimateTickTacToeGameAction(majorRow, majorCol, minorRow, minorCol, currentState.isPlayerOneTurn() ? 1 : -1);
-                            break;
-                        }
-                    }
-                }
+    }
+
+    private UltimateTickTacToeGameAction getActionFromPMF(double[] pmf, double marker) {
+        double[] cumulativeDistribution = new double[pmf.length];
+        cumulativeDistribution[0] = pmf[0];
+        for (int i = 1; i < pmf.length; i++) {
+            cumulativeDistribution[i] = cumulativeDistribution[i - 1] + pmf[i];
+        }
+        double rand = Math.abs(Math.random() - .000001);//if it ever is 1 then it could return illegal values
+        //binary search for value
+        int low = 0;
+        int high = cumulativeDistribution.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (rand < cumulativeDistribution[mid]) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
-        return actionToTake;
+        return com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getActionFromFlatIndex(low, marker, 3);
     }
 
 

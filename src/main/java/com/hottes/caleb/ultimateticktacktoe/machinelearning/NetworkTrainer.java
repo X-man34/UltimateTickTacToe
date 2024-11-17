@@ -3,14 +3,11 @@ package com.hottes.caleb.ultimateticktacktoe.machinelearning;
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
 import com.hottes.caleb.ultimateticktacktoe.machinelearning.simulation.StateDatum;
 import com.opencsv.CSVWriter;
-import org.bytedeco.opencv.presets.opencv_core;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.indexing.INDArrayIndex;
-import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +26,11 @@ public abstract class NetworkTrainer {
     protected static final Logger log = LoggerFactory.getLogger(ValueNetworkTrainer.class);
     protected static PrintStream outStream;
 
+    /**
+     * Trains a neural network according to whatever the dev has in mind.
+     * This method is more of a script that is changed as needed during development to get stuff done
+     * @param baseDir the AI directory, should have whatever files are needed as determined through the ever changing implementation
+     */
     abstract public void train(String baseDir);
 
     /**
@@ -36,11 +38,41 @@ public abstract class NetworkTrainer {
      * @param dataDumpDir the directory to save the images.
      * @throws FileNotFoundException if unable to concatenate data files
      */
-    protected static void preprocessPolicyImageInput(String dataDumpDir) throws IOException {
-        DataSet dataFromFile = concatenateValueDataFiles(new File("C:\\Users\\Caleb\\IdeaProjects\\UltimateTickTacToe\\data\\"), "series1", "policy");
-        FileWriter fileWriter = new FileWriter(dataDumpDir + "labels.csv");
+    protected static void preprocessPolicyImageInput(String dataDumpDir, String baseDataDir, String seriesName, double trainTestRatio, int boardSize, int scaleFactor) throws IOException {
+        DataSet dataFromFile = concatenateDataFiles(new File(baseDataDir), seriesName, "policy");
+        SplitTestAndTrain testAndTrain = dataFromFile.splitTestAndTrain(trainTestRatio);
+        DataSet trainingData = testAndTrain.getTrain();
+        DataSet testData = testAndTrain.getTest();
+        writeDataSet(trainingData, dataDumpDir + "\\train\\", boardSize, scaleFactor);
+        writeDataSet(testData, dataDumpDir + "\\test\\", boardSize, scaleFactor);
+
+
+    }
+
+    /**
+     * This method takes a raw standard format policy dataset, ie one from concatenated data files as well as a directory and creates policy network traning input.
+     * Its not creating data but its reformatting the board state tensors into images and saving them. This method also leaves a labels.csv file it the directory containing the label for each images.
+     * the ID column in the csv file corresponds to the filename of each image. This method is an abstraction so train and test
+     * data sets can easily be constructed from raw data.
+     * if there is an IO exception when writing an image it is ignored and that image (and label) are skipped.
+     *The data shuffled before being processed.
+     * @param dataset the standard format policy dataset
+     * @param dataDumpDir the directory to place the images and label file
+     * @param boardSize the size of the board, probably won't work unless its 3
+     * @param scaleFactor determines the size of the images. a factor of one results in 76x76 images
+     * @throws IOException if some of the large amount of file IO goes wrong.
+     */
+    private static void writeDataSet(DataSet dataset, String dataDumpDir, int boardSize, int scaleFactor) throws IOException {
+        File saveDir = new File(dataDumpDir);
+        saveDir.mkdirs();
+        File labelFile = new File(dataDumpDir + "labels.csv");
+        if (!labelFile.createNewFile()) {
+            labelFile.createNewFile();
+        }
+
+        FileWriter fileWriter = new FileWriter(labelFile);
         CSVWriter csvWriter = new CSVWriter(fileWriter);
-        int size = (int) dataFromFile.getLabels().shape()[1] + 1;
+        int size = (int) dataset.getLabels().shape()[1] + 1;
         String[] headers = new String[size];
         for (int j = 0; j < size; j++) {
             if (j == 0) {
@@ -50,14 +82,15 @@ public abstract class NetworkTrainer {
             }
         }
         csvWriter.writeNext(headers);
-        for (int i = 0; i < dataFromFile.getFeatures().shape()[0]; i++) {
-            BufferedImage image =  Resources.getImageForAI(BoardState.getBoardStateFromFlatVector(dataFromFile.getFeatures().getRow(i).toDoubleVector(), 3), 1);
+        dataset.shuffle();
+        for (int i = 0; i < dataset.getFeatures().shape()[0]; i++) {
+            BufferedImage image =  Resources.getImageForAI(BoardState.getBoardStateFromFlatVector(dataset.getFeatures().getRow(i).toDoubleVector(), boardSize), scaleFactor);
             try {
                 ImageIO.write(image, "PNG", new File(dataDumpDir + i + ".png"));
             } catch (IOException e) {
-                e.printStackTrace();
+                continue;
             }
-            double[] labels = dataFromFile.getLabels().getRow(i).toDoubleVector();
+            double[] labels = dataset.getLabels().getRow(i).toDoubleVector();
             String[] strs = new String[labels.length + 1];
             strs[0] = String.valueOf(i);
             for (int j = 1; j < labels.length + 1; j++) {
@@ -68,12 +101,22 @@ public abstract class NetworkTrainer {
         }
 
         csvWriter.close();
-
     }
 
 
+    /**
+     * This method takes in a filepath to a directory of saved standard data files. It combines them all together and converts the features of the data into
+     * one hot encoded tensor format. This data is then returned, the labels are left alone. (These docs are being written after the fact and there are no useages) it appears that
+     * this was used for value and policy networks. I think i'll deprecate it because networks made this way didn't perform well.
+     * @param filepath the standard data directory path
+     * @param seriesName the series name
+     * @param prefix the data prefix, either "value" or "policy"
+     * @return a converted dataset
+     * @throws FileNotFoundException if fileIO goes bad :(
+     */
+    @Deprecated
     protected static DataSet getInputDataSetFromRawFilepath(String filepath, String seriesName, String prefix) throws FileNotFoundException {
-        DataSet rawData = concatenateValueDataFiles(new File(filepath),seriesName, prefix);
+        DataSet rawData = concatenateDataFiles(new File(filepath),seriesName, prefix);
         double [][][][][] inputVectors = new double[rawData.getFeatures().rows()][][][][];
         double[][] rawInputMatrix = rawData.getFeatures().toDoubleMatrix();
         for (int i = 0; i < rawData.getFeatures().rows(); i++) {
@@ -192,6 +235,11 @@ public abstract class NetworkTrainer {
     }
 
 
+    /**
+     * logs info both with the logger and also to whatever the outSteam variable points to
+     * This method looks like an excuse for not using logger config files
+     * @param message the message to log
+     */
     protected static  void log(String message) {
         log.info(message);
         outStream.println(message);
@@ -200,12 +248,12 @@ public abstract class NetworkTrainer {
 
     /**
      * Takes a filepath and series name and puts all data files with a specific prefix eg value or policy
-     *
+     *together into one data file.
      * @param dataDir    the source of the data storage folder
      * @param seriesName the name of the data series
      * @return the dataset
      */
-    public static DataSet concatenateValueDataFiles(File dataDir, String seriesName, String prefix) throws FileNotFoundException {
+    public static DataSet concatenateDataFiles(File dataDir, String seriesName, String prefix) throws FileNotFoundException {
         if (!dataDir.isDirectory()) {
             throw new IllegalArgumentException("Provided file is not a folder. ");
         }
@@ -224,6 +272,11 @@ public abstract class NetworkTrainer {
     }
 
 
+    /**
+     * preforms the dirty work of {@link NetworkTrainer#concatenateDataFiles(File, String, String)}
+     * @param dataSets the datasets to concatenate
+     * @return the concatenated dataset
+     */
     private static DataSet concatenateDataSets(List<DataSet> dataSets) {
         // Get total number of features and labels
         INDArray features = dataSets.get(0).getFeatures().castTo(DataType.DOUBLE);
