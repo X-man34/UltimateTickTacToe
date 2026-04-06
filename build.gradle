@@ -33,7 +33,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-  //mainModule = 'com.hottes.caleb.ultimateticktacktoe'
+  mainModule = 'com.hottes.caleb.ultimateticktacktoe'
   mainClass = 'com.hottes.caleb.ultimateticktacktoe.machinelearning.TraningDataCreator.java'
 }
 
