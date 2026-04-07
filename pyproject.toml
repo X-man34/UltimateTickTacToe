@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uttt"
+version = "0.1.0"
+description = "Ultimate Tic Tac Toe with an MCTS + neural network bot"
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = [
+    "numpy>=1.26",
+    "torch>=2.2",
+    "PySide6>=6.6",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "pytest-qt>=4.4",
+]
+# On Windows with a CUDA GPU, install with:
+#   pip install -e ".[gpu]" --extra-index-url https://download.pytorch.org/whl/cu121
+# The default install above pulls a CPU wheel that works everywhere.
+gpu = [
+    "torch>=2.2",
+]
+
+[project.scripts]
+uttt = "uttt_app.main:main"
+uttt-self-play = "uttt_ml.self_play:main"
+uttt-train-value = "uttt_ml.train_value:main"
+uttt-train-policy = "uttt_ml.train_policy:main"
+uttt-convert-bin = "uttt_ml.convert_bin_to_npz:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

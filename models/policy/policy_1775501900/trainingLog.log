@@ -1,0 +1,10 @@
+device=cpu
+seed=2039402
+data=/home/calebh/claude-willow/uttt/data/smoke_policy.npz
+output_dir=/home/calebh/claude-willow/uttt/models/policy/policy_1775501900
+train_size=160, val_size=40
+Beginning training.
+Epoch    0 | train MSE 0.005003 | val MSE 0.003681
+  checkpoint -> checkpoint_epoch0000.pt
+Epoch    1 | train MSE 0.003465 | val MSE 0.003489
+Model saved to /home/calebh/claude-willow/uttt/models/policy/policy_1775501900/policy_final_mse0.003489.pt

@@ -1,0 +1,10 @@
+device=cpu
+seed=2039402
+data=data/series1_combined_policy.npz
+output_dir=models/policy/policy_1775504018
+train_size=22587, val_size=5646
+Beginning training.
+Epoch    0 | train MSE 0.003179 | val MSE 0.002863
+  checkpoint -> checkpoint_epoch0000.pt
+Early stopping: train/val divergence exceeded 2.5% at epoch 0.
+Model saved to models/policy/policy_1775504018/policy_final_mse0.002863.pt

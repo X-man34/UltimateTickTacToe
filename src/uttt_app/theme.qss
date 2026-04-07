@@ -1,0 +1,122 @@
+/* ------------------------------------------------------------------
+   Flat, modern Qt stylesheet for Ultimate Tic Tac Toe.
+   Palette is a muted slate + accent that works in any lighting.
+   Colors are not hardcoded in widget code — if you want to reskin,
+   this file is the single source of truth.
+------------------------------------------------------------------ */
+
+QWidget {
+    background-color: #1e1f24;
+    color: #e8e8ef;
+    font-family: "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+    font-size: 14px;
+}
+
+QMainWindow {
+    background-color: #1e1f24;
+}
+
+QLabel#TitleLabel {
+    font-size: 40px;
+    font-weight: 600;
+    color: #f5f5fa;
+    padding: 8px;
+}
+
+QLabel#SubtitleLabel {
+    font-size: 16px;
+    color: #9aa1b1;
+}
+
+QLabel#SectionLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #d0d4df;
+    padding-top: 6px;
+    padding-bottom: 2px;
+}
+
+QPushButton {
+    background-color: #2b2d36;
+    color: #e8e8ef;
+    border: 1px solid #3a3d49;
+    border-radius: 8px;
+    padding: 10px 18px;
+    min-width: 100px;
+}
+
+QPushButton:hover {
+    background-color: #353844;
+    border: 1px solid #4b4f5f;
+}
+
+QPushButton:pressed {
+    background-color: #25272f;
+}
+
+QPushButton#PrimaryButton {
+    background-color: #5465ff;
+    border: 1px solid #5465ff;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+}
+
+QPushButton#PrimaryButton:hover {
+    background-color: #6474ff;
+}
+
+QPushButton#PrimaryButton:pressed {
+    background-color: #4556e6;
+}
+
+QComboBox,
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox {
+    background-color: #2b2d36;
+    color: #e8e8ef;
+    border: 1px solid #3a3d49;
+    border-radius: 6px;
+    padding: 6px 10px;
+    min-height: 22px;
+}
+
+QComboBox:focus,
+QLineEdit:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus {
+    border: 1px solid #5465ff;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #2b2d36;
+    color: #e8e8ef;
+    selection-background-color: #5465ff;
+    border: 1px solid #3a3d49;
+}
+
+QFrame#Panel {
+    background-color: #25262e;
+    border: 1px solid #30313a;
+    border-radius: 10px;
+}
+
+QLabel#PlayerNameLabel {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+QLabel#PlayerStatusLabel {
+    font-size: 13px;
+    color: #9aa1b1;
+}
+
+QLabel#PlayerStatusLabel[state="thinking"] {
+    color: #f5c872;
+}
+
+QLabel#PlayerStatusLabel[state="winner"] {
+    color: #7de094;
+}

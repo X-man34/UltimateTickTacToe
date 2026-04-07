@@ -1,0 +1,46 @@
+# Ultimate Tic Tac Toe — per-machine configuration.
+#
+# Copy this file to `config.yaml` and adjust values to suit the current machine.
+# `config.yaml` is gitignored, so each of your machines can keep its own settings
+# without branching the code. The app, self-play CLI, and training scripts all
+# read this file on startup.
+
+# Device to run neural network inference / training on.
+#   auto → use CUDA if available, otherwise CPU
+#   cpu  → force CPU (Linux with integrated graphics, laptops, debugging)
+#   cuda → force CUDA (Windows with a discrete GPU)
+device: auto
+
+# Number of worker threads used by the MCTS evaluator.
+# The Java version defaulted to roughly as many threads as physical cores.
+num_threads: 4
+
+# MCTS search configuration — mirrors Java's EvaluatorConfiguration.
+mcts:
+  # Seconds of wall-clock time spent on each search. The Java default was 1-5s.
+  compute_time_seconds: 2.0
+  # UCB1 exploration constant. Java default is 2.0.
+  c_ucb1: 2.0
+  # Maximum depth for random rollouts when no value net is loaded.
+  max_rollout_depth: 1000
+  # Approximate number of iterations kept in flight in the thread pool at once.
+  # Matches the Java ~25-task buffering pattern.
+  task_queue_depth: 25
+
+# Filesystem paths. Relative paths resolve against the repository root.
+paths:
+  data_dir: ./data
+  models_dir: ./models
+  # Optional: path to a trained value net checkpoint used by the UI bot.
+  # Leave empty/null to fall back to random rollouts.
+  value_net: null
+  # Optional: path to a trained policy net checkpoint used by the UI bot.
+  # Leave empty/null to fall back to UCB1 selection.
+  policy_net: null
+
+# Training configuration. Only used by train_value.py / train_policy.py.
+training:
+  # Number of DataLoader worker processes. Increase on beefy machines.
+  num_workers: 2
+  # Enable automatic mixed precision. Only helpful on CUDA GPUs.
+  use_amp: false

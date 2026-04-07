@@ -1,0 +1,30 @@
+device=cpu
+seed=2039402
+data=data/series1_combined_value.npz
+output_dir=models/value/value_1775503912
+train_size=22587, test_size=5646
+Beginning training.
+Epoch    0 | train MSE 0.932414 | test MSE 0.821904 | MAE 0.818281 | RMSE 0.906589
+  checkpoint -> checkpoint_epoch0000.pt
+Epoch    1 | train MSE 0.586096 | test MSE 0.442201 | MAE 0.528370 | RMSE 0.664982
+Epoch    2 | train MSE 0.329510 | test MSE 0.308103 | MAE 0.390923 | RMSE 0.555070
+Epoch    3 | train MSE 0.220511 | test MSE 0.258746 | MAE 0.297682 | RMSE 0.508671
+Epoch    4 | train MSE 0.166266 | test MSE 0.221418 | MAE 0.241777 | RMSE 0.470551
+Epoch    5 | train MSE 0.140743 | test MSE 0.229160 | MAE 0.231316 | RMSE 0.478707
+Epoch    6 | train MSE 0.118840 | test MSE 0.212617 | MAE 0.209822 | RMSE 0.461105
+Epoch    7 | train MSE 0.111782 | test MSE 0.223698 | MAE 0.229914 | RMSE 0.472967
+Epoch    8 | train MSE 0.109003 | test MSE 0.213816 | MAE 0.208923 | RMSE 0.462402
+Epoch    9 | train MSE 0.096009 | test MSE 0.225537 | MAE 0.212809 | RMSE 0.474908
+Epoch   10 | train MSE 0.095708 | test MSE 0.211440 | MAE 0.197921 | RMSE 0.459826
+Epoch   11 | train MSE 0.092355 | test MSE 0.230807 | MAE 0.210190 | RMSE 0.480424
+Epoch   12 | train MSE 0.090404 | test MSE 0.230849 | MAE 0.201048 | RMSE 0.480468
+Epoch   13 | train MSE 0.085567 | test MSE 0.204509 | MAE 0.184968 | RMSE 0.452227
+  checkpoint -> checkpoint_epoch0013.pt
+Epoch   14 | train MSE 0.081730 | test MSE 0.205043 | MAE 0.188960 | RMSE 0.452817
+Epoch   15 | train MSE 0.083923 | test MSE 0.209019 | MAE 0.196133 | RMSE 0.457186
+Epoch   16 | train MSE 0.080310 | test MSE 0.204977 | MAE 0.191964 | RMSE 0.452744
+Epoch   17 | train MSE 0.081640 | test MSE 0.211267 | MAE 0.194634 | RMSE 0.459638
+Epoch   18 | train MSE 0.077495 | test MSE 0.222844 | MAE 0.219188 | RMSE 0.472063
+Epoch   19 | train MSE 0.076205 | test MSE 0.206147 | MAE 0.193979 | RMSE 0.454034
+Epoch   20 | train MSE 0.073409 | test MSE 0.216106 | MAE 0.191273 | RMSE 0.464872
+Epoch   21 | train MSE 0.075570 | test MSE 0.217757 | MAE 0.197110 | RMSE 0.466644

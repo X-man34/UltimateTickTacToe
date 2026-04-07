@@ -1,0 +1,6 @@
+[console_scripts]
+uttt = uttt_app.main:main
+uttt-convert-bin = uttt_ml.convert_bin_to_npz:main
+uttt-self-play = uttt_ml.self_play:main
+uttt-train-policy = uttt_ml.train_policy:main
+uttt-train-value = uttt_ml.train_value:main
