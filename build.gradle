@@ -5,12 +5,12 @@ plugins {
   id 'org.beryx.jlink' version '2.25.0'
 }
 
-jar {
-  // Exclude manifest files from all dependencies
-  from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } {
-    exclude 'META-INF/*.MF' // Exclude all manifest files
-  }
-}
+// jar {
+//   // Exclude manifest files from all dependencies
+//   from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } {
+//     exclude 'META-INF/*.MF' // Exclude all manifest files
+//   }
+// }
 
 
 
@@ -34,7 +34,7 @@ tasks.withType(JavaCompile) {
 
 application {
   //mainModule = 'com.hottes.caleb.ultimateticktacktoe'
-  mainClass = 'com.hottes.caleb.ultimateticktacktoe.machinelearning.TraningDataCreator.java'
+  mainClass = 'com.hottes.caleb.ultimateticktacktoe.Launcher'
 }
 
 javafx {
@@ -118,21 +118,21 @@ jlink {
 jlinkZip {
   group = 'distribution'
 }
-jar {
-  // Use a custom manifest file you created
-  manifest {
-    attributes(
-            'Main-Class': 'com.hottes.caleb.ultimateticktacktoe.Launcher'  // replace with your main class
-    )
-  }
+// jar {
+//   // Use a custom manifest file you created
+//   manifest {
+//     attributes(
+//             'Main-Class': 'com.hottes.caleb.ultimateticktacktoe.Launcher'  // replace with your main class
+//     )
+//   }
 
-  // Exclude all manifests from dependencies
-  from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }) {
-    exclude 'META-INF/MANIFEST.MF'
-  }
-  duplicatesStrategy = DuplicatesStrategy.INCLUDE  // Keeps the first occurrence of duplicate entries
+//   // Exclude all manifests from dependencies
+//   from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }) {
+//     exclude 'META-INF/MANIFEST.MF'
+//   }
+//   duplicatesStrategy = DuplicatesStrategy.INCLUDE  // Keeps the first occurrence of duplicate entries
 
 
 
-}
+// }
 
