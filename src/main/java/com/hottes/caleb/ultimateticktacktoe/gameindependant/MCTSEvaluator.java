@@ -16,6 +16,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
@@ -198,11 +199,8 @@ public class MCTSEvaluator {
             currentNode = getBestChild(currentNode);
             depth++;
         }
-        if (depth > maxDepth) {
-            setMaxDepth(depth);
-        }
-        traversalTimeSum += System.currentTimeMillis() - traversalStart;
-        traversalCount++;
+        setMaxDepth(depth);
+        recordTraversalStats(System.currentTimeMillis() - traversalStart);
         double scoreToAdd;
         //now that we have traversed the tree we are deep in and it is unlikly that another thread will have to wait for this node to unlock.
         synchronized (currentNode) {
@@ -213,9 +211,13 @@ public class MCTSEvaluator {
                 scoreToAdd = evaluateEndPoint(currentNode.getData().getGameState());
             } else {
                 //this node has been visited but has no children yet, so determine what all its children are (if any) and roll one of them out
-                addChildren(currentNode);
+                if (!currentNode.hasChildren()) {
+                    addChildren(currentNode);
+                    if (currentNode.hasChildren()) {
+                        incrementPositionsSearched();
+                    }
+                }
                 if (currentNode.hasChildren()) {
-                    incrementPositionsSearched();
                     currentNode = currentNode.getChildAt(0);//we could also try picking a random child so the order in which the action algorithm returns the actions does not bias which part of the board we often explore.
                     scoreToAdd = evaluateEndPoint(currentNode.getData().getGameState());
                 } else {
@@ -251,9 +253,11 @@ public class MCTSEvaluator {
         if (optionalPolicyNetwork.isPresent()) {
             BoardState state =  (BoardState) currentNode.getData().getGameState();
             UltimateTickTacToeGameAction actionToTake = getChildToExploreFromPolicyNetworkOutput(optionalPolicyNetwork.get().output(com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getPolicyNetworkInputV1( (BoardState) currentNode.getData().getGameState())), state, state.getBoardSize());
-            for (GenericTreeNode<NodeData> child : currentNode.getChildren()) {
-                if (child.getData().getActionTaken() == actionToTake) {
-                    return child;
+            synchronized (currentNode) {
+                for (GenericTreeNode<NodeData> child : currentNode.getChildren()) {
+                    if (child.getData().getActionTaken() == actionToTake) {
+                        return child;
+                    }
                 }
             }
         }
@@ -379,17 +383,20 @@ public class MCTSEvaluator {
     private void addChildren(GenericTreeNode<NodeData> parent) {
         //multithreading can cause this method to be called even when it parent already has children.
         if (parent.hasChildren()) {
-            childCreationRaceConditions++;
+            incrementChildCreationRaceConditions();
+            return;
         }
         if (parent.getData().getGameState().getEvaluation() != 0) {
             //then this is a terminal state. The actions function will return actions if there are empty squares regarless of whether or not we are in a terminal state.
             return;
         }
         double marker = parent.getData().getGameState().isPlayerOneTurn() ? 1 : -1;
+        ArrayList<GenericTreeNode<NodeData>> newChildren = new ArrayList<>();
         for (GameAction action : parent.getData().getGameState().getActions()) {
             action.setMarker(marker);
-            parent.addChild(new GenericTreeNode<>(new BitSetBasedUTTTNodeData(0, 0, parent.getData().getGameState().simulateAction(action, false), action)));
+            newChildren.add(new GenericTreeNode<>(new BitSetBasedUTTTNodeData(0, 0, parent.getData().getGameState().simulateAction(action, false), action)));
         }
+        parent.setChildren(newChildren);
     }
 
 
@@ -536,16 +543,35 @@ public class MCTSEvaluator {
         completedTasks++;
     }
 
-    private synchronized long getCompletedTasks() {
+    public synchronized long getCompletedTasks() {
         return completedTasks;
     }
 
-    private synchronized void setMaxDepth(int depth) {
-        maxDepth = depth;
+    public synchronized long getChildCreationRaceConditions() {
+        return childCreationRaceConditions;
     }
 
-    private void incrementPositionsSearched() {
+    public synchronized long getPositionsSearched() {
+        return positionsSearched;
+    }
+
+    private synchronized void setMaxDepth(int depth) {
+        if (depth > maxDepth) {
+            maxDepth = depth;
+        }
+    }
+
+    private synchronized void incrementPositionsSearched() {
         positionsSearched++;
+    }
+
+    private synchronized void incrementChildCreationRaceConditions() {
+        childCreationRaceConditions++;
+    }
+
+    private synchronized void recordTraversalStats(long time) {
+        traversalTimeSum += time;
+        traversalCount++;
     }
 
     public enum EndCondition {

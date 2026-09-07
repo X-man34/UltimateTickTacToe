@@ -20,6 +20,8 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -258,4 +260,36 @@ public class MCTSEvaluatorTest {
 //        System.out.println(GraphLayout.parseInstance(evaluator).toFootprint());
 //        System.out.println("done testing memory\n=====================");
 //    }
+
+    @Test
+    void testMultithreadedNoDuplicateChildrenRaceConditions() {
+        BoardState initialState = new BoardState(3);
+        initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1, 1, 1));
+        EvaluatorConfiguration config = new EvaluatorConfiguration(2.0, 1000, 1, 16, 0, false, true, Optional.empty(), Optional.empty());
+        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, config);
+        evaluator.dispalyDialogAfterSearch = false;
+        evaluator.log = false;
+        evaluator.preformSearch();
+
+        assertEquals(0, evaluator.getChildCreationRaceConditions(), "Should not encounter any child creation race conditions");
+        assertEquals(0, countDuplicateChildren(evaluator.tree.getRoot()), "Should not create any duplicate children in multithreaded MCTS");
+    }
+
+    private int countDuplicateChildren(GenericTreeNode<NodeData> node) {
+        if (node == null || !node.hasChildren()) {
+            return 0;
+        }
+        int dups = 0;
+        Set<GameAction> seenActions = new HashSet<>();
+        for (GenericTreeNode<NodeData> child : node.getChildren()) {
+            GameAction action = child.getData().getActionTaken();
+            if (action != null) {
+                if (!seenActions.add(action)) {
+                    dups++;
+                }
+            }
+            dups += countDuplicateChildren(child);
+        }
+        return dups;
+    }
 }
