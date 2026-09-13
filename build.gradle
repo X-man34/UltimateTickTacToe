@@ -3,6 +3,7 @@ plugins {
   id 'application'
   id 'org.openjfx.javafxplugin' version '0.0.13'
   id 'org.beryx.jlink' version '2.25.0'
+  id 'org.bytedeco.gradle-javacpp-platform' version '1.5.10'
 }
 
 // jar {
@@ -23,6 +24,9 @@ repositories {
 
 ext {
   junitVersion = '5.10.2'
+  // ship natives for 64-bit Windows only; without this every javacpp
+  // '-platform' artifact drags in binaries for all OSes (~1.2GB of extra jars)
+  javacppPlatform = 'windows-x86_64'
 }
 
 sourceCompatibility = '22'
@@ -57,8 +61,11 @@ dependencies {
 
 
 //----------working------------
-  // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
-  implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-M2.1'
+  // https://mvnrepository.com/artifact/org.nd4j/nd4j-native
+  // nd4j-native-platform is an org.nd4j artifact, so javacppPlatform above does not
+  // prune it; depend on nd4j-native with an explicit Windows classifier instead.
+  implementation group: 'org.nd4j', name: 'nd4j-native', version: '1.0.0-M2.1'
+  implementation group: 'org.nd4j', name: 'nd4j-native', version: '1.0.0-M2.1', classifier: 'windows-x86_64'
 
   // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
   //implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'
@@ -118,21 +125,21 @@ jlink {
 jlinkZip {
   group = 'distribution'
 }
-// jar {
-//   // Use a custom manifest file you created
-//   manifest {
-//     attributes(
-//             'Main-Class': 'com.hottes.caleb.ultimateticktacktoe.Launcher'  // replace with your main class
-//     )
-//   }
+jar {
+  // Use a custom manifest file you created
+  manifest {
+    attributes(
+            'Main-Class': 'com.hottes.caleb.ultimateticktacktoe.Launcher'  // replace with your main class
+    )
+  }
 
-//   // Exclude all manifests from dependencies
-//   from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }) {
-//     exclude 'META-INF/MANIFEST.MF'
-//   }
-//   duplicatesStrategy = DuplicatesStrategy.INCLUDE  // Keeps the first occurrence of duplicate entries
+  // Exclude all manifests from dependencies
+  // from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }) {
+  //   exclude 'META-INF/MANIFEST.MF'
+  // }
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE  // Keeps the first occurrence of duplicate entries
 
 
 
-// }
+}
 

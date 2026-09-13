@@ -3,6 +3,7 @@ package com.hottes.caleb.ultimateticktacktoe;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.util.ModelSerializer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,6 +16,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
@@ -85,16 +87,18 @@ public class Resources {
         XSelectedImage = tempXSelected;
         OSelectedImage = tempOSelected;
 
-        try {
-            valueNetwork = Optional.of(MultiLayerNetwork.load(new File(Resources.class.getResource("valueNetworkV1_1.zip").getPath()), false));
+        //load from a stream, not a File: getResource().getPath() points inside the jar in a packaged build, where File cannot open it
+        try (InputStream networkStream = Resources.class.getResourceAsStream("valueNetworkV1_1.zip")) {
+            valueNetwork = Optional.of(ModelSerializer.restoreMultiLayerNetwork(networkStream, false));
         } catch (IOException e) {
             valueNetwork = Optional.empty();
             System.out.println("Failed to load value network");
             e.printStackTrace();
         }
 
-        try {
-            policyNetwork = Optional.of(MultiLayerNetwork.load(new File(Resources.class.getResource("policyNetworkV1_0.zip").getPath()), false));
+        //load from a stream, not a File: getResource().getPath() points inside the jar in a packaged build, where File cannot open it
+        try (InputStream networkStream = Resources.class.getResourceAsStream("policyNetworkV1_0.zip")) {
+            policyNetwork = Optional.of(ModelSerializer.restoreMultiLayerNetwork(networkStream, false));
         } catch (IOException e) {
             policyNetwork = Optional.empty();
             System.out.println("Failed to load policy network");
