@@ -9,13 +9,11 @@ import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameState;
  * This is possible through storing the game state very concisley but comes at an unknown cpu use cost.
  * externally this class should be indistinguishale from a normal node data.
  */
-public class MemoryEfficientUTTTNodeData extends NodeData{
+public class MemoryEfficientUTTTNodeData extends NodeData {
     //does not accout for whether boards are active and breaks the algorithm
     public MemoryEfficientUTTTNodeData(int numVisits, double totalScore, GameState state, GameAction action) {
         super(numVisits, totalScore, action, state.getStringHash());
     }
-
-
 
 
     @Override

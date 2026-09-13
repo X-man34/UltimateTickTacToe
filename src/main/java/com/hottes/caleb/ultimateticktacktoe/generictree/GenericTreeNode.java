@@ -28,6 +28,7 @@ public class GenericTreeNode<T> {
 
     /**
      * is null in the case of the root node
+     *
      * @return the parent of this child
      */
     public GenericTreeNode<T> getParent() {
@@ -36,6 +37,14 @@ public class GenericTreeNode<T> {
 
     public synchronized List<GenericTreeNode<T>> getChildren() {
         return this.children;
+    }
+
+    public synchronized void setChildren(List<GenericTreeNode<T>> children) {
+        for (GenericTreeNode<T> child : children) {
+            child.parent = this;
+        }
+
+        this.children = children;
     }
 
     public int getNumberOfChildren() {
@@ -48,14 +57,6 @@ public class GenericTreeNode<T> {
 
     public boolean isLeaf() {
         return (getNumberOfChildren() == 0);
-    }
-
-    public synchronized void setChildren(List<GenericTreeNode<T>> children) {
-        for(GenericTreeNode<T> child : children) {
-            child.parent = this;
-        }
-
-        this.children = children;
     }
 
     public synchronized void addChild(GenericTreeNode<T> child) {

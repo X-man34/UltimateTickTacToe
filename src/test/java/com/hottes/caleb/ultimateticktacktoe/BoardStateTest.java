@@ -1,15 +1,14 @@
 package com.hottes.caleb.ultimateticktacktoe;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.GameAction;
+import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.hottes.caleb.ultimateticktacktoe.Resources.generateMatrixPermutations;
 import static org.junit.jupiter.api.Assertions.*;
@@ -130,17 +129,17 @@ class BoardStateTest {
     }
     @Test
     void getEvaluation() {
-        assertEquals(Resources.Evaluation.IN_PROGRESS.getlabel(), emptyState.getEvaluation(), "Emtpy board does not evaluate to in progress");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinTopRowState.getEvaluation(), "Player one win upper row not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinTopRowState.getEvaluation(), "Player two win upper row not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinLeftSide.getEvaluation(), "Player one win left side not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinLeftSide.getEvaluation(), "Player two win left side not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinMainDiagonal.getEvaluation(), "Player one win main diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinMainDiagonal.getEvaluation(), "Player two win main diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinOffDiagonal.getEvaluation(), "Player one win off diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinOffDiagonal.getEvaluation(), "Player two win off diagonal not evaluated correctly");
-        assertEquals(Resources.Evaluation.IN_PROGRESS.getlabel(), inprogressGame.getEvaluation(), "Arbitrary in progress game not evaluated correctly");
-        assertEquals(Resources.Evaluation.DRAW.getlabel(), drawState.getEvaluation(), "Draw not evaluated correctly");
+        assertEquals(BoardState.Evaluation.IN_PROGRESS.getlabel(), emptyState.getEvaluation(), "Emtpy board does not evaluate to in progress");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinTopRowState.getEvaluation(), "Player one win upper row not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinTopRowState.getEvaluation(), "Player two win upper row not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinLeftSide.getEvaluation(), "Player one win left side not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinLeftSide.getEvaluation(), "Player two win left side not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinMainDiagonal.getEvaluation(), "Player one win main diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinMainDiagonal.getEvaluation(), "Player two win main diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), oneWinOffDiagonal.getEvaluation(), "Player one win off diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), twoWinOffDiagonal.getEvaluation(), "Player two win off diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.IN_PROGRESS.getlabel(), inprogressGame.getEvaluation(), "Arbitrary in progress game not evaluated correctly");
+        assertEquals(BoardState.Evaluation.DRAW.getlabel(), drawState.getEvaluation(), "Draw not evaluated correctly");
 
         
     }
@@ -203,87 +202,91 @@ class BoardStateTest {
 
     }
     @Test
-    @Disabled
-    void preformAction() {
-
+    void testPreformAction() {
+        BoardState testState = GameController.getTestState();
+        testState.setAllBoardsActivity(false);
+        testState.setPlayerOneTurn(false);
+        testState.setBoardActive(1, 2);
+        GameAction action = new GameAction(0, 0);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+           testState.preformAction(action);
+        });
+        String actualMessage = "Invalid game action received: Action must be for a tic tac toe board";
+        assertTrue(exception.getMessage().contains(actualMessage), "Exception message did match expected");
+        UltimateTickTacToeGameAction illegalAction = new UltimateTickTacToeGameAction(1, 2, 2, 2, 1);
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            testState.preformAction(illegalAction);
+        });
+        actualMessage = "Illegal game action received!";
+        assertTrue(exception.getMessage().contains(actualMessage), "Exception message did match expected");
+        UltimateTickTacToeGameAction legalAction = new UltimateTickTacToeGameAction(1, 2, 2, 2, -1);
+        testState.preformAction(legalAction);
+        assertEquals(-1, testState.getMinorBoardAt(1, 2).itemAt(2, 2), "The marker was not placed where it should be");
+        assertTrue(testState.isPlayerOneTurn(), "Player one turn was not toggled");
+        assertTrue(testState.getMinorBoardAt(2, 2).isActive(), "Correct board was not activated");
+        assertFalse(testState.getMinorBoardAt(2, 1).isActive(), "Board was activated by mistake");
+        UltimateTickTacToeGameAction freePlayAction = new UltimateTickTacToeGameAction(2, 2, 1, 1, 1);
+        testState.preformAction(freePlayAction);
+        assertTrue(testState.getMinorBoardAt(2, 0).isActive(), "Board expected to be active was not active after free play");
     }
 
     @Test
     void simulateAction() {
-        BoardState newState = (BoardState) inprogressGame.simulateAction(new UltimateTickTacToeGameAction(1, 0, 0, 1, 0), false);//simulate an action that does nothing
-        newState.preformAction(new UltimateTickTacToeGameAction(1, 0, 2, 1, 1));//make a change. If simulate action returns a copy like it is supposed to then this change should not be reflected in the original state
-        assertNotEquals(inprogressGame.getMinorBoardAt(1, 0).itemAt(2,1), newState.getMinorBoardAt(1, 0).itemAt(2,1), "New state is pointer to old state");//preforms an action which should not actualy change the state of the board
+        BoardState newState = (BoardState) inprogressGame.simulateAction(new UltimateTickTacToeGameAction(1, 0, 0, 1, 1), false);//simulate an action. If the two boards are different then it is not a pointer to the old board.
+        //newState.preformAction(new UltimateTickTacToeGameAction(1, 0, 2, 1, 1));//make a change. If simulate action returns a copy like it is supposed to then this change should not be reflected in the original state
+        assertNotEquals(inprogressGame.getMinorBoardAt(1, 0).itemAt(0,1), newState.getMinorBoardAt(1, 0).itemAt(0,1), "New state is pointer to old state");//preforms an action which should not actualy change the state of the board
         //if we got this far then inprogressGame has not actually been affected.
         GameAction action = new UltimateTickTacToeGameAction(1, 0, 2, 2, -1);
+        inprogressGame.setPlayerOneTurn(false);
         newState = (BoardState) inprogressGame.simulateAction(action, false);
         assertEquals(newState.getMinorBoardAt(1, 0).getStateAsCopy()[action.y][action.x], action.getMarker(), "New state does not contain marker in correct place");
         BoardState invertedState =  (BoardState) inprogressGame.simulateAction(action, true);
         assertEquals(invertedState.getMinorBoardAt(1, 0).getStateAsCopy()[action.y][action.x], -action.getMarker(), "Failed to invert board");
     }
 
-    @Test
-    @Disabled
-    void setAllBoardsActivity() {
-    }
-
-    @Test
-    @Disabled
-    void setBoardActive() {
-    }
-
 
     @Test
     void testHashStringConstructor() {
         BoardState testState = new BoardState(3);
+        testState.setPlayerOneTurn(false);
+        testState.setBoardActive(2, 1);
         testState.preformAction(new UltimateTickTacToeGameAction(2, 1, 1, 1, -1));
+        testState.setBoardActive(1, 0);
         testState.preformAction(new UltimateTickTacToeGameAction(1, 0, 0, 0, 1));
+        testState.setBoardActive(0, 2);
         testState.preformAction(new UltimateTickTacToeGameAction(0, 2, 1, 2, -1));
+        testState.setBoardActive(0, 0);
         testState.preformAction(new UltimateTickTacToeGameAction(0, 0, 2, 1, 1));
+        testState.setBoardActive(2, 1);
+        testState.setPlayerOneTurn(true);
         BoardState newState = new BoardState(testState.getStringHash());
         assertEquals(testState.getStringHash(), newState.getStringHash(), "String hashes were not equal");
         assertEquals(testState, newState,"States were not equal");
 
-        System.out.println(testState);
-        System.out.println(Arrays.toString(testState.getBitSet().toByteArray()));
-        System.out.println(Resources.getBitSetAsString(testState.getBitSet()));
 
     }
 
     @Test
     void testgetBitSet() {
         BoardState testState = new BoardState(3);
-        testState.preformAction(new UltimateTickTacToeGameAction(2, 1, 1, 1, -1));
-        testState.preformAction(new UltimateTickTacToeGameAction(1, 0, 0, 0, 1));
-        testState.preformAction(new UltimateTickTacToeGameAction(0, 2, 1, 2, -1));
-        testState.preformAction(new UltimateTickTacToeGameAction(0, 0, 2, 1, 1));
-        testState.setAllBoardsActivity(false);
+        testState.setPlayerOneTurn(false);
         testState.setBoardActive(2, 1);
-        BitSet actualSet = BitSet.valueOf(new byte[] {3, 0, 1, 2, 0, 0, 16, 0, 4, 8, 0, 0, 0, 0, 0, 0, 0, 32, 4});
+        testState.preformAction(new UltimateTickTacToeGameAction(2, 1, 1, 1, -1));
+        testState.setBoardActive(1, 0);
+        testState.preformAction(new UltimateTickTacToeGameAction(1, 0, 0, 0, 1));
+        testState.setBoardActive(0, 2);
+        testState.preformAction(new UltimateTickTacToeGameAction(0, 2, 1, 2, -1));
+        testState.setBoardActive(0, 0);
+        testState.preformAction(new UltimateTickTacToeGameAction(0, 0, 2, 1, 1));
+        testState.setBoardActive(2, 1);
+        testState.setPlayerOneTurn(true);
+        BitSet actualSet = BitSet.valueOf(new byte[] {3, 1, 2, 4, 0, 0, 32, 0, 8, 16, 0, 0, 0, 0, 0, 0, 0, 64, 8});
         assertEquals(actualSet, testState.getBitSet(), "Returned bit set was not correct for simple state");
 
-        SubBoardState topRight = new SubBoardState(new double[][]{
-                {-1,0,-1},
-                {-1,0,-1},
-                {0,1,1}},
-                false, 3);
-        SubBoardState activeBoard = new SubBoardState(new double[][]{
-                {0,0,0},
-                {0,0,0},
-                {1,1,0}},
-                false, 3);
-        SubBoardState bottomLeft = new SubBoardState(new double[][]{
-                {0,1,0},
-                {0,1,0},
-                {0,0,0}},
-                false, 3);
-        testState = new BoardState(new SubBoardState[][]{
-                {oneWin, oneWin, topRight},
-                {oneWin, twoWin, activeBoard},
-                {bottomLeft, empty, empty}},
-                3);
+        testState = GameController.getTestState();
         testState.setAllBoardsActivity(false);
         testState.setBoardActive(1, 2);
-        actualSet = BitSet.valueOf(new byte[] {3, 14, 28, 112, -32, -128, -42, -128, 29, 56, -32, 0, -128, -64, -128, -111, 32, 1});
+        actualSet = BitSet.valueOf(new byte[] {3, 29, 56, -32, -64, 1, -83, 1, 59, 112, -64, 1, 0, -127, 1, 35, 65, 2});
         assertEquals(actualSet, testState.getBitSet(), "Returned bit set was not correct for X play so O can win");
     }
 
@@ -291,68 +294,31 @@ class BoardStateTest {
     @Test
     void testBitSetConstructor() {
         BoardState actualState = new BoardState(3);
-        actualState.preformAction(new UltimateTickTacToeGameAction(2, 1, 1, 1, -1));
-        actualState.preformAction(new UltimateTickTacToeGameAction(1, 0, 0, 0, 1));
+        actualState.setPlayerOneTurn(false);
         actualState.preformAction(new UltimateTickTacToeGameAction(0, 2, 1, 2, -1));
+        actualState.setBoardActive(1, 0);
+        actualState.preformAction(new UltimateTickTacToeGameAction(1, 0, 0, 0, 1));
+        actualState.setBoardActive(2, 1);
+        actualState.preformAction(new UltimateTickTacToeGameAction(2, 1, 1, 1, -1));
+        actualState.setBoardActive(0, 0);
         actualState.preformAction(new UltimateTickTacToeGameAction(0, 0, 2, 1, 1));
-        actualState.setAllBoardsActivity(false);
         actualState.setBoardActive(2, 1);
         actualState.setPlayerOneTurn(false);
 
         BoardState testState = new BoardState(BitSet.valueOf(new byte[] {3, 0, 2, 4, 0, 0, 32, 0, 8, 16, 0, 0, 0, 0, 0, 0, 0, 64, 8}));
         assertTwoBoardStatesEqual(actualState, testState, "Board state was incorrectly constructed from bit set for simple position");
 
-        SubBoardState topRight = new SubBoardState(new double[][]{
-                {-1,0,-1},
-                {-1,0,-1},
-                {0,1,1}},
-                false, 3);
-        SubBoardState activeBoard = new SubBoardState(new double[][]{
-                {0,0,0},
-                {0,0,0},
-                {1,1,0}},
-                false, 3);
-        SubBoardState bottomLeft = new SubBoardState(new double[][]{
-                {0,1,0},
-                {0,1,0},
-                {0,0,0}},
-                false, 3);
-        actualState = new BoardState(new SubBoardState[][]{
-                {oneWin, oneWin, topRight},
-                {oneWin, twoWin, activeBoard},
-                {bottomLeft, empty, empty}},
-                3);
+        actualState = GameController.getTestState();
         actualState.setAllBoardsActivity(false);
         actualState.setBoardActive(1, 2);
         actualState.setPlayerOneTurn(true);
         testState = new BoardState(BitSet.valueOf(new byte[] {3, 29, 56, -32, -64, 1, -83, 1, 59, 112, -64, 1, 0, -127, 1, 35, 65, 2}));
         assertTwoBoardStatesEqual(actualState, testState, "Board state was incorrectly constructed from bit set for X play so O can win");
-
     }
 
     @Test
     void testBoardStateClone() {
-
-        SubBoardState topRight = new SubBoardState(new double[][]{
-                {-1,0,-1},
-                {-1,0,-1},
-                {0,1,1}},
-                false, 3);
-        SubBoardState activeBoard = new SubBoardState(new double[][]{
-                {0,0,0},
-                {0,0,0},
-                {1,1,0}},
-                false, 3);
-        SubBoardState bottomLeft = new SubBoardState(new double[][]{
-                {0,1,0},
-                {0,1,0},
-                {0,0,0}},
-                false, 3);
-        BoardState originalState = new BoardState(new SubBoardState[][]{
-                {oneWin, oneWin, topRight},
-                {oneWin, twoWin, activeBoard},
-                {bottomLeft, empty, empty}},
-                3);
+        BoardState originalState = GameController.getTestState();
         originalState.setAllBoardsActivity(false);
         originalState.setBoardActive(1, 2);
         originalState.setPlayerOneTurn(false);
@@ -366,6 +332,7 @@ class BoardStateTest {
         newState.setAllBoardsActivity(false);
         assertTwoBoardStatesNotEqual(originalState, newState, "Clone state has mutable board activity");
         originalState.setAllBoardsActivity(false);
+        newState.setBoardActive(1, 2);
         newState.preformAction(new UltimateTickTacToeGameAction(1, 2, 2, 2, 1));
         assertTwoBoardStatesNotEqual(originalState, newState, "Clone state has mutable state");
 
@@ -406,6 +373,48 @@ class BoardStateTest {
         assertEquals(actualState.isPlayerOneTurn(), testState.isPlayerOneTurn(), baseMessage + ", whose turn it was not set correctly");
 
         assertAll(activityTests);
+    }
+
+
+    @Test
+    void testGetValueNetworkInputVector() {
+
+        BoardState testState = GameController.getTestState();
+        testState.setBoardActive(1, 0);//idk just for kicks
+        double[] expectedVector = new double[] {1,1,1,0,0,0,0,0,0,
+                1,1,1,0,0,0,0,0,0,
+                -1,0,-1,-1,0,-1,0,1,1,
+                1,1,1,0,0,0,0,0,0,
+                -1,-1,-1,0,0,0,0,0,0,
+                0,0,0,0,0,0,1,1,0,
+                0,1,0,0,1,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                -1,-1,-1,1,-1,-1,-1,-1,-1};//activity vals
+        testState.setPlayerOneTurn(true);
+        assertTrue(Arrays.equals(expectedVector, testState.getBoardStateFlatVector()), "Input vector was not the same as Expected: " + Arrays.toString(expectedVector) + " Actual: " + Arrays.toString(testState.getBoardStateFlatVector()));
+
+    }
+
+
+    @Test
+    void testIsLegal() {
+        BoardState testState = GameController.getTestState();
+        testState.setAllBoardsActivity(false);
+        testState.setPlayerOneTurn(true);
+        testState.setBoardActive(1, 1);
+        assertTrue(testState.isLegal(new UltimateTickTacToeGameAction(1, 1, 1, 1, 1)));
+        assertFalse(testState.isLegal(new UltimateTickTacToeGameAction(1, 1, 0, 1, 1)));
+        assertFalse(testState.isLegal(new UltimateTickTacToeGameAction(1, 1, 1, 1, -1)));
+        assertFalse(testState.isLegal(new UltimateTickTacToeGameAction(0, 2, 1, 1, 1)));
+        testState.setPlayerOneTurn(false);
+        assertTrue(testState.isLegal(new UltimateTickTacToeGameAction(1, 1, 1, 1, -1)));
+        assertFalse(testState.isLegal(new UltimateTickTacToeGameAction(0, 2, 2, 0, 1)));
+        testState.setPlayerOneTurn(true);
+        assertFalse(testState.isLegal(new UltimateTickTacToeGameAction(0, 2, 2, 0, 1)));
+        testState.setAllBoardsActivity(false);
+        testState.setBoardActive(0, 2);
+        assertTrue(testState.isLegal(new UltimateTickTacToeGameAction(0, 2, 2, 0, 1)));
     }
 
 

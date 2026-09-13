@@ -11,11 +11,10 @@ public class UltimateTickTacToeGameAction extends GameAction {
     public final int majorCol;
 
     /**
-     *
-     * @param majorRow the row of the board being played on
-     * @param majorCol the column of the board being played on
-     * @param minorRow the row of the square of the board being played on
-     * @param minorCol the column of the square of the board being played on
+     * @param majorRow  the row of the board being played on
+     * @param majorCol  the column of the board being played on
+     * @param minorRow  the row of the square of the board being played on
+     * @param minorCol  the column of the square of the board being played on
      * @param theMarker the marker of the player playing
      */
     public UltimateTickTacToeGameAction(int majorRow, int majorCol, int minorRow, int minorCol, double theMarker) {
@@ -41,5 +40,23 @@ public class UltimateTickTacToeGameAction extends GameAction {
                 ", minC=" + x +
                 ", marker=" + getMarker() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        UltimateTickTacToeGameAction that = (UltimateTickTacToeGameAction) o;
+        return majorRow == that.majorRow && majorCol == that.majorCol;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + majorRow;
+        result = 31 * result + majorCol;
+        return result;
     }
 }

@@ -1,8 +1,11 @@
 package com.hottes.caleb.ultimateticktacktoe;
 
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.EvaluatorConfiguration;
-import com.hottes.caleb.ultimateticktacktoe.gameindependant.MCTSEvaluator;
 import com.hottes.caleb.ultimateticktacktoe.ui.GameController;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.util.ModelSerializer;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,14 +13,16 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
-import java.util.BitSet;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
+import java.util.zip.ZipOutputStream;
 
 public class Resources {
-
 
 
     //constants to define how much spacing is put between boards based on the window dimensions
@@ -39,32 +44,10 @@ public class Resources {
     public static final int EVALUATION_ITERATION_HARD_LIMIT = 50000000;
     public static final int MAX_ITERS_USER_CAN_ENTER = 10000000;
 
-    public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false);
-    public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false);
-    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 5, 50, true, false);
-    public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true);
     public static final int MULTTHREADED_BATCH_SIZE = 100000;
-    public enum PlayerType {
-        HUMAN,
-        COMPUTER
-    }
 
-    public enum Evaluation {
-        IN_PROGRESS(0),
-        DRAW(-.25),
-        PLAYER_ONE_WIN(1),
-        PLAYER_TWO_WIN(-1);
-        private final double label;
-        Evaluation(double val) {
-            label = val;
-        }
-
-        public double getlabel() {
-            return label;
-        }
-    }
-
-
+    public static Optional<MultiLayerNetwork> valueNetwork = Optional.empty();//will try to load in static block
+    public static Optional<MultiLayerNetwork> policyNetwork = Optional.empty();
 
     static {
         BufferedImage tempVar;
@@ -88,7 +71,7 @@ public class Resources {
         } catch (
                 IOException e) {
             e.printStackTrace();
-            tempVar = new BufferedImage(100,100, BufferedImage.TYPE_INT_ARGB);//size doesn't matter it gets scaled later anyways.
+            tempVar = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);//size doesn't matter it gets scaled later anyways.
             tempUndo = null;
             tempRedo = null;
             tempX = null;
@@ -103,12 +86,38 @@ public class Resources {
         OImage = tempO;
         XSelectedImage = tempXSelected;
         OSelectedImage = tempOSelected;
+
+        //load from a stream, not a File: getResource().getPath() points inside the jar in a packaged build, where File cannot open it
+        try (InputStream networkStream = Resources.class.getResourceAsStream("valueNetworkV1_1.zip")) {
+            valueNetwork = Optional.of(ModelSerializer.restoreMultiLayerNetwork(networkStream, false));
+        } catch (IOException e) {
+            valueNetwork = Optional.empty();
+            System.out.println("Failed to load value network");
+            e.printStackTrace();
+        }
+
+        //load from a stream, not a File: getResource().getPath() points inside the jar in a packaged build, where File cannot open it
+        try (InputStream networkStream = Resources.class.getResourceAsStream("policyNetworkV1_0.zip")) {
+            policyNetwork = Optional.of(ModelSerializer.restoreMultiLayerNetwork(networkStream, false));
+        } catch (IOException e) {
+            policyNetwork = Optional.empty();
+            System.out.println("Failed to load policy network");
+            e.printStackTrace();
+        }
+
+
     }
+
+    public static final EvaluatorConfiguration DEFAULT_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 5, 0, true, false, Optional.empty(), Optional.empty());
+    public static final EvaluatorConfiguration EASY_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 10, 1, 100, true, false, Optional.empty(), Optional.empty());
+    public static final EvaluatorConfiguration MEDIUM_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 30, 25, 50, true, false, valueNetwork, policyNetwork);
+    public static final EvaluatorConfiguration HARD_EVALUATOR_CONFIGURATION = new EvaluatorConfiguration(2, 1000, 60, 25, 25, false, true, Optional.empty(), Optional.empty());
 
 
     /**
      * Changes all pixels of an old color into a new color, preserving the
      * alpha channel.
+     *
      * @see <a href="https://codereview.stackexchange.com/questions/146609/color-substitution-in-a-bufferedimage">Source</a>
      */
     public static BufferedImage changeColorBUfferedImage(
@@ -157,9 +166,9 @@ public class Resources {
      * Draws a red X if the token is 1 and a green O it the token is -1.
      * For other token values it returns false.
      *
-     * @param g the graphics context to draw with
+     * @param g           the graphics context to draw with
      * @param boundingBox the bouding box we are allowed to draw in
-     * @param token the token we are potentially drawing
+     * @param token       the token we are potentially drawing
      * @return whether or not something was drawn
      */
     public static boolean drawToken(Graphics2D g, Rectangle2D.Double boundingBox, double token) {
@@ -180,56 +189,21 @@ public class Resources {
             g.drawLine((int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y), (int) Math.round(scaledBox.x + scaledBox.width), (int) Math.round(scaledBox.y + scaledBox.height));
             g.drawLine((int) Math.round(scaledBox.x + scaledBox.width), (int) Math.round(scaledBox.y), (int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y + scaledBox.height));
             return true;
-        }else if (token == -1){
+        } else if (token == -1) {
             g.setPaint(Color.GREEN);
-            g.drawOval((int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y),(int) Math.round(scaledBox.width),(int)  Math.round(scaledBox.height));
+            g.drawOval((int) Math.round(scaledBox.x), (int) Math.round(scaledBox.y), (int) Math.round(scaledBox.width), (int) Math.round(scaledBox.height));
             return true;
-        }else {
+        } else {
             return false;
         }
     }
-    /**
-     *
-     * Evaluations are 1 for player 1 wins, -1 for player 1 loses, 0 for intederminate state and -.25 for draw
-     *Copy past from copilot LLM
-     * this method is called roughly 350 times on average per iteration so we're looking at ~400 million calls for 1.2million iterations.
-     * @return the static evaluation of the game state
-     */
-    public static double getTicTacToeEvaluationBruteForce(double[][] state) {
-        // Check rows, columns, and diagonals for a win
-        for (int i = 0; i < 3; i++) {
-            if (state[i][0] != 0 && state[i][0] == state[i][1] && state[i][1] == state[i][2]) {
-                return (state[i][0] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-            }
-            if (state[0][i] != 0 && state[0][i] == state[1][i] && state[1][i] == state[2][i]) {
-                return (state[0][i] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-            }
-        }
 
-        // Check diagonals
-        if (state[0][0] != 0 && state[0][0] == state[1][1] && state[1][1] == state[2][2]) {
-            return (state[0][0] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-        }
-        if (state[0][2] != 0 && state[0][2] == state[1][1] && state[1][1] == state[2][0]) {
-            return (state[0][2] == 1) ? Evaluation.PLAYER_ONE_WIN.label : Evaluation.PLAYER_TWO_WIN.label;
-        }
 
-        // Check if the state is full (draw) or still in progress
-        boolean isFull = true;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (state[i][j] == 0) {
-                    isFull = false;
-                    break;
-                }
-            }
-        }
-        return isFull ? Evaluation.DRAW.label: Evaluation.IN_PROGRESS.label;
-    }
 
     /**
      * creates a hashcode for a tick tac toe board. Assumes that each element of the array is either a 1 for player 1, -1 for player two or anything else for nothing.
      * this is to be used for fast evaluation functions using lookuptables
+     *
      * @param state the state variable from a game state object
      * @return the hashcode for static evaluation for this board.
      */
@@ -263,15 +237,52 @@ public class Resources {
         }
     }
 
-
     public static String getBitSetAsString(BitSet bi) {
         StringBuilder s = new StringBuilder();
-        for( int i = 0; i < bi.length();  i++ )
-        {
-            s.append( bi.get(i) ? 1: 0 );
+        for (int i = 0; i < bi.length(); i++) {
+            s.append(bi.get(i) ? 1 : 0);
         }
 
-       return s.toString();
+        return s.toString();
+    }
+
+
+    public enum PlayerType {
+        HUMAN,
+        COMPUTER
+    }
+    /**
+     * renders an image of the current state of the board
+     * The height and width used are arbitrary as the image view will rescale the image to the correct size before displaying it.
+     *
+     * @return a buffered image representing the board
+     */
+    public static BufferedImage getRenderedImage(double width, double height, int boardSize, Rectangle2D.Double[][] subBoardBoundingBoxes, SubBoardState[][] minorBoards) {
+        if (width <= 0) {
+            width = 1;
+        }
+        if (height <= 0) {
+            height = 1;
+        }
+        BufferedImage output = new BufferedImage((int) Math.round(width), (int) Math.round(height), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) output.getGraphics();
+        //all math done with doubles, rounded at the last possible moment
+        double horizontalSpacing = width * Resources.HORIZONTAL_SPACING_FACTOR;
+        double verticalSpacing = height * Resources.VERTICAL_SPACING_FACTOR;
+
+        double subBoardWidth = (width - (boardSize + 1) * horizontalSpacing) / boardSize;
+        double subBoardHeight = (height - (boardSize + 1) * verticalSpacing) / boardSize;
+
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                Rectangle2D.Double subBoardBoundingBox = new Rectangle2D.Double((horizontalSpacing * (i + 1)) + (subBoardWidth * i), (verticalSpacing * (j + 1)) + (subBoardHeight * j), subBoardWidth, subBoardHeight);
+                subBoardBoundingBoxes[j][i] = subBoardBoundingBox;
+                minorBoards[j][i].render(g, subBoardBoundingBox);
+            }
+        }
+
+
+        return output;
     }
 
 

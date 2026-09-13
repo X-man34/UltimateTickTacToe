@@ -15,6 +15,11 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+data/series1DataCombinedPolicy.bin
+data/series1DataCombinedValue.bin
+data/series1
+data/logs
+!data/models
 
 ### Eclipse ###
 .apt_generated

@@ -24,76 +24,76 @@ class SubBoardStateTest {
                 {0,0,0}},
                 false, 3);
 
-        assertEquals(Resources.Evaluation.IN_PROGRESS.getlabel(), testState.getEvaluation(), "Emtpy board does not evaluate to in progress");
+        assertEquals(BoardState.Evaluation.IN_PROGRESS.getlabel(), testState.getEvaluation(), "Emtpy board does not evaluate to in progress");
         testState = new SubBoardState(new double[][]{
                 {1,1,1},
                 {0,0,0},
                 {0,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win upper row not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win upper row not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {-1,-1,-1},
                 {0,0,0},
                 {0,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win upper row not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win upper row not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {1,0,0},
                 {1,0,0},
                 {1,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win left side not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win left side not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {-1,0,0},
                 {-1,0,0},
                 {-1,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win left side not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win left side not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {1,0,0},
                 {0,1,0},
                 {0,0,1}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win main diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win main diagonal not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {-1,0,0},
                 {0,-1,0},
                 {0,0,-1}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win main diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win main diagonal not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {0,0,1},
                 {0,1,0},
                 {1,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win off diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_ONE_WIN.getlabel(), testState.getEvaluation(), "Player one win off diagonal not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {0,0,-1},
                 {0,-1,0},
                 {-1,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win off diagonal not evaluated correctly");
+        assertEquals(BoardState.Evaluation.PLAYER_TWO_WIN.getlabel(), testState.getEvaluation(), "Player two win off diagonal not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {1,0,1},
                 {0,-1,0},
                 {1,0,0}},
                 false, 3);
-        assertEquals(Resources.Evaluation.IN_PROGRESS.getlabel(), testState.getEvaluation(), "Arbitrary in progress game not evaluated correctly");
+        assertEquals(BoardState.Evaluation.IN_PROGRESS.getlabel(), testState.getEvaluation(), "Arbitrary in progress game not evaluated correctly");
 
         testState = new SubBoardState(new double[][]{
                 {1,-1,1},
                 {1,-1,-1},
                 {-1,1,1}},
                 false, 3);
-        assertEquals(Resources.Evaluation.DRAW.getlabel(), testState.getEvaluation(), "Draw not evaluated correctly");
+        assertEquals(BoardState.Evaluation.DRAW.getlabel(), testState.getEvaluation(), "Draw not evaluated correctly");
 
     }
 

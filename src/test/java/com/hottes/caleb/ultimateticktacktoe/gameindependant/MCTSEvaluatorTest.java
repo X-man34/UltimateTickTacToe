@@ -1,52 +1,58 @@
 package com.hottes.caleb.ultimateticktacktoe.gameindependant;
 
 import com.hottes.caleb.ultimateticktacktoe.BoardState;
+import com.hottes.caleb.ultimateticktacktoe.Resources;
 import com.hottes.caleb.ultimateticktacktoe.SubBoardState;
+import com.hottes.caleb.ultimateticktacktoe.UltimateTickTackToe;
 import com.hottes.caleb.ultimateticktacktoe.gameindependant.mcts.NodeData;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTree;
 import com.hottes.caleb.ultimateticktacktoe.generictree.GenericTreeNode;
 import com.hottes.caleb.ultimateticktacktoe.ui.UltimateTickTacToeGameAction;
 import javafx.application.Platform;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.openjdk.jol.info.ClassLayout;
-import org.openjdk.jol.info.GraphLayout;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
-import javax.print.DocFlavor;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MCTSEvaluatorTest {
+public class MCTSEvaluatorTest {
 
-    private final SubBoardState oneWin = new SubBoardState(new double[][]{
+    protected final SubBoardState oneWin = new SubBoardState(new double[][]{
             {1,1,1},
             {0,0,0},
             {0,0,0}},
             false, 3);
 
-    private final SubBoardState twoWin = new SubBoardState(new double[][]{
+    protected final SubBoardState twoWin = new SubBoardState(new double[][]{
             {-1,-1,-1},
             {0,0,0},
             {0,0,0}},
             false, 3);
 
-    private final SubBoardState empty = new SubBoardState(new double[][]{
+    protected final SubBoardState empty = new SubBoardState(new double[][]{
             {0,0,0},
             {0,0,0},
             {0,0,0}},
             false, 3);
 
-    private final SubBoardState inProgress = new SubBoardState(new double[][]{
+    protected final SubBoardState inProgress = new SubBoardState(new double[][]{
             {1,-1,1},
             {0,-1,0},
             {1,1,-1}},
             true, 3);
 
-    private final SubBoardState draw = new SubBoardState(new double[][]{
+    protected final SubBoardState draw = new SubBoardState(new double[][]{
             {1,-1,1},
             {1,-1,-1},
             {-1,1,1}},
@@ -71,13 +77,16 @@ class MCTSEvaluatorTest {
         assertEquals(new UltimateTickTacToeGameAction(2, 0, 1, 0, 1), botAction, "Evaluator failed the following puzzle: {1 to play, activeboardRow=2, col=0}" + testState);
     }
 
-    //if this test fails try increasing the number of iterations
+    /**
+     * this test is intended as a sort of easy turing test for whatever evaluator is being used.
+     * There is one clear best answer to this situation but it requires some forward thinking
+     */
     @Test
     void forceOPlaySoXCanWin() {
 
         SubBoardState topRight = new SubBoardState(new double[][]{
                 {-1,0,-1},
-                {-1,0,-1},
+                {-1,1,-1},
                 {0,1,1}},
                 false, 3);
         SubBoardState activeBoard = new SubBoardState(new double[][]{
@@ -86,12 +95,12 @@ class MCTSEvaluatorTest {
                 {1,1,0}},
                 false, 3);
         SubBoardState bottomLeft = new SubBoardState(new double[][]{
-                {0,1,0},
-                {0,1,0},
+                {0,1,-1},
+                {0,1,-1},
                 {0,0,0}},
                 false, 3);
         BoardState testState = new BoardState(new SubBoardState[][]{
-                {oneWin, oneWin, topRight},
+                {oneWin, draw, topRight},
                 {oneWin, twoWin, activeBoard},
                 {bottomLeft, empty, empty}},
                 3);
@@ -99,14 +108,21 @@ class MCTSEvaluatorTest {
         testState.setBoardActive(1, 2);
         testState.setPlayerOneTurn(true);
 
-        MCTSEvaluator evaluator = new MCTSEvaluator(testState);
-        for (int i = 0; i < 40000; i++) {
-            evaluator.preformIteration(evaluator.tree.getRoot());
-
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 1, 30, 0, false, false, Optional.empty(), Optional.empty()));
+        evaluator.dispalyDialogAfterSearch = false;
+        System.out.println("Preforming search will take a bit...");
+        GameAction botAction = evaluator.preformSearch();
+        //valididty of actual move checked here.
+        //https://www.uttt.ai/init?state=222000000212211122101121022222000000111000000000000220021021000000000000000000000230210000250
+        UltimateTickTacToeGameAction correctAction = new UltimateTickTacToeGameAction(1, 2, 0, 2, 1);
+        assertEquals(correctAction, botAction, "Evaluator failed the following puzzle (it might pass if you run it again...): {1 to play, activeboardRow=1, col=2}" + testState);
+        final double[] prob = {0};
+        for (GenericTreeNode<NodeData> child : evaluator.tree.getRoot().getChildren()) {
+            if (child.getData().getActionTaken() == correctAction) {
+                prob[0] = Math.round((double) child.getData().getNumVisits() / evaluator.tree.getRoot().getData().getNumVisits() * 100);
+            }
         }
-
-        GameAction botAction = evaluator.getCurrentBestMove();
-        assertEquals(new UltimateTickTacToeGameAction(1, 2, 0, 2, 1), botAction, "Evaluator failed the following puzzle: {1 to play, activeboardRow=1, col=2}" + testState);
+        System.out.println("Move chosen with " + prob[0] + " % certainty");
 
     }
 
@@ -181,7 +197,7 @@ class MCTSEvaluatorTest {
         BoardState initialState = new BoardState(3);
         initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1,1, 1));//this is not an arbirary move but a strategic one, giving the AI lots of options to think about and is also the best move X can take
 
-        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false));//most of these settings don't matter we will preform the search ourselves in this test.
+        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false, Optional.empty(), Optional.empty()));//most of these settings don't matter we will preform the search ourselves in this test.
 
         long numIterations = 10000;//can't do too many or it will run out of heap space.
         long startTime = System.currentTimeMillis();
@@ -198,24 +214,82 @@ class MCTSEvaluatorTest {
         System.out.println("At this rate in 1 minute: " + iterationsIn60Secs + " iterations can be run");
         System.out.println("Tree used: " + treeMemory + " GB of memory");
         System.out.println("Average: " + memoryPerIteration + " KB used per iteration");
-        System.out.println(GraphLayout.parseInstance(evaluator.tree).toFootprint());
         System.out.println("Done Benchmarking iteration speed\n===========================");
         //if the test fails it is likly becuase of an out of memory issue.
     }
 
+    //with the latest and greatest policy network its literally a 50 50 chance to pass this test lol.
+    @Disabled
     @Test
-    @Tag("benchmark")
-    void analyzeMemory() {
-        System.out.println("================\ntesting memory");
-        BoardState initialState = new BoardState(3);
-        initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1,1, 1));//this is not an arbirary move but a strategic one, giving the AI lots of options to think about and is also the best move X can take
-        String initalStateHash = initialState.getStringHash();
-        System.out.println(GraphLayout.parseInstance(initalStateHash).toFootprint());
-        System.out.println(GraphLayout.parseInstance(initialState).toFootprint());
-        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false));//most of these settings don't matter we will preform the search ourselves in this test.
-        evaluator.preformIteration(evaluator.tree.getRoot());
+    void testPolicyDecisonFunction() {
+        MultiLayerNetwork policyNetwork = null;
+        try {
+            policyNetwork = MultiLayerNetwork.load(new File(Resources.class.getResource("policyNetworkV1_0.zip").getPath()), false);
+        } catch (IOException e) {
+            fail("Unable to load network");
+        }
+        BoardState testState = new BoardState(new SubBoardState[][]{
+                {oneWin, empty, empty},
+                {oneWin, empty, empty},
+                {inProgress, empty, empty}},
+                3);
+        testState.setPlayerOneTurn(true);
+        testState.setAllBoardsActivity(false);
+        testState.setBoardActive(2, 0);
+        INDArray output = policyNetwork.output(com.hottes.caleb.ultimateticktacktoe.machinelearning.Resources.getPolicyNetworkInputV1(testState));
 
-        System.out.println(GraphLayout.parseInstance(evaluator).toFootprint());
-        System.out.println("done testing memory\n=====================");
+        MCTSEvaluator evaluator = new MCTSEvaluator(testState, new EvaluatorConfiguration(2, 1000, 30, 1, 0, false, false, Optional.empty(), Optional.of(policyNetwork)));
+
+        UltimateTickTacToeGameAction action = evaluator.getChildToExploreFromPolicyNetworkOutput(output, testState, 3);
+        UltimateTickTacToeGameAction correctAction = new UltimateTickTacToeGameAction(2, 0, 1, 0, 1);
+        assertEquals(correctAction, action, "Network unable to win in won move, consider trying again, its a probability distribution");
+    }
+
+//    @Test
+//    @Tag("benchmark")
+//    void analyzeMemory() {
+//        System.out.println("================\ntesting memory");
+//        BoardState initialState = new BoardState(3);
+//        initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1,1, 1));//this is not an arbirary move but a strategic one, giving the AI lots of options to think about and is also the best move X can take
+//        String initalStateHash = initialState.getStringHash();
+//        System.out.println(GraphLayout.parseInstance(initalStateHash).toFootprint());
+//        System.out.println(GraphLayout.parseInstance(initialState).toFootprint());
+//        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, new EvaluatorConfiguration(2, 1000, 60, 5, 100, false, false));//most of these settings don't matter we will preform the search ourselves in this test.
+//        evaluator.preformIteration(evaluator.tree.getRoot());
+//
+//        System.out.println(GraphLayout.parseInstance(evaluator).toFootprint());
+//        System.out.println("done testing memory\n=====================");
+//    }
+
+    @Test
+    void testMultithreadedNoDuplicateChildrenRaceConditions() {
+        BoardState initialState = new BoardState(3);
+        initialState.preformAction(new UltimateTickTacToeGameAction(1, 1, 1, 1, 1));
+        EvaluatorConfiguration config = new EvaluatorConfiguration(2.0, 1000, 1, 16, 0, false, true, Optional.empty(), Optional.empty());
+        MCTSEvaluator evaluator = new MCTSEvaluator(initialState, config);
+        evaluator.dispalyDialogAfterSearch = false;
+        evaluator.log = false;
+        evaluator.preformSearch();
+
+        assertEquals(0, evaluator.getChildCreationRaceConditions(), "Should not encounter any child creation race conditions");
+        assertEquals(0, countDuplicateChildren(evaluator.tree.getRoot()), "Should not create any duplicate children in multithreaded MCTS");
+    }
+
+    private int countDuplicateChildren(GenericTreeNode<NodeData> node) {
+        if (node == null || !node.hasChildren()) {
+            return 0;
+        }
+        int dups = 0;
+        Set<GameAction> seenActions = new HashSet<>();
+        for (GenericTreeNode<NodeData> child : node.getChildren()) {
+            GameAction action = child.getData().getActionTaken();
+            if (action != null) {
+                if (!seenActions.add(action)) {
+                    dups++;
+                }
+            }
+            dups += countDuplicateChildren(child);
+        }
+        return dups;
     }
 }

@@ -34,7 +34,7 @@ public class MenuScreen extends VBox {
         settingsBox.setAlignment(Pos.CENTER);
 
         //lets go!!! giant unreadable one liners!!
-        startGameButton.setOnAction(_ -> UltimateTickTackToe.startGame(playerOneBox.getPlayerName(), playerTwoBox.getPlayerName(), playerOneBox.getPlayerType(), playerOneBox.getPlayerType() == Resources.PlayerType.HUMAN?Optional.empty():Optional.of(playerOneBox.getEvalulatorConfig()), playerTwoBox.getPlayerType(), playerTwoBox.getPlayerType() == Resources.PlayerType.HUMAN?Optional.empty():Optional.of(playerTwoBox.getEvalulatorConfig())));
+        startGameButton.setOnAction(_ -> UltimateTickTackToe.startGame(playerOneBox.getPlayerName(), playerTwoBox.getPlayerName(), playerOneBox.getPlayerType(), playerOneBox.getPlayerType() == Resources.PlayerType.HUMAN ? Optional.empty() : Optional.of(playerOneBox.getEvalulatorConfig()), playerTwoBox.getPlayerType(), playerTwoBox.getPlayerType() == Resources.PlayerType.HUMAN ? Optional.empty() : Optional.of(playerTwoBox.getEvalulatorConfig())));
         this.setSpacing(20);
         this.getChildren().addAll(mainLabel, startGameButton, settingsBox);
     }
