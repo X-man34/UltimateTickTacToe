@@ -22,11 +22,38 @@ repositories {
   mavenCentral()
 }
 
+// javacpp and nd4j publish one native binary per OS+arch. Left to their defaults the
+// '-platform' artifacts pull binaries for every OS at once (~1.2GB of extra jars), so we
+// pin to a single one: the host platform by default, since jpackage cannot cross-compile
+// anyway. Override to target another, e.g. -PjavacppPlatform=linux-x86_64
+static String hostJavacppPlatform() {
+  String os = System.getProperty('os.name').toLowerCase()
+  String arch = System.getProperty('os.arch').toLowerCase()
+  String a
+  if (arch in ['x86_64', 'amd64']) {
+    a = 'x86_64'
+  } else if (arch in ['aarch64', 'arm64']) {
+    a = 'arm64'
+  } else if (arch in ['arm', 'armv7l']) {
+    a = 'armhf'
+  } else {
+    a = arch
+  }
+  if (os.contains('windows')) {
+    return "windows-$a"
+  }
+  if (os.contains('mac') || os.contains('darwin')) {
+    return "macosx-$a"
+  }
+  if (os.contains('linux')) {
+    return "linux-$a"
+  }
+  throw new GradleException("Unsupported build OS '$os'; set -PjavacppPlatform=... explicitly")
+}
+
 ext {
   junitVersion = '5.10.2'
-  // ship natives for 64-bit Windows only; without this every javacpp
-  // '-platform' artifact drags in binaries for all OSes (~1.2GB of extra jars)
-  javacppPlatform = 'windows-x86_64'
+  javacppPlatform = findProperty('javacppPlatform') ?: hostJavacppPlatform()
 }
 
 sourceCompatibility = '22'
@@ -63,9 +90,9 @@ dependencies {
 //----------working------------
   // https://mvnrepository.com/artifact/org.nd4j/nd4j-native
   // nd4j-native-platform is an org.nd4j artifact, so javacppPlatform above does not
-  // prune it; depend on nd4j-native with an explicit Windows classifier instead.
+  // prune it; depend on nd4j-native with an explicit classifier instead.
   implementation group: 'org.nd4j', name: 'nd4j-native', version: '1.0.0-M2.1'
-  implementation group: 'org.nd4j', name: 'nd4j-native', version: '1.0.0-M2.1', classifier: 'windows-x86_64'
+  implementation group: 'org.nd4j', name: 'nd4j-native', version: '1.0.0-M2.1', classifier: javacppPlatform
 
   // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
   //implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'

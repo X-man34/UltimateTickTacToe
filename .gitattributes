@@ -1,0 +1,8 @@
+# The Gradle wrapper script is executed by /bin/sh; CRLF endings break its
+# shebang and make the build unrunnable on Linux and macOS.
+gradlew text eol=lf
+*.sh    text eol=lf
+
+# Windows-only scripts must keep CRLF.
+gradlew.bat text eol=crlf
+*.bat       text eol=crlf
