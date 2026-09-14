@@ -275,7 +275,7 @@ public class MCTSEvaluator {
                     state, state.getBoardSize());
             synchronized (currentNode) {
                 for (GenericTreeNode<NodeData> child : currentNode.getChildren()) {
-                    if (child.getData().getActionTaken() == actionToTake) {
+                    if (child.getData().getActionTaken().equals(actionToTake)) {
                         return child;
                     }
                 }

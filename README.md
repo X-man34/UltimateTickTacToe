@@ -20,9 +20,9 @@ row to win the game.
   (`valueNetworkV1_1.zip` / `policyNetworkV1_0.zip`, bundled as resources) are
   trained with Deeplearning4j and used by the MEDIUM difficulty preset.
 - **Three presets — EASY, MEDIUM, HARD** — plus a **Custom** mode exposing the
-  raw engine knobs: UCB C value, compute time, thread count, "stupidity"
-  (the chance the engine deliberately plays a non-optimal move), and whether
-  force-play is allowed.
+  raw engine knobs: UCB C value, compute time, thread count, and whether
+  force-play is allowed. See [MCTS_ANALYSIS.md](MCTS_ANALYSIS.md) for how the
+  search uses them.
 - **Saveable engine configurations.** An `EvaluatorConfiguration` serialises to
   a zip containing a JSON descriptor plus any neural nets it references; see
   the prebuilt ones in `evaluators/`.
@@ -125,6 +125,7 @@ data/                        training data, saved models, game logs
 docs/                        generated javadoc
 build-installer.bat          installer build script, Windows
 build-installer.sh           installer build script, Linux / macOS
+MCTS_ANALYSIS.md             deep dive on the search engine
 ```
 
 ## Building and testing
